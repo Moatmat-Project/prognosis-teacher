@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/omr8x/Projects/flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/.cxx/Debug/672iw4z3/x86",
+  "command": "/Users/omr8x/Library/Android/sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=i686-none-linux-android21 --gcc-toolchain=/Users/omr8x/Library/Android/sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/omr8x/Library/Android/sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -o CMakeFiles/opencv_jni_shared.dir/dummy.cpp.o -c /Users/omr8x/Projects/flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/libcxx_helper/dummy.cpp",
+  "file": "/Users/omr8x/Projects/flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/libcxx_helper/dummy.cpp"
+}
+]

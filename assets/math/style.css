@@ -1,0 +1,31 @@
+/* Content of style.css */
+body {
+    color: #444;
+    background-color: #f9f9f9;
+    font-size: 18px; /* Increased from default to make all text larger */
+}
+
+main {
+    max-width: 820px;
+    margin: auto;
+}
+
+math-field {
+    border: 2px solid #ddd; /* Thicker border for larger appearance */
+    padding: 10px; /* Increased padding */
+    margin: 20px 0; /* Increased margin */
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 20px; /* Larger font size specifically for math-field */
+}
+
+#value, #result {
+    padding: 10px; /* Increased padding */
+    border-radius: 5px;
+    border: 2px solid #000; /* Thicker border */
+    color: rgb(241, 188, 91);
+    background: #35434e;
+    font-family: monospace;
+    margin-bottom: 1em;
+    font-size: 20px; /* Larger font size for results */
+}
