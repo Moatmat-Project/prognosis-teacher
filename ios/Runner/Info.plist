@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>من اجل اضافة صور الى العرض التي ترغب بنشرة ، يرجى اختيار صور من معرض الصور الخاص بك</string>
+	<string>من اجل إضافة صور إلى العرض التي ترغب بنشرة ، يرجى اختيار صور من معرض الصور الخاص بك</string>
 	<key>CFBundleName</key>
 	<string>تطبيق المعلم</string>
 	<key>CFBundlePackageType</key>

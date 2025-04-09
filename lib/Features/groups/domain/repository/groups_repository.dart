@@ -6,6 +6,8 @@ import '../entities/group.dart';
 abstract class GroupsRepository {
   // get groups
   Future<Either<Exception, List<Group>>> getGroups();
+  // get groups
+  Future<Either<Exception, List<Group>>> getTeacherGroups({required String teacherEmail});
   // add group
   Future<Either<Exception, Unit>> addGroup({
     required Group group,
@@ -14,6 +16,12 @@ abstract class GroupsRepository {
   Future<Either<Exception, Unit>> addToGroup({
     required int groupId,
     required GroupItem item,
+  });
+  // add to group
+  Future<Either<Exception, Unit>> setGroupTests({
+    required int groupId,
+    required List<int> testsIds,
+  required  bool isCourseSubscribersGroup ,
   });
   // remove form group
   Future<Either<Exception, Unit>> removeFromGroup({

@@ -1,9 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:moatmat_teacher/Core/errors/exceptions.dart';
-import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank.dart';
 import 'package:moatmat_teacher/Features/students/data/datasources/students_ds.dart';
 import 'package:moatmat_teacher/Features/students/data/datasources/students_local_ds.dart';
+import 'package:moatmat_teacher/Features/students/data/responses/get_my_students_statistics_response.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/test_details.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
@@ -11,6 +10,7 @@ import 'package:moatmat_teacher/Features/students/domain/repository/students_rep
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
 
 import '../../../outer_tests/domain/entities/outer_test.dart';
+import '../responses/get_my_students_response.dart';
 
 class StudentsRepositoryImpl implements StudentsRepository {
   final StudentsDS dataSource;
@@ -18,9 +18,31 @@ class StudentsRepositoryImpl implements StudentsRepository {
 
   StudentsRepositoryImpl({required this.dataSource, required this.localDataSource});
   @override
-  Future<Either<Exception, List<UserData>>> getMyStudents({required bool update}) async {
+  Future<Either<Exception, GetMyStudentsResponse>> getMyStudents({
+    required bool excludeCourseSubscribers,
+    required bool excludeBanks,
+    required bool excludeTests,
+  }) async {
     try {
-      var res = await dataSource.getMyStudents(update: update);
+      var res = await dataSource.getMyStudents(
+        excludeBanks: excludeBanks,
+        excludeTests: excludeTests,
+        excludeCourseSubscribers: excludeCourseSubscribers,
+      );
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, GetMyStudentsStatisticsResponse>> getMyStudentsStatistics({
+    required List<UserData> students,
+  }) async {
+    try {
+      var res = await dataSource.getMyStudentsStatistics(
+        students: students,
+      );
       return right(res);
     } on Exception catch (e) {
       return left(e);

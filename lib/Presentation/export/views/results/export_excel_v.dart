@@ -43,7 +43,7 @@ class _ExportExcelVState extends State<ExportExcelV> {
       // 5 - bank id
       (TextCellValue("رقم الاختبار")),
       // 6 - wrong answers
-      (TextCellValue("الاجابات الخاطئة")),
+      (TextCellValue("الإجابات الخاطئة")),
       // 7 - date
       (TextCellValue("التاديخ")),
       // 8 - time

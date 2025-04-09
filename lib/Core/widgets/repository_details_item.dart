@@ -11,7 +11,7 @@ class RepositoryDetailsItemWidget extends StatelessWidget {
     super.key,
     this.onTap,
     required this.averageMark,
-     this.averageTime,
+    this.averageTime,
   });
   final String averageMark;
   final int? averageTime;
@@ -114,7 +114,7 @@ class RepositoryDetailsItemWidget extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: 3),
                                     child: Text(
-                                      "عرض نسب اختيار الطلاب للاجبات",
+                                      "عرض نسب اختيار الطلاب للإجابات",
                                       style: TextStyle(
                                         color: ColorsResources.darkPrimary,
                                         fontSize: 12,

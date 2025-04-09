@@ -38,6 +38,25 @@ class ResultModel extends Result {
       teacherEmail: json["teacher_email"],
     );
   }
+  factory ResultModel.fromStatisticsQuery(Map json) {
+    return ResultModel(
+      id: 0,
+      mark: json["mark"] + 0.0,
+      answers: json["answers"].cast<int?>(),
+      wrongAnswers: [],
+      period: 0,
+      date: DateTime.parse(json["date"]),
+      testName: "",
+      userId: json["user_id"],
+      form: 0,
+      userNumber: "",
+      testId: json["test_id"] == null ? null : int.parse(json["test_id"]),
+      bankId: 0,
+      outerTestId: 0,
+      userName: "",
+      teacherEmail: "",
+    );
+  }
   factory ResultModel.fromClass(Result result) {
     return ResultModel(
       id: result.id,

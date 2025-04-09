@@ -46,20 +46,20 @@ class ReportTileWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "رقم السؤال : ${report.questionID }",
+                      "رقم السؤال : ${report.questionID}",
                       style: FontsResources.styleMedium(size: 16),
                     ),
                     if (report.message != null && report.message != "") ...[
                       const SizedBox(height: SizesResources.s2),
                       Text(
-                        "تفاصيل الابلاغ : ${report.message}",
+                        "تفاصيل الإبلاغ : ${report.message}",
                         style: FontsResources.styleRegular(size: 16),
                       ),
                     ],
                     const SizedBox(height: SizesResources.s1),
                     if (report.testId != null)
                       Text(
-                        "اسم الأختبار : ${report.name}",
+                        "اسم الاختبار : ${report.name}",
                         style: FontsResources.styleRegular(size: 14),
                       ),
                     if (report.bankId != null)
@@ -93,7 +93,7 @@ class ReportTileWidget extends StatelessWidget {
                       showAlert(
                         context: context,
                         title: "تاكيد الحذف",
-                        body: "هل ترغب بحذف الابلاغ؟",
+                        body: "هل ترغب بحذف الإبلاغ؟",
                         onAgree: onDelete,
                       );
                     },

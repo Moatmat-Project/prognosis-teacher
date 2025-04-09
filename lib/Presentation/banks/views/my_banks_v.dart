@@ -5,13 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/my_banks/my_banks_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/views/bank_details_v.dart';
 import 'package:moatmat_teacher/Presentation/banks/widgets/bank_tile_w.dart';
-
-import '../../../Core/resources/colors_r.dart';
-import '../../../Core/resources/sizes_resources.dart';
-import '../../../Core/widgets/appbar/search_icon_w.dart';
 import '../../../Core/widgets/view/search_in_banks_v.dart';
-import '../../reports/view/reports_v.dart';
-import '../../../Core/widgets/appbar/report_icon_w.dart';
 import 'add_bank_view.dart';
 
 class MyBanksView extends StatefulWidget {
@@ -92,7 +86,7 @@ class _MyBanksViewState extends State<MyBanksView> {
               padding: EdgeInsets.all(8.0),
               child: Center(
                   child: Text(
-                "data",
+                "حصل خطأ ما",
                 textAlign: TextAlign.center,
               )),
             );
@@ -107,7 +101,7 @@ class _MyBanksViewState extends State<MyBanksView> {
         animatedIcon: AnimatedIcons.menu_home,
         children: [
           SpeedDialChild(
-            label: "اضافة بنك",
+            label: "إضافة بنك",
             child: const Icon(Icons.add),
             onTap: () async {
               await Navigator.of(context)

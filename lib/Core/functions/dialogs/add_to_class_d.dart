@@ -18,7 +18,7 @@ showAddToClass({
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text("اضافة الى صف"),
+      title: const Text("إضافة إلى صف"),
       content: Form(
         key: formKey,
         child: Column(
@@ -57,7 +57,7 @@ showAddToClass({
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("الغاء"),
+          child: const Text("إلغاء"),
         ),
       ],
     ),

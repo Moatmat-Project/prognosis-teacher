@@ -57,7 +57,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
     repeatable = widget.repeatable ?? false;
     showAnswers = widget.showAnswers ?? true;
     visible = widget.visible ?? true;
-       scrollable = widget.scrollable ?? false;
+    scrollable = widget.scrollable ?? false;
     super.initState();
   }
 
@@ -84,7 +84,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
             const SizedBox(height: SizesResources.s2),
             if (widget.isTest)
               CheckingWidget(
-                title: "تصفح الاجابات الخاطئة",
+                title: "تصفح الإجابات الخاطئة",
                 value: exploreAnswers,
                 onChanged: (value) {
                   exploreAnswers = value ?? false;
@@ -130,7 +130,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
             ),
             CheckingWidget(
               title: "تفعيل السكرول",
-                        value: scrollable,
+              value: scrollable,
               onChanged: (value) {
                 if (value == null) return;
                 onUpdate();

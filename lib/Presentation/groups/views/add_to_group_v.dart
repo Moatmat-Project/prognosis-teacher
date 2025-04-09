@@ -39,7 +39,7 @@ class _AddToGroupViewState extends State<AddToGroupView> {
       //
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("تمت الاضافة"),
+          content: Text("تمت الإضافة"),
         ),
       );
       //
@@ -52,7 +52,7 @@ class _AddToGroupViewState extends State<AddToGroupView> {
     final cubit = context.read<StudentsGroupsCubit>();
     return Scaffold(
         appBar: AppBar(
-          title: Text("اضافة ${widget.userData.name} الى مجموعة"),
+          title: Text("إضافة ${widget.userData.name} إلى مجموعة"),
         ),
         body: ListView.builder(
           itemCount: cubit.groups.length,

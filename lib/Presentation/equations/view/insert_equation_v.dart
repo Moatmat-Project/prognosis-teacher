@@ -80,7 +80,7 @@ class _InsertEquationViewState extends State<InsertEquationView> {
                 ),
               );
             },
-            child: const Text("اضافة معادلة"),
+            child: const Text("إضافة معادلة"),
           ),
         ],
       ),

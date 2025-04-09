@@ -113,22 +113,22 @@ class _SetOuterTestInformationViewState extends State<SetOuterTestInformationVie
             const SizedBox(height: SizesResources.s4),
             //
             MyTextFormFieldWidget(
-              hintText: "عدد الاسئلة",
+              hintText: "عدد الأسئلة",
               initialValue: length?.toString(),
               validator: (p0) {
                 if (p0?.isNotEmpty ?? false) {
                   switch (paperType) {
                     case PaperType.A4:
                       if ((int.tryParse(p0!) ?? 0) > 100) {
-                        return "لا يمكن ان يكون عدد الاسئلة اكبر من 100 سؤال";
+                        return "لا يمكن ان يكون عدد الأسئلة اكبر من 100 سؤال";
                       }
                     case PaperType.A5:
                       if ((int.tryParse(p0!) ?? 0) > 50) {
-                        return "لا يمكن ان يكون عدد الاسئلة اكبر من 50 سؤال";
+                        return "لا يمكن ان يكون عدد الأسئلة اكبر من 50 سؤال";
                       }
                     case PaperType.A6:
                       if ((int.tryParse(p0!) ?? 0) > 30) {
-                        return "لا يمكن ان يكون عدد الاسئلة اكبر من 30 سؤال";
+                        return "لا يمكن ان يكون عدد الأسئلة اكبر من 30 سؤال";
                       }
                   }
                 }
@@ -167,7 +167,7 @@ class _SetOuterTestInformationViewState extends State<SetOuterTestInformationVie
             const SizedBox(height: SizesResources.s4),
             //
             DropDownWidget(
-              hintText: "نوع الموذج",
+              hintText: "نوع النموذج",
               selectedItem: paperType.name,
               items: PaperType.values.map((e) => e.name).toList(),
               onChanged: (p0) {

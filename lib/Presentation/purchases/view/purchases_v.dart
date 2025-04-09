@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Presentation/purchases/state/cubit/purchases_cubit.dart';
@@ -80,9 +79,12 @@ class _PurchasesViewState extends State<PurchasesView> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      if (state.purchases[index].userName.isNotEmpty)
+                                        Text(
+                                          "اسم : ${state.purchases[index].userName}",
+                                        ),
                                       Text(
                                         "المبلغ : ${state.purchases[index].amount}",
                                       ),

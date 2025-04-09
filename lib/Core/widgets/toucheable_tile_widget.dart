@@ -31,15 +31,15 @@ class TouchableTileWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: SizesResources.s1),
           width: SpacingResources.mainWidth(context),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: ShadowsResources.mainBoxShadow,
             color: ColorsResources.onPrimary,
           ),
           child: Material(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
               onTap: onTap,
               child: Padding(
                 padding: const EdgeInsets.all(SizesResources.s4),
@@ -65,7 +65,7 @@ class TouchableTileWidget extends StatelessWidget {
                             textAlign: TextAlign.start,
                             style: FontsResources.styleRegular().copyWith(
                               color: ColorsResources.blackText2,
-                              fontSize: 12,
+                              fontSize: 8,
                             ),
                           ),
                         ],
@@ -76,7 +76,7 @@ class TouchableTileWidget extends StatelessWidget {
                             textAlign: TextAlign.start,
                             style: FontsResources.styleRegular().copyWith(
                               color: ColorsResources.blackText2,
-                              fontSize: 12,
+                              fontSize: 8,
                             ),
                           ),
                         ]
@@ -85,7 +85,7 @@ class TouchableTileWidget extends StatelessWidget {
                     Icon(
                       iconData,
                       color: ColorsResources.blackText2,
-                      size: 12,
+                      size: 8,
                     ),
                     if (icon != null) icon!,
                   ],

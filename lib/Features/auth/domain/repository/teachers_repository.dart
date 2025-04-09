@@ -29,4 +29,9 @@ abstract class TeacherRepository {
     required String id,
     bool isUuid = true,
   });
+  // get user Data
+  Future<Either<Failure, List<UserData>>> getUsersDataByIds({
+    required List<String> ids,
+    bool isUuid = true,
+  });
 }

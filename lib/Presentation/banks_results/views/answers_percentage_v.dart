@@ -31,7 +31,7 @@ class _BankAnswersPercentageState extends State<BankAnswersPercentage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("نسب اختيار الاجوبة"),
+        title: const Text("نسب اختيار الأجوبة"),
       ),
       body: Column(
         children: [

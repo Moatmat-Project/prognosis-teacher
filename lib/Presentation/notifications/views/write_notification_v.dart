@@ -3,8 +3,7 @@ import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/validators/not_empty_v.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/elevated_button_widget.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart'
-    as n;
+import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart' as n;
 
 import '../../../Features/notifications/domain/entities/notification.dart';
 
@@ -30,7 +29,7 @@ class _WriteNotificationViewState extends State<WriteNotificationView> {
           const SizedBox(height: SizesResources.s2),
           //
           MyTextFormFieldWidget(
-            hintText: "عنوان الاشعار",
+            hintText: "عنوان الإشعار",
             onSaved: (p0) {
               title = p0 ?? "";
             },
@@ -44,7 +43,7 @@ class _WriteNotificationViewState extends State<WriteNotificationView> {
           MyTextFormFieldWidget(
             minLines: 1,
             maxLines: 5,
-            hintText: "محتوى الاشعار",
+            hintText: "محتوى الإشعار",
             onSaved: (p0) {
               body = p0 ?? "";
             },

@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_test_files_uc.dart';
@@ -98,7 +100,10 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
         path: newTest.information.video![i],
       );
       res.fold(
-        (l) {},
+        (l) {
+          Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
+          Clipboard.setData(ClipboardData(text: l.toString()));
+        },
         (r) {
           //
           List<String> newVideos = newTest.information.video ?? [];
@@ -265,6 +270,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
 
     yield newTest;
   }
+
   @override
   Future<List<Test>> getMyTests({required bool update}) async {
     //
@@ -316,7 +322,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     if (oldTest != null) {
       //
-      yield "حذف ملفات الأختبار القديم";
+      yield "حذف ملفات الاختبار القديم";
       //
       locator<DeleteTestFilesUC>().call(oldTest: oldTest, newTest: test);
     }

@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
+import 'package:moatmat_teacher/Presentation/attendance/views/explore_attendance_view.dart';
 import 'package:moatmat_teacher/Presentation/folders/view/folders_views_manager.dart';
 import 'package:moatmat_teacher/Presentation/home/view/home_v.dart';
 import 'package:moatmat_teacher/Presentation/purchases/view/purchases_v.dart';
 
+import '../../../Core/resources/fonts_r.dart';
 import '../../banks/views/my_banks_v.dart';
 import '../../tests/views/my_tests_v.dart';
 
@@ -63,6 +64,8 @@ class _PagesHolderViewState extends State<PagesHolderView> {
               );
             },
           ),
+
+          ExploreAttendanceView(),
           const PurchasesView(),
         ],
       ),
@@ -103,6 +106,16 @@ class _PagesHolderViewState extends State<PagesHolderView> {
               Icons.library_books,
             ),
             label: "البنوك",
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(
+              // icon for attendance
+              Icons.app_registration_outlined,
+            ),
+            icon: Icon(
+              Icons.app_registration_outlined,
+            ),
+            label: "الجلسات",
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(

@@ -48,6 +48,7 @@ class _SignUpViewState extends State<SignUpView> {
       email: email,
       banksFolders: {},
       testsFolders: {},
+      courseSubscribersTests: [],
       options: TeacherOptions(
         allowInsert: false,
         allowUpdate: false,
@@ -58,6 +59,7 @@ class _SignUpViewState extends State<SignUpView> {
       image: '',
       purchaseDescription: '',
       price: 0,
+      groups: [],
     );
     var query = locator<SignUpUC>().call(
       teacherData: teacherData,

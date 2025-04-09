@@ -64,4 +64,28 @@ class GroupsRepositoryImpl implements GroupsRepository {
       return left(e);
     }
   }
+
+  @override
+  Future<Either<Exception, List<Group>>> getTeacherGroups({required String teacherEmail}) async {
+    try {
+      final response = await dataSource.getTeacherGroups(teacherEmail: teacherEmail);
+      return right(response);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, Unit>> setGroupTests({required int groupId, required List<int> testsIds, required bool isCourseSubscribersGroup}) async {
+    try {
+      await dataSource.setGroupTests(
+        groupId: groupId,
+        testsIds: testsIds,
+        isCourseSubscribersGroup: isCourseSubscribersGroup,
+      );
+      return right(unit);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
 }

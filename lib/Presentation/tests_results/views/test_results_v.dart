@@ -57,8 +57,7 @@ class _TestResultsViewState extends State<TestResultsView> {
                         MaterialPageRoute(
                           builder: (context) => ChooseExportV(
                             name: widget.test.information.title,
-                            results:
-                                state.details.marks.map((e) => e.$1).toList(),
+                            results: state.details.marks.map((e) => e.$1).toList(),
                           ),
                         ),
                       );
@@ -115,8 +114,7 @@ class _TestResultsViewState extends State<TestResultsView> {
                     ),
                     Expanded(
                       child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 5 / 3,
                           crossAxisSpacing: SizesResources.s2,
@@ -145,10 +143,8 @@ class _TestResultsViewState extends State<TestResultsView> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => StudentView(
-                                    userName:
-                                        state.details.marks[index].$1.userName,
-                                    userId:
-                                        state.details.marks[index].$1.userId,
+                                    userName: state.details.marks[index].$1.userName,
+                                    userId: state.details.marks[index].$1.userId,
                                     result: state.details.marks[index].$1,
                                   ),
                                 ),
@@ -197,6 +193,11 @@ class MarkInfoItemWidget extends StatelessWidget {
         color: ColorsResources.onPrimary,
         borderRadius: BorderRadius.circular(10),
         boxShadow: ShadowsResources.mainBoxShadow,
+        border: markLetter == ''
+            ? Border.all(
+                color: ColorsResources.red,
+              )
+            : null,
       ),
       child: Material(
         color: Colors.transparent,

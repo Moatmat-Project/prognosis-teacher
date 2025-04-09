@@ -19,11 +19,7 @@ class PurchasedItemsDSImpl implements PurchasedItemsDS {
     //
     var client = Supabase.instance.client;
     //
-    var res = await client
-        .from("purchases")
-        .select()
-        .eq("item_type", "bank")
-        .eq("item_id", "${bank.id}").order("id");
+    var res = await client.from("purchases").select().eq("item_type", "bank").eq("item_id", "${bank.id}").order("id");
     //
     var list = res.map((e) => PurchaseItemModel.fromJson(e)).toList();
     //
@@ -35,26 +31,19 @@ class PurchasedItemsDSImpl implements PurchasedItemsDS {
     //
     var client = Supabase.instance.client;
     //
-    var res = await client
-        .from("purchases")
-        .select()
-        .eq("item_type", "test")
-        .eq("item_id", "${test.id}").order("id");
+    var res = await client.from("purchases").select().eq("item_type", "test").eq("item_id", "${test.id}").order("id");
     //
     var list = res.map((e) => PurchaseItemModel.fromJson(e)).toList();
     //
     return list;
   }
-    @override
+
+  @override
   Future<List<PurchaseItem>> teacherPurchases({required String email}) async {
     //
     var client = Supabase.instance.client;
     //
-    var res = await client
-        .from("purchases")
-        .select()
-        .eq("item_type", "teacher")
-        .eq("item_id", email).order("id");
+    var res = await client.from("purchases").select().eq("item_type", "teacher").eq("item_id", email).order("id");
     //
     var list = res.map((e) => PurchaseItemModel.fromJson(e)).toList();
     //

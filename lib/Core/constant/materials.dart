@@ -16,8 +16,8 @@ List<Map<String, String>> materialsLst = [
     "image": "assets/images/materials/digestive-system.gif",
   },
   {
-    "name": "التربية الوطنية",
-    "image": "assets/images/materials/syria.png",
+    "name": "اللغة الألمانية",
+    "image": "assets/images/materials/germany.pngng",
   },
   {
     "name": "اللغة العربية",
@@ -55,13 +55,21 @@ List<Map<String, String>> materialsLst = [
     "name": "الفلسفة",
     "image": "assets/images/materials/philosopher.png",
   },
+  {
+    "name": "فريق روح التعليمي",
+    "image": "assets/images/materials/roh-team.jpg",
+  },
+  {
+    "name": "معهد الهادي",
+    "image": "assets/images/materials/hadi-team.jpg",
+  },
 ];
 Map trMaterialsLst = {
   "الرياضيات": "Mathematics",
   "الفيزياء": "Physics",
   "الكيمياء": "Chemistry",
   "علم الأحياء": "Biology",
-  "التربية الوطنية": "Nationality",
+  "اللغة الألمانية": "Nationality",
   "اللغة العربية": "Arabic",
   "اللغة الإنجليزية": "English",
   "اللغة الروسية": "Russian",
@@ -71,13 +79,15 @@ Map trMaterialsLst = {
   "الجغرافيا": "Geography",
   "التاريخ": "History",
   "الفلسفة": "Philosophy",
+  "فريق روح التعليمي": "Roh Team",
+  "معهد الهادي": "Hadi Team",
 };
 List<String> materialsStrLst = [
   "الرياضيات",
   "الفيزياء",
   "الكيمياء",
   "علم الأحياء",
-  "التربية الوطنية",
+  "اللغة الألمانية",
   "اللغة العربية",
   "اللغة الإنجليزية",
   "اللغة الروسية",
@@ -87,4 +97,6 @@ List<String> materialsStrLst = [
   "الجغرافيا",
   "التاريخ",
   "الفلسفة",
+  "فريق روح التعليمي",
+  "معهد الهادي",
 ];

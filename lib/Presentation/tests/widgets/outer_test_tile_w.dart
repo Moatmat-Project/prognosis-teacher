@@ -62,7 +62,7 @@ class OuterTestTileWidget extends StatelessWidget {
                         ),
                         const SizedBox(height: SizesResources.s1),
                         Text(
-                          "عدد الاسئلة : ${test.information.length.toString()}",
+                          "عدد الأسئلة : ${test.information.length.toString()}",
                           style: const TextStyle(
                             fontSize: 11,
                             color: ColorsResources.blackText2,

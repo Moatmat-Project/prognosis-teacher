@@ -20,11 +20,13 @@ class AttachmentWidget extends StatefulWidget {
     this.file,
     this.onTap,
     this.disableUpdate = false,
+    this.allowedExtensions,
   });
 
   final String title;
   final String? file;
   final FileType? fileType;
+  final List<String>? allowedExtensions;
   final void Function(String?)? afterPick;
   final VoidCallback onDelete;
   final VoidCallback? onTap;
@@ -73,6 +75,7 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
               final result = await FilePicker.platform.pickFiles(
                 allowMultiple: false,
                 type: widget.fileType ?? FileType.any,
+                allowedExtensions: widget.allowedExtensions,
               );
               //
               setState(() {
@@ -122,9 +125,7 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.clip,
                           style: FontsResources.styleMedium(
-                            color: file != null
-                                ? ColorsResources.primary
-                                : ColorsResources.blackText2,
+                            color: file != null ? ColorsResources.primary : ColorsResources.blackText2,
                           ),
                         ),
                         if (file != null)

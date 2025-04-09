@@ -58,6 +58,7 @@ class StudentsGroupsCubit extends Cubit<StudentsGroupsState> {
         name: group,
         classRoom: classRoom,
         items: [],
+        testsIds: [],
       ),
     );
     //

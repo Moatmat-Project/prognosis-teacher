@@ -208,8 +208,8 @@ class _SetInformationViewState extends State<SetInformationView> {
                 validator: (p0) {
                   int? price = int.tryParse(p0 ?? "0");
                   if (price != null) {
-                    if (price > 100000) {
-                      return "يرجى ادخال سعر ادنى من 100,000";
+                    if (price > 200000) {
+                      return "يرجى ادخال سعر ادنى من 200,000";
                     }
                   }
                   return notEmptyValidator(text: p0);

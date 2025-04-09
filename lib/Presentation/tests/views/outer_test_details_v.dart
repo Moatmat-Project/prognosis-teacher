@@ -97,7 +97,7 @@ class _OUterTestDetailsViewState extends State<OUterTestDetailsView> {
                         showAlert(
                           context: context,
                           title: "تأكيد",
-                          body: "هل انت متاكد من انك تريد حذف الأختبار",
+                          body: "هل انت متاكد من انك تريد حذف الاختبار",
                           onAgree: () {
                             context.read<ExploreOuterTestsCubit>().deleteTest(state.test.id);
                             Navigator.of(context).pop();
@@ -118,7 +118,7 @@ class _OUterTestDetailsViewState extends State<OUterTestDetailsView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TouchableTileWidget(
-                          title: "تصفح نتائج الأختبار",
+                          title: "تصفح نتائج الاختبار",
                           iconData: Icons.arrow_forward_ios,
                           onTap: () {
                             Navigator.of(context).push(

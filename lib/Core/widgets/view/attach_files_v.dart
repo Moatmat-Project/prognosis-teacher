@@ -64,7 +64,7 @@ class _AttachFilesViewState extends State<AttachFilesView> {
         actions: [
           TextButton(
             onPressed: pickFiles,
-            child: const Text("اضافة"),
+            child: const Text("إضافة"),
           )
         ],
       ),

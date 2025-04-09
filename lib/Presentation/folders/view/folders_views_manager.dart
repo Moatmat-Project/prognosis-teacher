@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Presentation/folders/state/folders_manager/folders_manager_cubit.dart';
@@ -9,7 +8,7 @@ class FoldersViewManager extends StatefulWidget {
     super.key,
     required this.isTest,
     required this.title,
-    required this.openAll,
+     this.openAll,
   });
 
   final String title;

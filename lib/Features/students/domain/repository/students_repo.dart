@@ -1,19 +1,25 @@
 import 'package:dartz/dartz.dart';
-import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/test_details.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
-
-import '../../../../Core/errors/exceptions.dart';
 import '../../../banks/domain/entities/bank.dart';
 import '../../../outer_tests/domain/entities/outer_test.dart';
+import '../../data/responses/get_my_students_response.dart';
+import '../../data/responses/get_my_students_statistics_response.dart';
 
 abstract class StudentsRepository {
   //
   // get my students
-  Future<Either<Exception, List<UserData>>> getMyStudents({
-    required bool update,
+  Future<Either<Exception, GetMyStudentsResponse>> getMyStudents({
+    required bool excludeCourseSubscribers,
+    required bool excludeBanks,
+    required bool excludeTests,
+  });
+
+  // get my students
+  Future<Either<Exception, GetMyStudentsStatisticsResponse>> getMyStudentsStatistics({
+    required List<UserData> students,
   });
   // get my students by ids
   Future<Either<Exception, List<UserData>>> getMyStudentsByIds({
@@ -46,6 +52,8 @@ abstract class StudentsRepository {
     required Bank? bank,
     required bool update,
   });
+  //
+  //
   // delete results
   Future<Either<Exception, Unit>> deleteRepositoryResults({
     required List<int>? results,

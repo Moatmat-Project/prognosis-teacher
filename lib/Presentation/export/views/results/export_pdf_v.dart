@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moatmat_teacher/Core/services/pdf_s.dart';
+import 'package:moatmat_teacher/Core/functions/pdf/export_results_pdf.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/elevated_button_widget.dart';
 
 import '../../../../Features/students/domain/entities/result.dart';
@@ -24,7 +24,7 @@ class _ExportPdfVState extends State<ExportPdfV> {
           ElevatedButtonWidget(
             text: "",
             onPressed: () async {
-              await PdfService().exportResults(widget.results, widget.name);
+              await exportResultsPdf(widget.results, widget.name);
             },
           ),
         ],

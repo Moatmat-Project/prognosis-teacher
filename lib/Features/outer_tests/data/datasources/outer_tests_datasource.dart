@@ -45,7 +45,7 @@ class OuterTestsDatasourceImplements implements OuterTestsDatasource {
 
   @override
   Future<OuterTest> getOuterTestById({required int id}) async {
-    final response = await Supabase.instance.client.from("outer_tests").select().limit(1);
+    final response = await Supabase.instance.client.from("outer_tests").select().eq("id", id).limit(1);
     if (response.isNotEmpty) {
       final List<OuterTest> tests = response.map((e) => OuterTestModel.fromJson(e)).toList();
       return tests.first;

@@ -143,7 +143,7 @@ class PickFolderWidget extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Text("اضافة الى مجلد"),
+              Text("إضافة إلى مجلد"),
             ],
           ),
           //
@@ -152,7 +152,7 @@ class PickFolderWidget extends StatelessWidget {
             child: folders.isEmpty
                 ? const Center(
                     child: Text(
-                      "لا يوجد مجلدات \n قم بانشاء مجلدات لاضافة العناصر اليها",
+                      "لا يوجد مجلدات \n قم بانشاء مجلدات لإضافة العناصر اليها",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,

@@ -161,7 +161,7 @@ class _MyTestsViewState extends State<MyTestsView> {
             animatedIcon: AnimatedIcons.menu_home,
             children: [
               SpeedDialChild(
-                label: "اضافة أختبار",
+                label: "إضافة أختبار",
                 child: const Icon(Icons.add),
                 onTap: () async {
                   await Navigator.of(context)
@@ -177,7 +177,7 @@ class _MyTestsViewState extends State<MyTestsView> {
                 },
               ),
               SpeedDialChild(
-                label: "اضافة أختبار خارجي",
+                label: "تصميم سلم اختبار خارجي",
                 child: const Icon(Icons.add),
                 onTap: () async {
                   await Navigator.of(context)

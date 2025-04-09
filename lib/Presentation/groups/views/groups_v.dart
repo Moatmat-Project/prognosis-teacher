@@ -16,11 +16,12 @@ class GroupsView extends StatefulWidget {
     super.key,
     required this.groups,
     required this.onTap,
+    this.onExploreSubscribers,
   });
   //
   final List<Group> groups;
   final Function(int index) onTap;
-
+  final void Function()? onExploreSubscribers;
   @override
   State<GroupsView> createState() => _GroupsViewState();
 }
@@ -89,10 +90,26 @@ class _GroupsViewState extends State<GroupsView> {
           const SizedBox(height: SizesResources.s1),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.groups.length,
+              itemCount: widget.groups.length + 1,
               itemBuilder: (context, index) {
+                if (index == 0) {
+                  final group = Group(
+                    id: -1,
+                    name: "مشتركين الكورس",
+                    classRoom: "",
+                    items: [],
+                    testsIds: [],
+                  );
+                  return GroupTileWidget(
+                    group: group,
+                    onTap: () {
+                      widget.onTap(index);
+                    },
+                    onExploreSubscribers: widget.onExploreSubscribers,
+                  );
+                }
                 return GroupTileWidget(
-                  group: widget.groups[index],
+                  group: widget.groups[index - 1],
                   onLongPress: () {
                     showAlert(
                       context: context,

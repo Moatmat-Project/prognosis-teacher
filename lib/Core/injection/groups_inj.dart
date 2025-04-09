@@ -6,6 +6,8 @@ import 'package:moatmat_teacher/Features/groups/domain/usecases/get_groups_uc.da
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_from_group_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_group_uc.dart';
 import '../../Features/groups/domain/usecases/add_group_uc.dart';
+import '../../Features/groups/domain/usecases/get_teacher_groups_uc.dart';
+import '../../Features/groups/domain/usecases/set_group_tests_uc.dart';
 import 'app_inj.dart';
 
 injectGroups() {
@@ -30,6 +32,11 @@ void injectUC() {
       repository: locator(),
     ),
   );
+  locator.registerFactory<GetTeacherGroupsUc>(
+    () => GetTeacherGroupsUc(
+      repository: locator(),
+    ),
+  );
   locator.registerFactory<AddGroupUc>(
     () => AddGroupUc(
       repository: locator(),
@@ -37,6 +44,11 @@ void injectUC() {
   );
   locator.registerFactory<RemoveGroupUc>(
     () => RemoveGroupUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<SetGroupTestsUC>(
+    () => SetGroupTestsUC(
       repository: locator(),
     ),
   );

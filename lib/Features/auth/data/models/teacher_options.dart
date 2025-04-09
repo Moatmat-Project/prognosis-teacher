@@ -1,5 +1,4 @@
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_options.dart';
-
 class TeacherOptionsModel extends TeacherOptions {
   TeacherOptionsModel({
     required super.allowInsert,
@@ -34,7 +33,6 @@ class TeacherOptionsModel extends TeacherOptions {
     );
   }
   toJson() {
-
     return {
       "allow_insert": allowInsert,
       "allow_update": allowUpdate,

@@ -46,7 +46,7 @@
 //               ),
 //               const SizedBox(height: SizesResources.s4),
 //               ElevatedButtonWidget(
-//                 text: 'اضافة',
+//                 text: 'إضافة',
 //                 width: 300,
 //                 onPressed: () {
 //                   if (formKey.currentState?.validate() ?? false) {

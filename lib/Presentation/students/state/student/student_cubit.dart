@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/use_cases/get_user_data.dart';
 import 'package:moatmat_teacher/Features/banks/domain/usecases/get_bank_by_id_uc.dart';
@@ -15,6 +16,7 @@ import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_test_by_id_uc.dart';
 
 import '../../../../Features/banks/domain/entities/bank.dart';
+import '../../../../Features/outer_tests/domain/entities/outer_question.dart';
 import '../../../../Features/students/domain/entities/result.dart';
 
 part 'student_state.dart';
@@ -176,11 +178,23 @@ class StudentCubit extends Cubit<StudentState> {
           for (int i = 0; i < result.answers.length; i++) {
             //
             final answer = result.answers[i];
-            final question = outerTest.forms[result.form!].questions[i];
+            //
+            final OuterQuestion question;
+            //
+            if (result.form! < outerTest.forms.length) {
+              question = outerTest.forms[result.form!].questions[i];
+            } else {
+              Fluttertoast.showToast(msg: "لم يتم العثور على النموذج التصحيحي الاصلي");
+              if (i > outerTest.forms[0].questions.length - 1) {
+                Fluttertoast.showToast(msg: "هنالك اختلاف في عدد الأسئلة");
+                question = outerTest.forms[0].questions[0];
+              } else {
+                question = outerTest.forms[0].questions[i];
+              }
+            }
             //
             if (answer != null) {
               //
-
               if (answer != (question.trueAnswer + 1)) {
                 wrongAnswers.add((question.toQuestion(), answer));
               }

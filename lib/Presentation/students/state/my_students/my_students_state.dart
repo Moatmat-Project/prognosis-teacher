@@ -17,8 +17,12 @@ final class MyStudentsError extends MyStudentsState {
 
 final class MyStudentsInitial extends MyStudentsState {
   final List<UserData> users;
+  final List<int> testsIds;
 
-  const MyStudentsInitial({required this.users});
+  const MyStudentsInitial({
+    required this.users,
+    required this.testsIds,
+  });
 
   @override
   List<Object> get props => [users];

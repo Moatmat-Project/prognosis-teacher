@@ -40,7 +40,13 @@ final class AuthDone extends AuthState {
 final class AuthError extends AuthState {
   final String? error;
 
-  const AuthError({ this.error});
+  const AuthError({this.error});
+  @override
+  List<Object> get props => [];
+}
+
+final class OfflineError extends AuthState {
+  const OfflineError();
   @override
   List<Object> get props => [];
 }
@@ -49,6 +55,7 @@ final class AuthResetPassword extends AuthState {
   @override
   List<Object> get props => [];
 }
+
 final class AuthUpdate extends AuthState {
   final UpdateInfo updateInfo;
 

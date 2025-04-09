@@ -44,7 +44,7 @@ class ExploreQuestionView extends StatelessWidget {
                 );
               }
             },
-            child: Text("تعديل ${test != null ? "الأختبار" : "البنك"}"),
+            child: Text("تعديل ${test != null ? "الاختبار" : "البنك"}"),
           ),
         ],
       ),

@@ -41,10 +41,7 @@ class NotificationDSImpl implements NotificationDS {
     //
     final client = Supabase.instance.client;
     //
-    var res = await client
-        .from("users_data")
-        .select("notifications")
-        .eq("uuid", userId);
+    var res = await client.from("users_data").select("notifications").eq("uuid", userId);
     //
     if (res.isNotEmpty) {
       //
@@ -52,9 +49,9 @@ class NotificationDSImpl implements NotificationDS {
       //
       notifications.add(NotificationDataModel.fromClass(notification).toJson());
       //
-      await client
-          .from("users_data")
-          .update({"notifications": notifications}).eq("uuid", userId);
+
+      //
+      await client.from("users_data").update({"notifications": notifications}).eq("uuid", userId);
     }
     //
     return unit;

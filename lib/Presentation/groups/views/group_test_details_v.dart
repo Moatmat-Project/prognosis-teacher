@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Core/widgets/repository_details_item.dart';
-import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
+import 'package:moatmat_teacher/Core/widgets/view/search_in_results_v.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank.dart';
 import 'package:moatmat_teacher/Features/outer_tests/domain/entities/outer_test.dart';
+import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
 import 'package:moatmat_teacher/Presentation/banks_results/views/answers_percentage_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/group_test_details_cubit.dart';
@@ -18,6 +18,7 @@ import '../../../Core/resources/shadows_r.dart';
 import '../../../Core/resources/sizes_resources.dart';
 import '../../../Core/resources/spacing_resources.dart';
 import '../../../Features/groups/domain/entities/group.dart';
+import '../../export/views/results/choose_export_v.dart';
 import '../../outer_tests_results/views/answers_percentage_v.dart';
 import '../../students/views/student_v.dart';
 import '../../tests_results/views/test_results_v.dart';
@@ -87,7 +88,48 @@ class GroupAndStudentResultDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ChooseExportV(
+                    name: state.test?.information.title ?? state.bank?.information.title ?? state.outerTest?.information.title ?? "نتيجة الامتحان",
+                    results: state.results.where((e) => e.$1 != null).toList().map<Result>((e) => e.$1!).toList(),
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.file_open_sharp),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SearchInResultsView(
+                    results: state.details.marks.map((e) {
+                      return e.$1;
+                    }).toList(),
+                    onPick: (r) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => StudentView(
+                            userName: r.userName,
+                            userId: r.userId,
+                            result: r,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.search),
+          )
+        ],
+      ),
       body: Column(
         children: [
           RepositoryDetailsItemWidget(
@@ -125,6 +167,101 @@ class GroupAndStudentResultDetailsView extends StatelessWidget {
             },
           ),
           const SizedBox(height: SizesResources.s2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 50,
+                width: SpacingResources.mainHalfWidth(context),
+                padding: const EdgeInsets.symmetric(
+                  vertical: SizesResources.s1,
+                  horizontal: SizesResources.s3,
+                ).copyWith(top: SizesResources.s2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: ShadowsResources.mainBoxShadow,
+                  color: ColorsResources.onPrimary,
+                  border: Border.all(
+                    width: 0.5,
+                    color: ColorsResources.green,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "طلاب قاموا بحل الاختبار",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Text(
+                        state.results
+                            .where((e) {
+                              return e.$1 != null;
+                            })
+                            .length
+                            .toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: ColorsResources.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: SizesResources.s2),
+              Container(
+                height: 50,
+                width: SpacingResources.mainHalfWidth(context),
+                padding: const EdgeInsets.symmetric(
+                  vertical: SizesResources.s1,
+                  horizontal: SizesResources.s3,
+                ).copyWith(top: SizesResources.s2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: ShadowsResources.mainBoxShadow,
+                  color: ColorsResources.onPrimary,
+                  border: Border.all(
+                    width: 0.5,
+                    color: ColorsResources.red,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "طلاب لم يحلو الاختبار",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Text(
+                        state.results
+                            .where((e) {
+                              return e.$1 == null;
+                            })
+                            .length
+                            .toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: ColorsResources.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: SizesResources.s2),
           Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -157,12 +294,15 @@ class GroupAndStudentResultDetailsView extends StatelessWidget {
                           state.details.marks[index].$1.period,
                         ),
                   onTap: () {
+                    if (state.results[index].$1 == null) {
+                      return;
+                    }
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => StudentView(
                           userName: state.results[index].$2.name,
-                          userId: state.details.marks[index].$1.userId,
-                          result: state.details.marks[index].$1,
+                          userId: state.results[index].$1!.userId,
+                          result: state.results[index].$1!,
                         ),
                       ),
                     );

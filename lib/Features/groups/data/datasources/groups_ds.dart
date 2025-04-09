@@ -1,16 +1,16 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
-import 'package:moatmat_teacher/Features/groups/data/models/group_m.dart';
+import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
+import 'package:moatmat_teacher/Features/auth/domain/use_cases/get_teacher_data.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/group_item.dart';
 
 abstract class GroupsDS {
   //
   Future<List<Group>> getGroups();
+  //
+  Future<List<Group>> getTeacherGroups({required String teacherEmail});
   //
   Future<Unit> addGroup({
     required Group group,
@@ -19,6 +19,12 @@ abstract class GroupsDS {
   Future<Unit> addToGroup({
     required int groupId,
     required GroupItem item,
+  });
+  //
+  Future<Unit> setGroupTests({
+    required int groupId,
+    required List<int> testsIds,
+    required bool isCourseSubscribersGroup,
   });
   //
   Future<Unit> removeFromGroup({
@@ -57,21 +63,52 @@ class GroupsDSImpl implements GroupsDS {
   }
 
   @override
+  Future<Unit> setGroupTests({
+    required int groupId,
+    required List<int> testsIds,
+    required bool isCourseSubscribersGroup,
+  }) async {
+    if (isCourseSubscribersGroup) {
+      await locator<TeacherData>().updateCourseSubscribersTests(
+        testsIds,
+      );
+      return unit; 
+    }
+    //
+    List<Group> groups = await getGroups();
+    //
+    groups = List<Group>.from(groups);
+    //
+    for (int i = 0; i < groups.length; i++) {
+      if (groups[i].id == groupId) {
+        groups[i] = groups[i].copyWith(
+          testsIds: testsIds,
+        );
+      }
+    }
+    //
+    await setGroups(groups);
+    //
+    return unit;
+  }
+
+  @override
   Future<List<Group>> getGroups() async {
     List<Group> groups = [];
     //
-    final str = locator<SharedPreferences>().getString("groups");
-    //
-    groups = strToListGroups(str);
+    groups = locator<TeacherData>().groups;
     //
     return groups;
   }
 
   Future<List<Group>> setGroups(List<Group> groups) async {
     //
-    final str = listGroupsToStr(groups);
-    //
-    await locator<SharedPreferences>().setString("groups", str);
+    await locator<TeacherData>().updateGroups(
+      List.generate(
+        groups.length,
+        (i) => groups[i].copyWith(id: i),
+      ),
+    );
     //
     return groups;
   }
@@ -82,7 +119,7 @@ class GroupsDSImpl implements GroupsDS {
     required int itemId,
   }) async {
     //
-    List<Group> groups = await getGroups();
+    List<Group> groups = locator<TeacherData>().groups;
     //
     groups = List<Group>.from(groups);
     //
@@ -97,35 +134,6 @@ class GroupsDSImpl implements GroupsDS {
     await setGroups(groups);
     //
     return unit;
-  }
-
-  List<Group> strToListGroups(String? str) {
-    //
-    if (str == null) return [];
-    //
-    List jsonList = json.decode(str);
-    //
-    List<Group> groups = jsonList.map((e) {
-      return GroupModel.fromJson(e);
-    }).toList();
-    //
-    return groups;
-  }
-
-  //
-  String listGroupsToStr(List<Group> groups) {
-    //
-    List<Map> jsonList = List.generate(
-      groups.length,
-      (i) {
-        final model = GroupModel.fromClass(groups[i].copyWith(id: i));
-        return model.toJson();
-      },
-    );
-    //
-    String str = json.encode(jsonList);
-    //
-    return str;
   }
 
   @override
@@ -154,5 +162,19 @@ class GroupsDSImpl implements GroupsDS {
     await setGroups(groups);
     //
     return unit;
+  }
+
+  @override
+  Future<List<Group>> getTeacherGroups({required String teacherEmail}) async {
+    List<Group> groups = [];
+
+    //
+    final response = await locator<GetTeacherDataUC>().call(email: teacherEmail);
+    //
+    response.fold((l) {}, (r) {
+      groups = r.groups;
+    });
+    //
+    return groups;
   }
 }

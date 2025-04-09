@@ -1,3 +1,0 @@
-/Users/omar/Dev/Projects/Flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/.cxx/Debug/6t1jm1s6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
-/Users/omar/Dev/Projects/Flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/.cxx/Debug/6t1jm1s6/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/omar/Dev/Projects/Flutter/work/moatmat-project/moatmat_teacher/android/OpenCV/.cxx/Debug/6t1jm1s6/armeabi-v7a/CMakeFiles/opencv_jni_shared.dir

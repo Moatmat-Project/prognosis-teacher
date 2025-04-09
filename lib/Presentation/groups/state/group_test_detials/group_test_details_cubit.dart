@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:moatmat_teacher/Core/errors/exceptions.dart';
+import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank.dart';
+import 'package:moatmat_teacher/Features/groups/domain/usecases/get_teacher_groups_uc.dart';
 import 'package:moatmat_teacher/Features/outer_tests/domain/entities/outer_test.dart';
 import 'package:moatmat_teacher/Features/students/data/models/user_data_m.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
@@ -25,14 +27,14 @@ class GroupTestDetailsCubit extends Cubit<GroupTestDetailsState> {
   Test? test;
   Bank? bank;
   OuterTest? outerTest;
-  init({Test? test, Bank? bank, OuterTest? outerTest}) async {
+  init({Test? test, Bank? bank, OuterTest? outerTest, TeacherData? teacherData}) async {
     emit(GroupTestDetailsLoading());
     //
     this.test = test;
     this.bank = bank;
     this.outerTest = outerTest;
     //
-    var groupRes = await locator<GetGroupsUc>().call();
+    var groupRes = await locator<GetTeacherGroupsUc>().call(teacherEmail: teacherData?.email ?? locator<TeacherData>().email);
     groupRes.fold(
       (l) {},
       (r) {

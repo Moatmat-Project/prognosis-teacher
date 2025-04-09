@@ -32,7 +32,7 @@ class _ReportsViewState extends State<ReportsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("الابلاغات"),
+        title: const Text("الإبلاغات"),
       ),
       body: BlocConsumer<ReportsCubit, ReportsState>(
         listener: (context, state) {

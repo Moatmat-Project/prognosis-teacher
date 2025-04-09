@@ -1,6 +1,7 @@
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/use_cases/update_teacher_data_uc.dart';
 
+import '../../../groups/domain/entities/group.dart';
 import 'teacher_options.dart';
 
 class TeacherData {
@@ -15,6 +16,9 @@ class TeacherData {
   //
   Map<String, dynamic> banksFolders;
   Map<String, dynamic> testsFolders;
+  //
+  List<Group> groups;
+  List<int> courseSubscribersTests;
 
   TeacherData({
     required this.name,
@@ -26,6 +30,8 @@ class TeacherData {
     required this.price,
     required this.banksFolders,
     required this.testsFolders,
+    required this.groups,
+    required this.courseSubscribersTests,
   });
   updateBanksFolders(Map<String, dynamic> banksFolders) {
     this.banksFolders = (banksFolders);
@@ -34,6 +40,16 @@ class TeacherData {
 
   updateTestsFolders(Map<String, dynamic> testsFolders) {
     this.testsFolders = (testsFolders);
+    locator<UpdateTeacherDataUC>().call(teacherData: this);
+  }
+
+  updateGroups(List<Group> groups) {
+    this.groups = (groups);
+    locator<UpdateTeacherDataUC>().call(teacherData: this);
+  }
+
+  updateCourseSubscribersTests(List<int> courseSubscribersTests) {
+    this.courseSubscribersTests = (courseSubscribersTests);
     locator<UpdateTeacherDataUC>().call(teacherData: this);
   }
 
@@ -47,6 +63,8 @@ class TeacherData {
     int? price,
     Map<String, dynamic>? banksFolders,
     Map<String, dynamic>? testsFolders,
+    List<Group>? groups,
+    List<int>? courseSubscribersTests,
   }) {
     return TeacherData(
       name: name ?? this.name,
@@ -58,6 +76,8 @@ class TeacherData {
       image: image ?? this.image,
       testsFolders: testsFolders ?? this.testsFolders,
       banksFolders: banksFolders ?? this.banksFolders,
+      groups: groups ?? this.groups,
+      courseSubscribersTests: courseSubscribersTests ?? this.courseSubscribersTests,
     );
   }
 }

@@ -10,11 +10,7 @@ import '../../../Core/resources/sizes_resources.dart';
 import '../../../Core/widgets/fields/elevated_button_widget.dart';
 
 class EditColorsView extends StatefulWidget {
-  const EditColorsView(
-      {super.key,
-      required this.text,
-      required this.colors,
-      required this.result});
+  const EditColorsView({super.key, required this.text, required this.colors, required this.result});
   final String text;
   final List<QuestionWordColor>? colors;
   final Function(List<QuestionWordColor>) result;
@@ -31,7 +27,7 @@ class _EditColorsViewState extends State<EditColorsView> {
   @override
   void initState() {
     colors = widget.colors ?? [];
-    words = widget.text.split(" ");
+    words = widget.text.split(RegExp(r'(?<=\n)|(?=\n)| '));
     selected = 0;
     //
     data = {};
@@ -88,42 +84,47 @@ class _EditColorsViewState extends State<EditColorsView> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(SpacingResources.sidePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: double.infinity),
-            RichText(
-              text: TextSpan(
-                style: FontsResources.styleMedium(
-                  size: 19,
+      body: Directionality(
+        textDirection: isArabic(widget.text) ? TextDirection.rtl : TextDirection.ltr,
+        child: Padding(
+          padding: const EdgeInsets.all(SpacingResources.sidePadding),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(width: double.infinity),
+                RichText(
+                  text: TextSpan(
+                    style: FontsResources.styleMedium(
+                      size: 19,
+                    ),
+                    children: List.generate(
+                      words.length,
+                      (i) {
+                        return TextSpan(
+                          text: " ${words[i]} ",
+                          style: TextStyle(
+                            color: data[i],
+                            fontSize: selected == i ? 24 : null,
+                            fontWeight: selected == i ? FontWeight.bold : null,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              if (selected == i) {
+                                selected = -1;
+                              } else {
+                                selected = i;
+                              }
+                              setState(() {});
+                            },
+                        );
+                      },
+                    ).toList(),
+                  ),
                 ),
-                children: List.generate(
-                  words.length,
-                  (i) {
-                    return TextSpan(
-                      text: " ${words[i]} ",
-                      style: TextStyle(
-                        color: data[i],
-                        fontSize: selected == i ? 24 : null,
-                        fontWeight: selected == i ? FontWeight.bold : null,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          if (selected == i) {
-                            selected = -1;
-                          } else {
-                            selected = i;
-                          }
-                          setState(() {});
-                        },
-                    );
-                  },
-                ).toList(),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -139,8 +140,7 @@ class _EditColorsViewState extends State<EditColorsView> {
                         child: Directionality(
                           textDirection: TextDirection.ltr,
                           child: ColorPicker(
-                            pickerColor:
-                                data[selected] ?? ColorsResources.blackText1,
+                            pickerColor: data[selected] ?? ColorsResources.blackText1,
                             enableAlpha: true,
                             hexInputBar: true,
                             labelTypes: const [
@@ -172,5 +172,9 @@ class _EditColorsViewState extends State<EditColorsView> {
         ),
       ),
     );
+  }
+
+  bool isArabic(String text) {
+    return RegExp(r'[\u0600-\u06FF]').hasMatch(text);
   }
 }

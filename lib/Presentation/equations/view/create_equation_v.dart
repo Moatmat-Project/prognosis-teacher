@@ -68,7 +68,7 @@ class _CreateEquationViewState extends State<CreateEquationView> {
       backgroundColor: ColorsResources.background,
       appBar: AppBar(
         backgroundColor: ColorsResources.background,
-        title: const Text("اضافة معادلة"),
+        title: const Text("إضافة معادلة"),
         actions: [
           TextButton(
             onPressed: equation.isEmpty

@@ -1,17 +1,8 @@
-import 'dart:io';
-
-import 'package:excel/excel.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:moatmat_teacher/Core/functions/pdf/export_results_pdf.dart';
 import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
-import 'package:moatmat_teacher/Presentation/export/views/results/export_excel_v.dart';
-import 'package:moatmat_teacher/Presentation/export/views/results/export_pdf_v.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-
+import '../../../../Core/functions/excel/export_results_excel.dart';
 import '../../../../Core/resources/sizes_resources.dart';
-import '../../../../Core/services/pdf_s.dart';
 import '../../../../Core/widgets/fields/drop_down_w.dart';
 import '../../../../Features/students/domain/entities/result.dart';
 
@@ -32,7 +23,7 @@ class _ChooseExportVState extends State<ChooseExportV> {
 
   List<String> types = [
     "جميع العلامات",
-    "اعلى علامة",
+    "أعلى علامة",
   ];
   @override
   void initState() {
@@ -44,59 +35,6 @@ class _ChooseExportVState extends State<ChooseExportV> {
       }
     });
     super.initState();
-  }
-
-  onExportExcel() async {
-    // Create an Excel document
-    var excel = Excel.createExcel();
-
-    // Access the sheet named 'resultsSheet'
-    Sheet resultsSheet = excel['Sheet1'];
-    // Populate the sheet with data
-    resultsSheet.appendRow([
-      // 1 - id
-      ( TextCellValue("رقم الطالب")),
-      // 2 - name
-      ( TextCellValue("اسم الطالب")),
-      // 3 - mark
-      ( TextCellValue("العلامة")),
-      // 4 - test id
-      ( TextCellValue("رقم البنك")),
-      // 5 - bank id
-      ( TextCellValue("رقم الاختبار")),
-      // 6 - wrong answers
-      ( TextCellValue("الاجابات الخاطئة")),
-      // 7 - date
-      ( TextCellValue("التاديخ")),
-      // 8 - time
-      ( TextCellValue("الوقت")),
-      // 9 - period
-      ( TextCellValue("المدة")),
-      // 10 - t/b name
-      ( TextCellValue("الاسم")),
-      //
-    ]);
-    // Example headers
-    for (var result in results) {
-      resultsSheet.appendRow(result.toExcelRow());
-    }
-    //
-    // Save the file to the local storage
-    var directory = await getApplicationDocumentsDirectory();
-    String filePath = '${directory.path}/results_of_${widget.name.replaceAll(" ", "_")}.xlsx';
-    var fileBytes = excel.save();
-    if (fileBytes != null) {
-      File(filePath)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes);
-    }
-    if (kDebugMode) {
-      OpenFile.open(filePath);
-    } else {
-      await Share.shareXFiles(
-        [XFile(filePath)],
-      );
-    }
   }
 
   @override
@@ -112,7 +50,8 @@ class _ChooseExportVState extends State<ChooseExportV> {
             onTap: () async {
               try {
                 onFilter();
-                onExportExcel();
+                exportResultsExcel(name: widget.name, results: widget.results);
+                ();
               } on Exception catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('error : $e')),
@@ -125,7 +64,7 @@ class _ChooseExportVState extends State<ChooseExportV> {
             onTap: () async {
               try {
                 onFilter();
-                await PdfService().exportResults(widget.results, widget.name);
+                await exportResultsPdf(widget.results, widget.name);
               } on Exception catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('error : $e')),
@@ -151,12 +90,9 @@ class _ChooseExportVState extends State<ChooseExportV> {
   }
 
   onFilter() {
-    print(1);
-
     ///
     if (!filter) {
       results = widget.results;
-      print(2);
       return;
     }
 

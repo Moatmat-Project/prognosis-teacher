@@ -55,33 +55,28 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                 PageSlide(
                   color: textColors[2],
                   content: Image.asset("assets/images/boarding/3.png"),
-                  text:
-                      "حدد قواعدك الخاصة لكل اختبار \n خصص معايير متنوعة متدرجة الصعوبة لتزيد خبرة ومهارة طلابك",
+                  text: "حدد قواعدك الخاصة لكل اختبار \n خصص معايير متنوعة متدرجة الصعوبة لتزيد خبرة ومهارة طلابك",
                 ),
                 PageSlide(
                   color: textColors[3],
                   content: Image.asset("assets/images/boarding/4.png"),
-                  text:
-                      "إحصل على نتيجة الأختبار من الطالب بمجرد حله واستعرض النتائج بمختلف لإحصائيات والطرق",
+                  text: "إحصل على نتيجة الاختبار من الطالب بمجرد حله واستعرض النتائج بمختلف لإحصائيات والطرق",
                 ),
                 PageSlide(
                   color: textColors[0],
                   content: Image.asset("assets/images/boarding/5.png"),
-                  text:
-                      "صنف طلابك ضمن مجموعات وارسل لهم ما تريد من اختبارات او تصفح نتائجهم سويةً",
+                  text: "صنف طلابك ضمن مجموعات وارسل لهم ما تريد من اختبارات او تصفح نتائجهم سويةً",
                 ),
                 PageSlide(
                   color: textColors[1],
                   content: Image.asset("assets/images/boarding/6.png"),
-                  text:
-                      "امتلك أرشيفك الخاص لكل اسئلتك ، تحكم بكل شيئ واحتفظ بهم ك ملف ان اردت",
+                  text: "امتلك أرشيفك الخاص لكل اسئلتك ، تحكم بكل شيئ واحتفظ بهم ك ملف ان اردت",
                 ),
                 PageSlide(
                   color: textColors[2],
                   customPadding: const EdgeInsets.all(75),
                   content: Image.asset("assets/images/boarding/7.png"),
-                  text:
-                      "تواصل مباشرةً مع فريق دعم جاهز و مدرب لمساعدتك بأسرع وأفضل شكل",
+                  text: "تواصل مباشرةً مع فريق دعم جاهز و مدرب لمساعدتك بأسرع وأفضل شكل",
                 ),
               ],
             ),

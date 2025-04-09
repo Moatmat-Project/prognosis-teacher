@@ -70,9 +70,7 @@ class _CreateAnswerViewState extends State<CreateAnswerView> {
                     }
                   }
                 : null,
-            child: widget.answer != null
-                ? const Text("تحديث")
-                : const Text("اضافة"),
+            child: widget.answer != null ? const Text("تحديث") : const Text("إضافة"),
           ),
         ],
       ),

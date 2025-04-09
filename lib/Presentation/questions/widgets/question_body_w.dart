@@ -118,10 +118,12 @@ class QuestionTextBuilderWidget extends StatefulWidget {
     this.wrapAlignment,
     this.width,
     this.fontSize,
+    this.mathFontSize,
     this.fontWeight,
     this.disableNewLines = false,
   });
   final double? fontSize;
+  final double? mathFontSize;
   final FontWeight? fontWeight;
   final double? width;
   final String text;
@@ -182,58 +184,61 @@ class _QuestionTextBuilderWidgetState extends State<QuestionTextBuilderWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.width ?? SpacingResources.mainWidth(context) - SpacingResources.sidePadding,
-      child: Wrap(
-        alignment: widget.wrapAlignment ?? WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: List.generate(words.length, (index) {
-          //
-          if (containsEscapeSequence(words[index])) {
+      child: Directionality(
+        textDirection: isArabic(widget.text) ? TextDirection.rtl : TextDirection.ltr,
+        child: Wrap(
+          alignment: widget.wrapAlignment ?? WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: List.generate(words.length, (index) {
             //
-            String equation = getEquationByFromText(words[index]);
-            //
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: constraints.maxWidth,
-                    minHeight: (widget.fontSize ?? 15) * 2,
-                  ),
-                  child: FittedBox(
-                    child: MathTexWidget(
-                      equation: equation,
-                      color: colors[index],
-                      fontWeight: widget.fontWeight,
-                      fontSize: widget.fontSize ?? 14,
-                    ),
-                  ),
-                );
-              },
-            );
-            //
-          } else {
-            //
-            if (words[index] == '\n' && !widget.disableNewLines) {
+            if (containsEscapeSequence(words[index])) {
               //
-              return const NewLineWidget();
+              String equation = getEquationByFromText(words[index]);
+              //
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: constraints.maxWidth,
+                      minHeight: (widget.mathFontSize ?? 15) * 2.7,
+                    ),
+                    child: FittedBox(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: MathTexWidget(
+                          equation: equation,
+                          color: colors[index],
+                          fontWeight: widget.fontWeight,
+                          fontSize: widget.mathFontSize ?? 14,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
               //
             } else {
               //
-              return SizedBox(
-                height: (widget.fontSize ?? 15) * 2,
-                child: Directionality(
-                  textDirection: isArabic(words[index]) ? TextDirection.rtl : TextDirection.ltr,
+              if (words[index] == '\n' && !widget.disableNewLines) {
+                //
+                return const NewLineWidget();
+                //
+              } else {
+                //
+                return SizedBox(
+                  height: (widget.fontSize ?? 15) * 2,
                   child: TextWidget(
                     text: words[index],
                     color: colors[index],
                     fontSize: widget.fontSize ?? 14,
                     fontWeight: widget.fontWeight,
                   ),
-                ),
-              );
-              //
+                );
+                //
+              }
             }
-          }
-        }),
+          }),
+        ),
       ),
     );
   }

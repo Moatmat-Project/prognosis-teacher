@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Presentation/auth/view/on_boarding_v.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' as sp;
-
-import '../../home/view/home_v.dart';
 import '../../home/view/pages_holder_v.dart';
 import '../state/auth_c/auth_cubit_cubit.dart';
 import 'error_v.dart';
+import 'offline_v.dart';
 import 'sign_in_v.dart';
 import 'sign_up_v.dart';
 import 'start_auth.dart';
@@ -41,9 +38,14 @@ class _AuthViewsManagerState extends State<AuthViewsManager> {
             return const SignUpView();
           } else if (state is AuthDone) {
             return const PagesHolderView();
-          } else if (state is AuthError) {
+          }
+           else if (state is AuthError) {
             return ErrorView(error: state.error);
-          } else if (state is AuthUpdate) {
+          }
+           else if (state is OfflineError) {
+            return OfflineView();
+          }
+           else if (state is AuthUpdate) {
             return UpdateView(updateInfo: state.updateInfo);
           } else if (state is AuthLoading) {
             return const Center(

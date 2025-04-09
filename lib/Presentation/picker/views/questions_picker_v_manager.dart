@@ -153,7 +153,7 @@ class _QuestionsPickerViewsManagerState extends State<QuestionsPickerViewsManage
                                 );
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text("تمت اضافة السؤال"),
+                                content: Text("تمت إضافة السؤال"),
                               ),
                             );
                           },

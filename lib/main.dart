@@ -1,5 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:moatmat_teacher/Core/services/folders_s.dart';
 import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/add_bank/add_bank_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/my_banks/my_banks_cubit.dart';
@@ -7,9 +7,11 @@ import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/gro
 import 'package:moatmat_teacher/Presentation/questions/state/cubit/create_question_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/add_outer_test/add_outer_test_cubit.dart';
+import 'package:moatmat_teacher/firebase_options.dart';
 import 'Core/injection/app_inj.dart';
 import 'Core/services/supabase_s.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'Presentation/attendance/state/explore_attendance/explore_attendance_bloc.dart';
 import 'Presentation/banks/state/bank_information/bank_information_cubit.dart';
 import 'Presentation/banks_results/state/cubit/bank_results_cubit.dart';
 import 'Presentation/folders/state/add_to_folder/add_to_folder_cubit.dart';
@@ -24,6 +26,7 @@ import 'Presentation/reports/state/reports/reports_cubit.dart';
 import 'Presentation/scanner/state/cubit/explore_outer_tests_cubit.dart';
 import 'Presentation/scanner/state/scanner_views_manager_cubit.dart';
 import 'Presentation/students/state/cubit/explore_class_students_cubit.dart';
+import 'Presentation/students/state/student_reports/student_reports_cubit.dart';
 import 'Presentation/tests/state/outer_test_information/outer_test_information_cubit.dart';
 import 'Presentation/tests_results/state/cubit/test_results_cubit.dart';
 import 'Presentation/students/state/student/student_cubit.dart';
@@ -40,12 +43,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // int supabase
   await SupabaseServices.init();
+  //
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  //
   // init get it
   await initGetIt();
-  //
-  FoldersService.testing();
-  //
-
   //
   runApp(
     MultiBlocProvider(
@@ -77,8 +81,11 @@ void main() async {
         BlocProvider(create: (context) => AddOuterTestCubit()),
         BlocProvider(create: (context) => OuterTestResultsCubit()),
         BlocProvider(create: (context) => GroupTestDetailsCubit()),
+        BlocProvider(create: (context) => StudentReportsCubit()),
+        BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
       ],
       child: const AppRoot(),
     ),
   );
 }
+// improve injection code

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
@@ -17,11 +20,18 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthLoading());
   init() async {
     //
+    emit(AuthLoading());
+
+    //
     final res = await locator<CheckUpdateStateUC>().call();
     //
     res.fold(
       (l) {
-        emit(const AuthError());
+        if (l is SocketException && Supabase.instance.client.auth.currentUser != null) {
+          emit(const OfflineError());
+        } else {
+          emit(const AuthError());
+        }
       },
       (r) {
         //
@@ -65,7 +75,6 @@ class AuthCubit extends Cubit<AuthState> {
     locator<GetTeacherDataUC>().call().then((value) {
       value.fold(
         (l) {
-          print("l is $l");
           emit(const AuthError());
         },
         (r) async {

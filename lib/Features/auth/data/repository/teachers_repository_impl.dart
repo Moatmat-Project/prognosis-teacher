@@ -118,4 +118,14 @@ class TeachersRepositoryImpl implements TeacherRepository {
       return left(const AnonFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<UserData>>> getUsersDataByIds({required List<String> ids, bool isUuid = true}) async {
+    try {
+      var res = await dataSource.getUsersDataByIds(ids: ids, isUuid: isUuid);
+      return right(res);
+    } on Exception catch (e) {
+      return left(const AnonFailure());
+    }
+  }
 }

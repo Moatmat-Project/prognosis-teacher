@@ -102,7 +102,7 @@ class ResultTileWidget extends StatelessWidget {
                     ),
                   ),
                   //
-                  if (onExploreResult != null)
+                  if (onExploreResult != null && (result.bankId != null || result.testId != null || result.outerTestId != null))
                     TextButton(
                       onPressed: onExploreResult,
                       child: const Text(

@@ -82,7 +82,7 @@ class _AttachFileViewState extends State<AttachFileView> {
           const SizedBox(height: SizesResources.s4),
           //
           ElevatedButtonWidget(
-            text: "اضافة ملفات",
+            text: "إضافة ملفات",
             onPressed: () async {
               //
               await requestPermissions();

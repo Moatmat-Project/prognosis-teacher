@@ -10,6 +10,7 @@ class GroupModel extends Group {
     required super.name,
     required super.items,
     required super.classRoom,
+    required super.testsIds,
   });
 
   factory GroupModel.fromJson(Map json) {
@@ -18,6 +19,7 @@ class GroupModel extends Group {
       id: json["id"],
       name: json["name"],
       classRoom: json["classRoom"] ?? classesLst.first,
+      testsIds: json["tests_ids"]?.cast<int>() ?? <int>[],
       items: List.generate(itemsJson.length, (index) {
         return GroupItemModel.fromJson(itemsJson[index]);
       }),
@@ -29,6 +31,7 @@ class GroupModel extends Group {
       name: group.name,
       classRoom: group.classRoom,
       items: group.items,
+      testsIds: group.testsIds,
     );
   }
 
@@ -38,9 +41,9 @@ class GroupModel extends Group {
       "id": id,
       "name": name,
       "classRoom": classRoom,
+      "tests_ids": testsIds,
       "items": List.generate(list.length, (index) {
-        return GroupItemModel.fromClass(list[index].copyWith(id: index))
-            .toJson();
+        return GroupItemModel.fromClass(list[index].copyWith(id: index)).toJson();
       }),
     };
   }

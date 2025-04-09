@@ -9,11 +9,13 @@ import 'package:moatmat_teacher/Presentation/groups/views/add_to_group_v.dart';
 import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_v.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/student/student_cubit.dart';
+import 'package:moatmat_teacher/Presentation/students/views/student_reports_view.dart';
 import 'package:moatmat_teacher/Presentation/students/views/student_result_details_v.dart';
 import '../../../Core/functions/dialogs/add_to_class_d.dart';
 import '../../../Core/functions/show_alert.dart';
 import '../../../Core/resources/sizes_resources.dart';
 import '../widgets/result_tile_w.dart';
+import 'student_attendance_details_v.dart';
 
 class StudentView extends StatefulWidget {
   const StudentView({
@@ -86,17 +88,14 @@ class _StudentViewState extends State<StudentView> {
                       showAlert(
                         context: context,
                         title: "تاكيد الحذف",
-                        body:
-                            "هل انت متاكد من انك تريد حذف جميع نتائج الطالب التي تخص اختباراتك؟",
+                        body: "هل انت متاكد من انك تريد حذف جميع نتائج الطالب التي تخص اختباراتك؟",
                         onAgree: () async {
                           //
                           List<int> results = [];
                           //
                           results = state.results.map((e) => e.id).toList();
                           //
-                          await context
-                              .read<StudentCubit>()
-                              .deleteResult(results);
+                          await context.read<StudentCubit>().deleteResult(results);
                           //
                           context.read<MyStudentsCubit>().init();
                           //
@@ -130,10 +129,32 @@ class _StudentViewState extends State<StudentView> {
                     ),
                     const SizedBox(height: SizesResources.s2),
                     TouchableTileWidget(
+                      title: "تقارير الطالب",
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => StudentReportsView(
+                              results: state.results,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    TouchableTileWidget(
+                      title: "حضور الطالب",
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => StudentAttendanceDetailsView(
+                              userData: state.userData,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    TouchableTileWidget(
                       title: "تصنيف صف الطالب",
-                      subTitle2: ClassificationService()
-                          .getById(state.userData.uuid)
-                          ?.classs,
+                      subTitle2: ClassificationService().getById(state.userData.uuid)?.classs,
                       onTap: () {
                         showAddToClass(
                           context: context,
@@ -145,16 +166,17 @@ class _StudentViewState extends State<StudentView> {
                       },
                     ),
                     TouchableTileWidget(
-                        title: "الاضافة الى مجموعة",
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => AddToGroupView(
-                                userData: state.userData,
-                              ),
+                      title: "الإضافة إلى مجموعة",
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AddToGroupView(
+                              userData: state.userData,
                             ),
-                          );
-                        }),
+                          ),
+                        );
+                      },
+                    ),
                     const SizedBox(height: SizesResources.s2),
                     Expanded(
                       child: ListView.builder(
@@ -165,9 +187,7 @@ class _StudentViewState extends State<StudentView> {
                             result: state.results[index],
                             //
                             onExploreResult: () {
-                              context
-                                  .read<StudentCubit>()
-                                  .showResultDetails(state.results[index]);
+                              context.read<StudentCubit>().showResultDetails(state.results[index]);
                             },
                           );
                         },
@@ -181,7 +201,7 @@ class _StudentViewState extends State<StudentView> {
             return StudentResultDetailsView(
               test: state.test,
               bank: state.bank,
-              outerTest:state.outerTest,
+              outerTest: state.outerTest,
               testAverage: state.testAverage,
               wrongAnswers: state.wrongAnswers,
               result: state.result,

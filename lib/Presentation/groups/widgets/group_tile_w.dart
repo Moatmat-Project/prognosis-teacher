@@ -9,10 +9,13 @@ class GroupTileWidget extends StatelessWidget {
   const GroupTileWidget({
     super.key,
     required this.group,
-    this.onTap, this.onLongPress,
+    this.onTap,
+    this.onExploreSubscribers,
+    this.onLongPress,
   });
   final Group group;
   final void Function()? onTap;
+  final void Function()? onExploreSubscribers;
   final void Function()? onLongPress;
   @override
   Widget build(BuildContext context) {
@@ -34,8 +37,8 @@ class GroupTileWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
-              onTap: onTap,
-              onLongPress: onLongPress,
+              onTap: group.id != -1 ? onTap : onExploreSubscribers,
+              onLongPress: group.id != -1 ? onLongPress : null,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: SizesResources.s3,
@@ -44,9 +47,30 @@ class GroupTileWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     //
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3),
-                      child: Text(group.name),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            group.name,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        //
+                        if (group.id != -1)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 3),
+                            child: Text(
+                              "عدد الطلاب : ${group.items.length}",
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     //
                     const Spacer(),

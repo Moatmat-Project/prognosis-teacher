@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/groups/students_groups_cubit.dart';
+import 'package:moatmat_teacher/Presentation/groups/views/explore_course_subscribers_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/group_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/groups_v.dart';
-import 'package:moatmat_teacher/Presentation/groups/widgets/group_tile_w.dart';
 
 class GroupsViewsManager extends StatefulWidget {
   const GroupsViewsManager({super.key});
@@ -28,11 +28,17 @@ class _GroupsViewsManagerState extends State<GroupsViewsManager> {
           if (state is StudentsGroupsInitial) {
             return GroupsView(
               groups: state.groups,
-         
               onTap: (index) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => GroupView(group: state.groups[index]),
+                    builder: (context) => GroupView(group: state.groups[index - 1]),
+                  ),
+                );
+              },
+              onExploreSubscribers: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExploreCourseSubscribersView(),
                   ),
                 );
               },

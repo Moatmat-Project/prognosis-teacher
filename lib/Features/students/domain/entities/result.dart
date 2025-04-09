@@ -53,6 +53,45 @@ class Result {
     this.testAverage,
     this.teacherEmail,
   });
+
+  Result copyWith({
+    int? id,
+    String? userId,
+    String? userNumber,
+    double? mark,
+    int? testId,
+    int? bankId,
+    int? outerTestId,
+    int? form,
+    List<int?>? answers,
+    List<int?>? wrongAnswers,
+    DateTime? date,
+    int? period,
+    String? testName,
+    String? userName,
+    double? testAverage,
+    String? teacherEmail,
+  }) {
+    return Result(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userNumber: userNumber ?? this.userNumber,
+      mark: mark ?? this.mark,
+      testId: testId ?? this.testId,
+      bankId: bankId ?? this.bankId,
+      outerTestId: outerTestId ?? this.outerTestId,
+      form: form ?? this.form,
+      answers: answers ?? this.answers,
+      wrongAnswers: wrongAnswers ?? this.wrongAnswers,
+      date: date ?? this.date,
+      period: period ?? this.period,
+      testName: testName ?? this.testName,
+      userName: userName ?? this.userName,
+      testAverage: testAverage ?? this.testAverage,
+      teacherEmail: teacherEmail ?? this.teacherEmail,
+    );
+  }
+
   //
   List<CellValue> toExcelRow() {
     List<CellValue> cells = [];
