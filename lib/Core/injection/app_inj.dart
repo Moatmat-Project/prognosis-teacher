@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:moatmat_teacher/Core/injection/banks_inj.dart';
 import 'package:moatmat_teacher/Core/injection/buckets_inj.dart';
+import 'package:moatmat_teacher/Core/injection/cash_inj.dart';
 import 'package:moatmat_teacher/Core/injection/controllers_inj.dart';
 import 'package:moatmat_teacher/Core/injection/groups_inj.dart';
 import 'package:moatmat_teacher/Core/injection/outer_tests_inj.dart';
@@ -47,6 +48,8 @@ initGetIt() async {
   injectScanner();
   //
   injectUpdate();
+  //
+  injectCache();
   //
   injectAttendance();
   //

@@ -49,9 +49,8 @@ class _ChooseExportVState extends State<ChooseExportV> {
             title: "تصدير بصيغة ملف اكسل",
             onTap: () async {
               try {
-                onFilter();
-                exportResultsExcel(name: widget.name, results: widget.results);
-                ();
+                await onFilter();
+                exportResultsExcel(name: widget.name, results: results);
               } on Exception catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('error : $e')),
@@ -63,8 +62,8 @@ class _ChooseExportVState extends State<ChooseExportV> {
             title: "تصدير بصيغة ملف pdf",
             onTap: () async {
               try {
-                onFilter();
-                await exportResultsPdf(widget.results, widget.name);
+                await onFilter();
+                await exportResultsPdf(results, widget.name);
               } on Exception catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('error : $e')),

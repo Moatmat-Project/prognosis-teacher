@@ -48,9 +48,9 @@ class TeacherData {
     locator<UpdateTeacherDataUC>().call(teacherData: this);
   }
 
-  updateCourseSubscribersTests(List<int> courseSubscribersTests) {
+ Future updateCourseSubscribersTests(List<int> courseSubscribersTests) async{
     this.courseSubscribersTests = (courseSubscribersTests);
-    locator<UpdateTeacherDataUC>().call(teacherData: this);
+    await locator<UpdateTeacherDataUC>().call(teacherData: this);
   }
 
   TeacherData copyWith({

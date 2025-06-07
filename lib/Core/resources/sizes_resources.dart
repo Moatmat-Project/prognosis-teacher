@@ -1,6 +1,7 @@
 class SizesResources {
   static const double sizeUnit = 4.0;
   static const double s1 = sizeUnit * 1;
+  static const double s1_5 = sizeUnit * 1.5;
   static const double s2 = sizeUnit * 2;
   static const double s3 = sizeUnit * 3;
   static const double s4 = sizeUnit * 4;

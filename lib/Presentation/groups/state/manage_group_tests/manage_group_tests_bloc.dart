@@ -63,18 +63,20 @@ class ManageGroupTestsBloc extends Bloc<ManageGroupTestsEvent, ManageGroupTestsS
 
   //
   onManageGroupTestsLoadEvent(ManageGroupTestsLoadEvent event, Emitter<ManageGroupTestsState> emit) async {
-    emit(ManageGroupTestsLoading());
+    emit(ManageGroupTestsLoading(selectedTests: state.selectedTests));
 
     isCourseSubscribersGroup = event.isCourseSubscribersGroup;
     if (isCourseSubscribersGroup) {
+      final selectedTests = await getTests(locator<TeacherData>().courseSubscribersTests);
       emit(ManageGroupTestsInitial(
-        selectedTests: await getTests(locator<TeacherData>().courseSubscribersTests),
+        selectedTests: selectedTests,
         canSaving: state.canSaving,
       ));
     } else {
       group = locator<TeacherData>().groups.firstWhere((element) => element.id == event.group.id);
+      final selectedTests = await getTests(group!.testsIds);
       emit(ManageGroupTestsInitial(
-        selectedTests: await getTests(group!.testsIds),
+        selectedTests: selectedTests,
         canSaving: state.canSaving,
       ));
     }
@@ -86,6 +88,7 @@ class ManageGroupTestsBloc extends Bloc<ManageGroupTestsEvent, ManageGroupTestsS
     emit(ManageGroupTestsPickTests(
       isLoading: true,
       canSaving: state.canSaving,
+      selectedTests: state.selectedTests,
     ));
     //
     foldersSystemService = FoldersSystemService(
@@ -106,12 +109,13 @@ class ManageGroupTestsBloc extends Bloc<ManageGroupTestsEvent, ManageGroupTestsS
 
   //
   onManageGroupTestsAddTestEvent(ManageGroupTestsAddTestEvent event, Emitter<ManageGroupTestsState> emit) async {
+    final selectedTests = List<Test>.from(state.selectedTests)..add(event.test);
     emit(
       ManageGroupTestsPickTests(
         canPop: foldersSystemService.canPop,
         folders: foldersSystemService.getSubdirectories(),
         tests: (state as ManageGroupTestsPickTests).tests,
-        selectedTests: List.from(state.selectedTests)..add(event.test),
+        selectedTests: selectedTests,
         isLoading: false,
         canSaving: true,
       ),

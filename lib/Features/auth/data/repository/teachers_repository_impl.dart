@@ -13,13 +13,12 @@ class TeachersRepositoryImpl implements TeacherRepository {
 
   TeachersRepositoryImpl({required this.dataSource});
   @override
-  Future<Either<Failure, TeacherData>> getTeacherData({String? email}) async {
+  Future<Either<Exception, TeacherData>> getTeacherData({String? email}) async {
     try {
       var res = await dataSource.getTeacherData(email: email);
       return right(res);
     } on Exception catch (e) {
-      print(e);
-      return left(const AnonFailure());
+      return left(e);
     }
   }
 
@@ -27,12 +26,14 @@ class TeachersRepositoryImpl implements TeacherRepository {
   Future<Either<Failure, TeacherData>> signIn({
     required String email,
     required String password,
+    required bool saveCredentials,
   }) async {
     //
     try {
       var res = await dataSource.signIn(
         email: email,
         password: password,
+        saveCredentials: saveCredentials,
       );
       return right(res);
     } on AuthException catch (e) {
@@ -53,12 +54,14 @@ class TeachersRepositoryImpl implements TeacherRepository {
   Future<Either<Failure, TeacherData>> signUp({
     required TeacherData teacherData,
     required String password,
+    required bool saveCredentials,
   }) async {
     //
     try {
       var res = await dataSource.signUp(
         teacherData: teacherData,
         password: password,
+        saveCredentials: saveCredentials,
       );
       //
       return right(res);

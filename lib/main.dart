@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.dart';
+import 'package:moatmat_teacher/Presentation/auth/state/switch_accounts/switch_accounts_bloc.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/add_bank/add_bank_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/my_banks/my_banks_cubit.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/group_test_details_cubit.dart';
@@ -9,6 +10,7 @@ import 'package:moatmat_teacher/Presentation/students/state/my_students/my_stude
 import 'package:moatmat_teacher/Presentation/tests/state/add_outer_test/add_outer_test_cubit.dart';
 import 'package:moatmat_teacher/firebase_options.dart';
 import 'Core/injection/app_inj.dart';
+import 'Core/services/cache/cache_manager.dart';
 import 'Core/services/supabase_s.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Presentation/attendance/state/explore_attendance/explore_attendance_bloc.dart';
@@ -35,6 +37,7 @@ import 'Presentation/tests/state/my_tests/my_tests_cubit.dart';
 import 'Presentation/tests/state/test_information/test_information_cubit.dart';
 import 'app_root.dart';
 
+//
 bool testing = false;
 //
 
@@ -50,6 +53,9 @@ void main() async {
   //
   // init get it
   await initGetIt();
+
+  /// init app cache
+  await locator<CacheManager>().init();
   //
   runApp(
     MultiBlocProvider(
@@ -82,6 +88,7 @@ void main() async {
         BlocProvider(create: (context) => OuterTestResultsCubit()),
         BlocProvider(create: (context) => GroupTestDetailsCubit()),
         BlocProvider(create: (context) => StudentReportsCubit()),
+        BlocProvider(create: (context) => SwitchAccountsBloc()),
         BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
       ],
       child: const AppRoot(),

@@ -8,6 +8,7 @@ import '../../../Core/resources/sizes_resources.dart';
 import '../../../Core/resources/texts_resources.dart';
 import '../../../Core/validators/email_v.dart';
 import '../../../Core/validators/not_empty_v.dart';
+import '../../../Core/widgets/fields/checking_w.dart';
 import '../../../Core/widgets/fields/elevated_button_widget.dart';
 import '../../../Core/widgets/fields/text_input_field.dart';
 import '../../../Features/auth/domain/use_cases/sign_up_uc.dart';
@@ -36,6 +37,7 @@ class _SignUpViewState extends State<SignUpView> {
   late String schoolName;
   late String classroom;
   late String governorate;
+  bool saveCredentials = true;
   //
   bool loading = false;
   //
@@ -64,6 +66,7 @@ class _SignUpViewState extends State<SignUpView> {
     var query = locator<SignUpUC>().call(
       teacherData: teacherData,
       password: password,
+      saveCredentials: saveCredentials,
     );
     await query.then((value) {
       value.fold(
@@ -138,6 +141,17 @@ class _SignUpViewState extends State<SignUpView> {
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (p0) {
                   password = p0!;
+                },
+              ),
+              const SizedBox(height: SizesResources.s1),
+              CheckingWidget(
+                title: "حفظ بيانات الدخول",
+                value: saveCredentials,
+                bgColor: Colors.transparent,
+                onChanged: (value) {
+                  setState(() {
+                    saveCredentials = value!;
+                  });
                 },
               ),
               const SizedBox(height: SizesResources.s4),

@@ -11,10 +11,12 @@ class SignUpUC {
   Future<Either<Failure, TeacherData>> call({
     required TeacherData teacherData,
     required String password,
+    required bool saveCredentials,
   }) async {
     return await repository.signUp(
       teacherData: teacherData,
       password: password,
+      saveCredentials: saveCredentials,
     );
   }
 }

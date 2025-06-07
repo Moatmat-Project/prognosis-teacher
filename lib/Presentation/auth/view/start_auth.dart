@@ -11,8 +11,8 @@ import '../../../Core/widgets/fields/elevated_button_widget.dart';
 import '../state/auth_c/auth_cubit_cubit.dart';
 
 class StartAuthView extends StatefulWidget {
-  const StartAuthView({super.key});
-
+  const StartAuthView({super.key, required this.state});
+  final AuthStartAuth state;
   @override
   State<StartAuthView> createState() => _StartAuthViewState();
 }
@@ -50,7 +50,6 @@ class _StartAuthViewState extends State<StartAuthView> {
               onPressed: startSignUp,
               isWhite: true,
             ),
-            const SizedBox(height: SizesResources.s2),
             const Text(
               "قم ب${TextsResources.signIn} او ${TextsResources.signUp} من اجل ${AppBarTitles.startAuth}",
               textAlign: TextAlign.center,
@@ -73,4 +72,6 @@ class _StartAuthViewState extends State<StartAuthView> {
   void startSignUp() {
     context.read<AuthCubit>().startSignUp();
   }
+
+
 }

@@ -15,6 +15,7 @@ import '../../Features/groups/domain/usecases/get_teacher_groups_uc.dart';
 import '../../Features/students/domain/usecases/get_my_students_statistics_uc.dart';
 import '../../Presentation/attendance/state/explore_group_attendance/explore_group_attendance_bloc.dart';
 import '../../Presentation/attendance/state/set_up_attendance/set_up_attendance_bloc.dart';
+import '../../Presentation/auth/state/switch_accounts/switch_accounts_bloc.dart';
 import '../../Presentation/groups/state/manage_group_tests/manage_group_tests_bloc.dart';
 import '../../Presentation/statistics/state/bloc/export_students_statistics_bloc.dart';
 
@@ -39,6 +40,9 @@ injectControllers() {
       locator<GetTestsByIdsUC>(),
       locator<SetGroupTestsUC>(),
     ),
+  );
+  locator.registerFactory(
+    () => SwitchAccountsBloc(),
   );
   locator.registerSingleton(
     ExploreStudentAttendanceBloc(

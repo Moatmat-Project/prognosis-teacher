@@ -4,6 +4,7 @@ class TextsResources {
   //
   static const signIn = "تسجيل الدخول";
   static const signUp = "انشاء حساب";
+  static const fastSigning = "دخول سريع";
   static const update = "تحديث البيانات";
   static const save = "حفظ";
   //
@@ -22,6 +23,7 @@ class AppBarTitles {
   static const startAuth = "البدء باستخدام التطبيق";
   static const signIn = "تسجيل الدخول";
   static const signUp = "انشاء حساب";
+  static const changeAccount = "تبديل الحساب";
   static const materialPicker = "اختر المادة للمتابعة";
   static const settings = "الاعدادات";
   static const changePassword = "تغيير كلمة السر";

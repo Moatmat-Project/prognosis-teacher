@@ -28,8 +28,6 @@ class AddToFolderCubit extends Cubit<AddToFolderState> {
   ///
   late FoldersSystemService foldersSystemService;
 
-
-
   ///
   init({required int item, required String teacher, required bool isTest, TeacherData? customTeacherData}) async {
     ///
@@ -55,7 +53,7 @@ class AddToFolderCubit extends Cubit<AddToFolderState> {
       ///
       teacherDataResponse.fold(
         (l) {
-          emit(state.copyWith(error: l));
+          emit(state.copyWith(error: AnonFailure()));
         },
         (r) async {
           teacherDataCompleter.complete(r);
@@ -102,6 +100,7 @@ class AddToFolderCubit extends Cubit<AddToFolderState> {
   List<String> listAllDirectories() {
     return foldersSystemService.listAllDirectories();
   }
+
   ///
   addToDirectory(int id) async {
     //

@@ -11,7 +11,9 @@ class SignInUC {
   Future<Either<Failure, TeacherData>> call({
     required String email,
     required String password,
+    required bool saveCredentials,
   }) async {
-    return await repository.signIn(email: email, password: password);
+    return await repository.signIn(email: email, password: password
+        , saveCredentials: saveCredentials);
   }
 }

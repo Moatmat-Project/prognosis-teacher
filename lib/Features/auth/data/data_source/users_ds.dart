@@ -1,10 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/students/data/models/user_data_m.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../Core/errors/exceptions.dart';
+import '../../../../Core/services/cache/cache_constant.dart';
+import '../../../../Core/services/cache/cache_manager.dart';
 import '../../domain/entites/teacher_data.dart';
+import '../models/cached_credentials_model.dart';
 import '../models/teacher_data_m.dart';
 
 abstract class TeachersDataSource {
@@ -12,11 +16,13 @@ abstract class TeachersDataSource {
   Future<TeacherData> signIn({
     required String email,
     required String password,
+    required bool saveCredentials,
   });
   // signUp
   Future<TeacherData> signUp({
     required TeacherData teacherData,
     required String password,
+    required bool saveCredentials,
   });
   //
   // update User Data
@@ -39,9 +45,10 @@ abstract class TeachersDataSource {
 }
 
 class TeachersDataSourceImpl implements TeachersDataSource {
+  final CacheManager cacheManager;
   final SupabaseClient client;
 
-  TeachersDataSourceImpl({required this.client});
+  TeachersDataSourceImpl({required this.client, required this.cacheManager});
   @override
   Future<TeacherData> getTeacherData({String? email}) async {
     //
@@ -92,6 +99,7 @@ class TeachersDataSourceImpl implements TeachersDataSource {
   Future<TeacherData> signIn({
     required String email,
     required String password,
+    required bool saveCredentials,
   }) async {
     email = email.toLowerCase().trim();
     await client.auth.signInWithPassword(
@@ -100,6 +108,9 @@ class TeachersDataSourceImpl implements TeachersDataSource {
     );
     String? uuid = client.auth.currentUser?.id;
     if (uuid != null) {
+      if (saveCredentials) {
+        await addToSavedConditionals(email, password);
+      }
       return await getTeacherData();
     } else {
       throw AnonException();
@@ -110,6 +121,7 @@ class TeachersDataSourceImpl implements TeachersDataSource {
   Future<TeacherData> signUp({
     required TeacherData teacherData,
     required String password,
+    required bool saveCredentials,
   }) async {
     //
     teacherData = teacherData.copyWith(email: teacherData.email.toLowerCase().trim());
@@ -121,11 +133,32 @@ class TeachersDataSourceImpl implements TeachersDataSource {
     //
     String? uuid = client.auth.currentUser?.id;
     if (uuid != null) {
+      if (saveCredentials) {
+        await addToSavedConditionals(teacherData.email, password);
+      }
       await updateTeacherData(teacherData: teacherData);
       return teacherData;
     } else {
       throw AnonException();
     }
+  }
+
+  ///
+  Future<void> addToSavedConditionals(String email, String password) async {
+    //
+    List cachedConditionals = [];
+    //
+    if (cacheManager().exist(CacheConstant.cachedCredentialKey)) {
+      cachedConditionals = await cacheManager().read(CacheConstant.cachedCredentialKey);
+    }
+    //
+    cachedConditionals.removeWhere((e) => e["email"] == email);
+    //
+    cachedConditionals.add(CachedCredentialsModel(email: email, password: password).toJson());
+    //
+    await cacheManager().write(CacheConstant.cachedCredentialKey, cachedConditionals);
+    //
+    return;
   }
 
   @override

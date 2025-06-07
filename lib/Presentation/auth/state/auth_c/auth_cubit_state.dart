@@ -23,6 +23,9 @@ final class AuthStartAuth extends AuthState {
 }
 
 final class AuthSignIn extends AuthState {
+  final bool allowFastAuth;
+
+  const AuthSignIn({required this.allowFastAuth});
   @override
   List<Object> get props => [];
 }
@@ -30,6 +33,14 @@ final class AuthSignIn extends AuthState {
 final class AuthSignUP extends AuthState {
   @override
   List<Object> get props => [];
+}
+
+final class AuthFastAuth extends AuthState {
+  final List<CachedCredentials> accounts;
+
+  const AuthFastAuth({required this.accounts});
+  @override
+  List<Object> get props => [accounts];
 }
 
 final class AuthDone extends AuthState {

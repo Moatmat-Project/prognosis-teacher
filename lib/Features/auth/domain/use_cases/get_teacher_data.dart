@@ -8,7 +8,7 @@ class GetTeacherDataUC {
   final TeacherRepository repository;
 
   GetTeacherDataUC({required this.repository});
-  Future<Either<Failure, TeacherData>> call({String? email}) async {
+  Future<Either<Exception, TeacherData>> call({String? email}) async {
     return await repository.getTeacherData(email: email);
   }
 }

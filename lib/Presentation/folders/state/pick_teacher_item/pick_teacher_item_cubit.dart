@@ -58,7 +58,7 @@ class PickTeacherItemCubit extends Cubit<PickTeacherItemState> {
       ///
       teacherDataResponse.fold(
         (l) {
-          emit(state.copyWith(error: l));
+          emit(state.copyWith(error: AnonFailure()));
         },
         (r) async {
           teacherDataCompleter.complete(r);

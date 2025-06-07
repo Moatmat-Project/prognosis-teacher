@@ -12,11 +12,12 @@ class CheckingWidget extends StatefulWidget {
     required this.value,
     required this.onChanged,
     this.color,
+    this.bgColor,
   });
 
   final String title;
   final bool? value;
-  final Color? color;
+  final Color? color, bgColor;
   final void Function(bool? value) onChanged;
   @override
   State<CheckingWidget> createState() => _CheckingWidgetState();
@@ -40,11 +41,9 @@ class _CheckingWidgetState extends State<CheckingWidget> {
           width: SpacingResources.mainWidth(context),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              boxShadow: ShadowsResources.mainBoxShadow,
-              color: ColorsResources.onPrimary,
-              border: widget.color != null && widget.value == true
-                  ? Border.all(color: widget.color!)
-                  : null),
+              // boxShadow: ShadowsResources.mainBoxShadow,
+              color: widget.bgColor ?? ColorsResources.onPrimary,
+              border: widget.color != null && widget.value == true ? Border.all(color: widget.color!) : null),
           child: Material(
             borderRadius: BorderRadius.circular(10),
             color: Colors.transparent,

@@ -120,9 +120,14 @@ class QuestionTextBuilderWidget extends StatefulWidget {
     this.fontSize,
     this.mathFontSize,
     this.fontWeight,
+    this.textAlign,
     this.disableNewLines = false,
+    this.padding,
+    this.textPadding,
+    this.fontFamily,
   });
   final double? fontSize;
+  final String? fontFamily;
   final double? mathFontSize;
   final FontWeight? fontWeight;
   final double? width;
@@ -131,6 +136,8 @@ class QuestionTextBuilderWidget extends StatefulWidget {
   final List<QuestionWordColor> colors;
   final WrapAlignment? wrapAlignment;
   final bool disableNewLines;
+  final TextAlign? textAlign;
+  final EdgeInsetsGeometry? padding, textPadding;
 
   @override
   State<QuestionTextBuilderWidget> createState() => _QuestionTextBuilderWidgetState();
@@ -165,6 +172,8 @@ class _QuestionTextBuilderWidgetState extends State<QuestionTextBuilderWidget> {
     //
     words = widget.text.split(RegExp(r'(?<=\n)|(?=\n)| '));
     //
+    words.add(" ");
+    //
     colors = [];
     //
     for (int i = 0; i < words.length; i++) {
@@ -189,32 +198,29 @@ class _QuestionTextBuilderWidgetState extends State<QuestionTextBuilderWidget> {
         child: Wrap(
           alignment: widget.wrapAlignment ?? WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
+          runAlignment: WrapAlignment.center,
           children: List.generate(words.length, (index) {
             //
             if (containsEscapeSequence(words[index])) {
               //
               String equation = getEquationByFromText(words[index]);
               //
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  return ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: constraints.maxWidth,
-                      minHeight: (widget.mathFontSize ?? 15) * 2.7,
-                    ),
-                    child: FittedBox(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: MathTexWidget(
-                          equation: equation,
-                          color: colors[index],
-                          fontWeight: widget.fontWeight,
-                          fontSize: widget.mathFontSize ?? 14,
-                        ),
-                      ),
-                    ),
-                  );
-                },
+
+              return ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: (widget.mathFontSize ?? 14) * 1.9,
+                ),
+                child: Padding(
+                  padding: widget.padding ?? const EdgeInsets.only(),
+                  child: MathTexWidget(
+                    fontFamily: widget.fontFamily,
+                    equation: equation,
+                    textAlign: widget.textAlign,
+                    color: colors[index],
+                    fontWeight: widget.fontWeight,
+                    fontSize: widget.mathFontSize ?? 14,
+                  ),
+                ),
               );
               //
             } else {
@@ -225,13 +231,17 @@ class _QuestionTextBuilderWidgetState extends State<QuestionTextBuilderWidget> {
                 //
               } else {
                 //
-                return SizedBox(
-                  height: (widget.fontSize ?? 15) * 2,
-                  child: TextWidget(
-                    text: words[index],
-                    color: colors[index],
-                    fontSize: widget.fontSize ?? 14,
-                    fontWeight: widget.fontWeight,
+                return Padding(
+                  padding: widget.textPadding ?? const EdgeInsets.only(),
+                  child: SizedBox(
+                    height: (widget.fontSize ?? 15) * 1.9,
+                    child: TextWidget(
+                      text: words[index],
+                      color: colors[index],
+                      fontSize: widget.fontSize ?? 14,
+                      fontWeight: widget.fontWeight,
+                      fontFamily: widget.fontFamily,
+                    ),
                   ),
                 );
                 //

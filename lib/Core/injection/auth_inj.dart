@@ -54,6 +54,6 @@ void injectRepo() {
 
 void injectDS() {
   locator.registerFactory<TeachersDataSource>(
-    () => TeachersDataSourceImpl(client: locator()),
+    () => TeachersDataSourceImpl(client: locator(), cacheManager: locator()),
   );
 }

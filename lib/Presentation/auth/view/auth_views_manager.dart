@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Presentation/auth/view/fast_auth_v.dart';
 import 'package:moatmat_teacher/Presentation/auth/view/on_boarding_v.dart';
 import '../../home/view/pages_holder_v.dart';
 import '../state/auth_c/auth_cubit_cubit.dart';
@@ -12,8 +13,8 @@ import 'start_auth.dart';
 import 'update_view.dart';
 
 class AuthViewsManager extends StatefulWidget {
-  const AuthViewsManager({super.key});
-
+  const AuthViewsManager({super.key, this.forceSigning = false});
+  final bool forceSigning;
   @override
   State<AuthViewsManager> createState() => _AuthViewsManagerState();
 }
@@ -21,7 +22,7 @@ class AuthViewsManager extends StatefulWidget {
 class _AuthViewsManagerState extends State<AuthViewsManager> {
   @override
   void initState() {
-    context.read<AuthCubit>().init();
+    context.read<AuthCubit>().init(forceSigning: widget.forceSigning);
     super.initState();
   }
 
@@ -31,21 +32,24 @@ class _AuthViewsManagerState extends State<AuthViewsManager> {
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           if (state is AuthStartAuth) {
-            return const StartAuthView();
+            return StartAuthView(
+              state: state,
+            );
           } else if (state is AuthSignIn) {
-            return const SignInView();
+            return SignInView(
+              state: state,
+            );
           } else if (state is AuthSignUP) {
             return const SignUpView();
           } else if (state is AuthDone) {
             return const PagesHolderView();
-          }
-           else if (state is AuthError) {
+          } else if (state is AuthFastAuth) {
+            return FastAuthView(state: state);
+          } else if (state is AuthError) {
             return ErrorView(error: state.error);
-          }
-           else if (state is OfflineError) {
+          } else if (state is OfflineError) {
             return OfflineView();
-          }
-           else if (state is AuthUpdate) {
+          } else if (state is AuthUpdate) {
             return UpdateView(updateInfo: state.updateInfo);
           } else if (state is AuthLoading) {
             return const Center(

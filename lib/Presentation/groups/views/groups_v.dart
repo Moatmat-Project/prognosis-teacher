@@ -113,12 +113,12 @@ class _GroupsViewState extends State<GroupsView> {
                   onLongPress: () {
                     showAlert(
                       context: context,
-                      title: "حذف مجموعة ${widget.groups[index].name}",
+                      title: "حذف مجموعة ${widget.groups[index - 1].name}",
                       body: "هل انت متاكد من رغبتك بحذف المجموعة؟",
                       agreeBtn: "حذف",
                       onAgree: () {
                         context.read<StudentsGroupsCubit>().deleteGroup(
-                              groupId: widget.groups[index].id,
+                              groupId: widget.groups[index - 1].id,
                             );
                       },
                     );

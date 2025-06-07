@@ -35,7 +35,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_localizations:
     sdk: flutter
-  flutter_math_fork: ^0.7.3
+  flutter_math_fork: ^0.7.4
   flutter_speed_dial: ^7.0.0
   flutter_svg: ^2.0.10+1
   fluttertoast: ^8.2.8
@@ -62,9 +62,10 @@ dependencies:
   camera: ^0.11.0+1
   package_info_plus: ^8.0.2
   firebase_core: ^3.6.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   qr_code_scanner_plus: ^2.0.10+1
   encrypt: ^5.0.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -83,6 +84,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/fonts/Tajawal/
+    - assets/fonts/Arial/
     - assets/math/
     - assets/images/boarding/
     - assets/images/other/
@@ -111,5 +113,12 @@ flutter:
           weight: 600
         - asset: assets/fonts/Tajawal/Tajawal-Black.ttf
           weight: 700
+    - family: Arial
+      fonts:
+        - asset: assets/fonts/Arial/arial.ttf
+          weight: 300
+        - asset: assets/fonts/Arial/arial-bold.ttf
+          weight: 500
+
 
 

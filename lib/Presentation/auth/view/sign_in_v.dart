@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moatmat_teacher/Core/widgets/fields/checking_w.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 
 import '../../../Core/injection/app_inj.dart';
@@ -17,8 +18,8 @@ import '../../../Features/auth/domain/use_cases/sign_in_uc.dart';
 import '../state/auth_c/auth_cubit_cubit.dart';
 
 class SignInView extends StatefulWidget {
-  const SignInView({super.key});
-
+  const SignInView({super.key, required this.state});
+  final AuthSignIn state;
   @override
   State<SignInView> createState() => _SignInViewState();
 }
@@ -27,6 +28,7 @@ class _SignInViewState extends State<SignInView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String email;
   late String password;
+  bool saveCredentials = true;
   bool loading = false;
   void onFinish() async {
     setState(() {
@@ -35,6 +37,7 @@ class _SignInViewState extends State<SignInView> {
     var query = locator<SignInUC>().call(
       email: email,
       password: password,
+      saveCredentials: saveCredentials,
     );
     await query.then((value) {
       value.fold(
@@ -113,7 +116,16 @@ class _SignInViewState extends State<SignInView> {
                   password = p0!;
                 },
               ),
-              const SizedBox(height: SizesResources.s4),
+              CheckingWidget(
+                title: "حفظ بيانات الدخول",
+                value: saveCredentials,
+                bgColor: Colors.transparent,
+                onChanged: (value) {
+                  setState(() {
+                    saveCredentials = value!;
+                  });
+                },
+              ),
               ElevatedButtonWidget(
                 loading: loading,
                 text: AppBarTitles.signIn,
@@ -124,11 +136,26 @@ class _SignInViewState extends State<SignInView> {
                   }
                 },
               ),
+              const SizedBox(height: SizesResources.s4),
+              if (widget.state.allowFastAuth) ...[
+                Text("- او -"),
+                const SizedBox(height: SizesResources.s4),
+                ElevatedButtonWidget(
+                  text: TextsResources.fastSigning,
+                  onPressed: startFastSigning,
+                  isWhite: true,
+                ),
+                const SizedBox(height: SizesResources.s2),
+              ],
               const SizedBox(height: SizesResources.s10 * 2),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void startFastSigning() {
+    context.read<AuthCubit>().startFastAuth();
   }
 }

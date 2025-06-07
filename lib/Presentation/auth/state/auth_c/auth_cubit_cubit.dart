@@ -4,12 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moatmat_teacher/Core/services/cache/cache_manager.dart';
+import 'package:moatmat_teacher/Features/auth/domain/entites/cached_credentials.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/auth/domain/use_cases/update_teacher_data_uc.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../Core/injection/app_inj.dart';
+import '../../../../Core/services/cache/cache_constant.dart';
+import '../../../../Features/auth/data/models/cached_credentials_model.dart';
 import '../../../../Features/auth/domain/use_cases/get_teacher_data.dart';
 import '../../../../Features/update/domain/entites/update_info.dart';
 import '../../../../Features/update/domain/usecases/check_update_state_uc.dart';
@@ -18,10 +22,9 @@ part 'auth_cubit_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthLoading());
-  init() async {
+  init({bool forceSigning = false}) async {
     //
     emit(AuthLoading());
-
     //
     final res = await locator<CheckUpdateStateUC>().call();
     //
@@ -40,6 +43,11 @@ class AuthCubit extends Cubit<AuthState> {
         if (r.appVersion < r.currentVersion || r.appVersion < r.minimumVersion) {
           emit(AuthUpdate(updateInfo: r));
         } else {
+          //
+          if (forceSigning) {
+            startAuth();
+            return;
+          }
           //
           var user = Supabase.instance.client.auth.currentUser;
           //
@@ -75,7 +83,11 @@ class AuthCubit extends Cubit<AuthState> {
     locator<GetTeacherDataUC>().call().then((value) {
       value.fold(
         (l) {
-          emit(const AuthError());
+          if (l is SocketException && Supabase.instance.client.auth.currentUser != null) {
+            emit(const OfflineError());
+          } else {
+            emit(const AuthError());
+          }
         },
         (r) async {
           if (r.options.isTeacher ?? false) {
@@ -123,12 +135,17 @@ class AuthCubit extends Cubit<AuthState> {
 
   //
   startSignIn() async {
-    emit(AuthSignIn());
+    emit(AuthSignIn(allowFastAuth: locator<CacheManager>()().exist(CacheConstant.cachedCredentialKey)));
   }
 
   //
   startSignUp() async {
     emit(AuthSignUP());
+  }
+
+  //
+  startFastAuth() async {
+    emit(AuthFastAuth(accounts: await _getCachedAccounts()));
   }
 
   //
@@ -140,11 +157,31 @@ class AuthCubit extends Cubit<AuthState> {
   startSignOut() async {
     emit(AuthLoading());
     await locator<SupabaseClient>().auth.signOut();
-    startAuth();
+    await startAuth();
   }
 
   //
   finishAuth() {
     init();
+  }
+
+  //
+  ///
+  Future<List<CachedCredentials>> _getCachedAccounts() async {
+    //
+    late final List cachedConditionals;
+    late final List<CachedCredentials> accounts;
+    //
+    if (locator<CacheManager>()().exist(CacheConstant.cachedCredentialKey)) {
+      cachedConditionals = await locator<CacheManager>()().read(CacheConstant.cachedCredentialKey);
+    }
+    //
+    if (cachedConditionals.isEmpty) {
+      return const [];
+    }
+    //
+    accounts = cachedConditionals.map((e) => CachedCredentialsModel.fromJson(e)).toList();
+    //
+    return accounts;
   }
 }

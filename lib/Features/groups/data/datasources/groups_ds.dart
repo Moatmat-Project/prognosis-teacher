@@ -72,7 +72,7 @@ class GroupsDSImpl implements GroupsDS {
       await locator<TeacherData>().updateCourseSubscribersTests(
         testsIds,
       );
-      return unit; 
+      return unit;
     }
     //
     List<Group> groups = await getGroups();

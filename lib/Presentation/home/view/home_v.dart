@@ -6,7 +6,6 @@ import 'package:moatmat_teacher/Core/functions/dialogs/add_group_d.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
-import 'package:moatmat_teacher/Features/outer_tests/domain/usecases/get_outer_tests_uc.dart';
 import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/views/add_bank_view.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/groups/students_groups_cubit.dart';
@@ -14,7 +13,6 @@ import 'package:moatmat_teacher/Presentation/groups/views/groups_views_manager.d
 import 'package:moatmat_teacher/Presentation/scanner/views/scanner_views_manager.dart';
 import 'package:moatmat_teacher/Presentation/students/views/add_results_v.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/add_test_vew.dart';
-
 import '../../../Core/widgets/appbar/contact_us_w.dart';
 import '../../../Core/widgets/appbar/report_icon_w.dart';
 import '../../../Core/widgets/appbar/search_icon_w.dart';
@@ -57,6 +55,14 @@ class _HomeViewState extends State<HomeView> {
             child: const Icon(Icons.logout),
             onTap: () async {
               context.read<AuthCubit>().startSignOut();
+            },
+          ),
+          SpeedDialChild(
+            label: "تبديل الحساب",
+            child: const Icon(Icons.switch_account_outlined),
+            onTap: () async {
+              context.read<AuthCubit>().startFastAuth();
+              FocusManager.instance.primaryFocus?.unfocus();
             },
           ),
           SpeedDialChild(
