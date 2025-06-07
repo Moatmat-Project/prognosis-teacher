@@ -61,8 +61,8 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AddTestCubit()),
-        BlocProvider(create: (context) => MyTestsCubit()),
         BlocProvider(create: (context) => AddBankCubit()),
+        BlocProvider(create: (context) => MyTestsCubit()),
         BlocProvider(create: (context) => MyBanksCubit()),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => ReportsCubit()..init()),
@@ -95,4 +95,3 @@ void main() async {
     ),
   );
 }
-//
