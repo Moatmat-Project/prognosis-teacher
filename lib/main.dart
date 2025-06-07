@@ -62,8 +62,8 @@ void main() async {
       providers: [
         BlocProvider(create: (context) => MyTestsCubit()),
         BlocProvider(create: (context) => AddTestCubit()),
-        BlocProvider(create: (context) => MyBanksCubit()),
         BlocProvider(create: (context) => AddBankCubit()),
+        BlocProvider(create: (context) => MyBanksCubit()),
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => ReportsCubit()..init()),
         BlocProvider(create: (context) => CreateQuestionCubit()),
