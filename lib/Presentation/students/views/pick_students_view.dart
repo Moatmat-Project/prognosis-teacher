@@ -61,6 +61,10 @@ class _PickStudentsState extends State<PickStudents> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("تمت إضافة $addedCnt طالب/ة إلى المجموعة")),
                   );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("الطالب مضاف مسبقاً")),
+                  );
                 }
               },
               child: Icon(Icons.person_add_alt_1),
