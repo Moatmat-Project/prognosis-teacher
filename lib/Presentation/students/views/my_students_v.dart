@@ -138,10 +138,14 @@ class StudentTileWidget extends StatefulWidget {
   const StudentTileWidget({
     super.key,
     required this.userData,
+    this.isSelected = false,
+    this.forSelecion = false,
     this.onLongPress,
     this.onTap,
   });
   final UserData userData;
+  final bool? isSelected;
+  final bool? forSelecion;
   final void Function()? onTap;
   final Function()? onLongPress;
 
@@ -221,7 +225,13 @@ class _StudentTileWidgetState extends State<StudentTileWidget> {
                       ),
                     ),
                     //
-                    const Icon(Icons.arrow_forward_ios, size: 10),
+                    if(widget.isSelected ?? false)...[
+                      Icon(Icons.check_circle, color: ColorsResources.primary),
+                    ]
+                    else ...[
+                      if(!(widget.forSelecion ?? false))
+                        Icon(Icons.arrow_forward_ios, size: 10),
+                    ]
                   ],
                 ),
               ),

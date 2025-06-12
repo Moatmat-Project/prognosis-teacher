@@ -11,6 +11,7 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
 
   List<UserData> users = [];
   List<int> testsIds = [];
+  List<UserData> selectedUsers = [];
 
   init() async {
     //
@@ -25,7 +26,7 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       (r) {
         users = r.students;
         testsIds = r.testsIds;
-        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds));
+        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds, selectedUsers: selectedUsers));
       },
     );
   }
@@ -41,7 +42,11 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       (r) {
         users = r.students;
         testsIds = r.testsIds;
-        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds));
+        emit(MyStudentsInitial(
+          users: r.students,
+          testsIds: r.testsIds,
+          selectedUsers: selectedUsers,
+        ));
       },
     );
   }
@@ -51,7 +56,21 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       MyStudentsInitial(
         users: users.where((e) => e.name.contains(key) || key.isEmpty).toList(),
         testsIds: testsIds,
+        selectedUsers: selectedUsers,
       ),
     );
+  }
+
+  void toggleSelection(UserData user) {
+    if (selectedUsers.any((u) => u.id == user.id)) {
+      selectedUsers.removeWhere((u) => u.id == user.id);
+    } else {
+      selectedUsers.add(user);
+    }
+    emit(MyStudentsInitial(users: users, testsIds: testsIds, selectedUsers: selectedUsers));
+  }
+
+  bool isSelected(UserData user) {
+    return selectedUsers.any((u) => u.id == user.id);
   }
 }

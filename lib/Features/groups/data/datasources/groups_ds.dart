@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartz/dartz.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
@@ -16,9 +18,9 @@ abstract class GroupsDS {
     required Group group,
   });
   //
-  Future<Unit> addToGroup({
+  Future<Unit> addStudentsToGroup({
     required int groupId,
-    required GroupItem item,
+    required List<GroupItem> items,
   });
   //
   Future<Unit> setGroupTests({
@@ -39,29 +41,6 @@ abstract class GroupsDS {
 }
 
 class GroupsDSImpl implements GroupsDS {
-  @override
-  Future<Unit> addToGroup({
-    required int groupId,
-    required GroupItem item,
-  }) async {
-    //
-    List<Group> groups = await getGroups();
-    //
-    groups = List<Group>.from(groups);
-    //
-    for (int i = 0; i < groups.length; i++) {
-      if (groups[i].id == groupId) {
-        groups[i] = groups[i].copyWith(
-          items: groups[i].items + [item],
-        );
-      }
-    }
-    //
-    await setGroups(groups);
-    //
-    return unit;
-  }
-
   @override
   Future<Unit> setGroupTests({
     required int groupId,
@@ -176,5 +155,39 @@ class GroupsDSImpl implements GroupsDS {
     });
     //
     return groups;
+  }
+
+  @override
+  Future<Unit> addStudentsToGroup({
+    required int groupId,
+    required List<GroupItem> items,
+  }) async {
+    //
+    List<Group> groups = await getGroups();
+    //
+    groups = List<Group>.from(groups);
+    //
+    for (int i = 0; i < groups.length; i++) {
+      if (groups[i].id == groupId) {
+        int maxGroupId = -1; // empty list -1 +1 = 0 + new id = 0
+        for (int j = 0; j < groups[i].items.length; j++) {
+          maxGroupId = max(maxGroupId, groups[i].items[j].id);
+        }
+        for (int j = 0; j < items.length; j++) {
+          groups[i] = groups[i].copyWith(
+            items: groups[i].items + [
+              items[j].copyWith(
+                id: items[j].id + maxGroupId + 1,
+              )
+            ],
+          );
+          // add maximum id in the group + the new id + 1
+        }
+      }
+    }
+    //
+    await setGroups(groups);
+    //
+    return unit;
   }
 }

@@ -66,6 +66,13 @@ android {
 flutter {
     source = "../.."
 }
+
+
+repositories {
+    google()
+    mavenCentral()
+}
+
 dependencies {
     implementation(project(":OpenCV"))
     implementation(project(":OpenCV"))
