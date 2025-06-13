@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moatmat_teacher/Presentation/students/views/pick_students_view.dart';
+import 'package:moatmat_teacher/Presentation/students/views/my_students_v.dart';
 
 class SearchIconWidget extends StatelessWidget {
   const SearchIconWidget({super.key});
@@ -9,7 +9,7 @@ class SearchIconWidget extends StatelessWidget {
     return IconButton(
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const PickStudents(),
+          builder: (context) => const MyStudentsView(),
         ));
       },
       icon: const Stack(

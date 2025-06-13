@@ -184,7 +184,7 @@ class _StudentViewState extends State<StudentView> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("تمت إضافة ${state.userData.name} طالب/ة إلى المجموعة")),
                           );
-                        }else{
+                        }else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("الطالب مضاف مسبقاً")),
                           );

@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moatmat_teacher/Core/functions/dialogs/add_to_group_d.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
+import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
+import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/groups/students_groups_cubit.dart';
 import 'package:moatmat_teacher/Presentation/statistics/views/export_students_statistics_view.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/views/my_students_v.dart';
 
 class PickStudents extends StatefulWidget {
-  const PickStudents({super.key});
+  const PickStudents({super.key, required this.group});
+  final Group group;
 
   @override
   State<PickStudents> createState() => _PickStudentsState();
@@ -45,34 +47,40 @@ class _PickStudentsState extends State<PickStudents> {
         if (state is MyStudentsInitial) {
           return Scaffold(
             floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                final addedCnt = await addStudentToGroupDialog(
-                  context: context,
-                  groups: context.read<StudentsGroupsCubit>().groups,
-                  userDataList: state.selectedUsers,
-                  onAdd: (groupId, filteredUsers) {
-                    context.read<StudentsGroupsCubit>().addGroupItem(
-                          groupId: groupId,
-                          userDataList: filteredUsers,
-                        );
-                  },
-                );
+              onPressed: () {
+                if (context.read<MyStudentsCubit>().getSelectedUsers.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("اختر طالباً على الأقل")),
+                  );
+                  return;
+                }
+                List<UserData> filteredUsers = context.read<MyStudentsCubit>().getSelectedUsers.where((user) {
+                  return !widget.group.items.any(
+                    (existingUser) => existingUser.userData.id == user.id,
+                  );
+                }).toList();
+                final int addedCnt = filteredUsers.length;
+                context.read<StudentsGroupsCubit>().addGroupItem(
+                      groupId: widget.group.id,
+                      userDataList: filteredUsers,
+                    );
                 if (addedCnt > 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("تمت إضافة $addedCnt طالب/ة إلى المجموعة")),
                   );
-                }else{
+                } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("الطالب مضاف مسبقاً")),
                   );
                 }
+                Navigator.of(context).pop(filteredUsers);
               },
               child: Icon(Icons.person_add_alt_1),
             ),
             appBar: AppBar(
               title: const Text("طلابي"),
               actions: [
-                Text(' عدد الطلاب : ${state.selectedUsers.length}  '),
+                Text(' عدد الطلاب : ${context.read<MyStudentsCubit>().getSelectedUsers.length}  '),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(
@@ -129,7 +137,7 @@ class _PickStudentsState extends State<PickStudents> {
                           userData: state.users[index],
                           isSelected: selected,
                           forSelecion: true,
-                          onTap: (){
+                          onTap: () {
                             context.read<MyStudentsCubit>().toggleSelection(item);
                             setState(() {});
                           },

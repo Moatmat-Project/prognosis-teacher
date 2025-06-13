@@ -26,7 +26,7 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       (r) {
         users = r.students;
         testsIds = r.testsIds;
-        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds, selectedUsers: selectedUsers));
+        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds, selectedUsers: []));
       },
     );
   }
@@ -45,7 +45,7 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
         emit(MyStudentsInitial(
           users: r.students,
           testsIds: r.testsIds,
-          selectedUsers: selectedUsers,
+          selectedUsers: [],
         ));
       },
     );
@@ -69,6 +69,8 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
     }
     emit(MyStudentsInitial(users: users, testsIds: testsIds, selectedUsers: selectedUsers));
   }
+
+  List<UserData> get getSelectedUsers => selectedUsers;
 
   bool isSelected(UserData user) {
     return selectedUsers.any((u) => u.id == user.id);
