@@ -16,6 +16,9 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
   init() async {
     //
     emit(MyStudentsLoading());
+    users = [];
+    testsIds = [];
+    selectedUsers = [];
     //
     var res = await locator<GetMyStudentsUC>().call();
     //
