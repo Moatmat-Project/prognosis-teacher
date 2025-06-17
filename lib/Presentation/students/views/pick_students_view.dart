@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
+import 'package:moatmat_teacher/Core/widgets/fields/elevated_button_widget.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
@@ -52,36 +53,38 @@ class _PickStudentsState extends State<PickStudents> {
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (context.read<MyStudentsCubit>().getSelectedUsers.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("اختر طالباً على الأقل")),
-                          );
-                          return;
-                        }
-                        List<UserData> filteredUsers = context.read<MyStudentsCubit>().getSelectedUsers.where((user) {
-                          return !widget.group.items.any(
-                            (existingUser) => existingUser.userData.id == user.id,
-                          );
-                        }).toList();
-                        final int addedCnt = filteredUsers.length;
-                        context.read<StudentsGroupsCubit>().addGroupItem(
-                              groupId: widget.group.id,
-                              userDataList: filteredUsers,
-                            );
-                        if (addedCnt > 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("تمت إضافة $addedCnt طالب/ة إلى المجموعة")),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("الطالب مضاف مسبقاً")),
-                          );
-                        }
-                        Navigator.of(context).pop(filteredUsers);
-                      },
-                      child: Text("اضافة ${context.read<MyStudentsCubit>().getSelectedUsers.length} طالب"),
+                    child: ElevatedButtonWidget(
+                      onPressed: context.read<MyStudentsCubit>().getSelectedUsers.isEmpty
+                          ? null
+                          : () {
+                              if (context.read<MyStudentsCubit>().getSelectedUsers.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("اختر طالباً على الأقل")),
+                                );
+                                return;
+                              }
+                              List<UserData> filteredUsers = context.read<MyStudentsCubit>().getSelectedUsers.where((user) {
+                                return !widget.group.items.any(
+                                  (existingUser) => existingUser.userData.id == user.id,
+                                );
+                              }).toList();
+                              final int addedCnt = filteredUsers.length;
+                              context.read<StudentsGroupsCubit>().addGroupItem(
+                                    groupId: widget.group.id,
+                                    userDataList: filteredUsers,
+                                  );
+                              if (addedCnt > 0) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("تمت إضافة $addedCnt طالب/ة إلى المجموعة")),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("الطالب مضاف مسبقاً")),
+                                );
+                              }
+                              Navigator.of(context).pop(filteredUsers);
+                            },
+                      text: ("اضافة ${context.read<MyStudentsCubit>().getSelectedUsers.length} طالب"),
                     ),
                   ),
                 ),
