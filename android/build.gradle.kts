@@ -4,10 +4,6 @@ allprojects {
     //         jvmTarget = "17"
     //     }
     // }    
-    repositories {
-        google()
-        mavenCentral()
-    }
 }
 
 val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
