@@ -20,7 +20,7 @@ import 'Presentation/folders/state/add_to_folder/add_to_folder_cubit.dart';
 import 'Presentation/folders/state/folders_manager/folders_manager_cubit.dart';
 import 'Presentation/folders/state/pick_teacher_item/pick_teacher_item_cubit.dart';
 import 'Presentation/groups/state/groups/students_groups_cubit.dart';
-import 'Presentation/notifications/state/cubit/notifications_cubit.dart';
+import 'Presentation/notifications2/state/cubit/notifications_cubit.dart';
 import 'Presentation/outer_tests_results/state/cubit/outer_test_results_cubit.dart';
 import 'Presentation/picker/state/cubit/questions_picker_cubit.dart';
 import 'Presentation/purchases/state/cubit/purchases_cubit.dart';
