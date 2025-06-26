@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:moatmat_admin/Core/constant/topics_list.dart';
-import 'package:moatmat_admin/Core/resources/colors_r.dart';
+import 'package:moatmat_teacher/Core/constant/topics_list.dart';
+import 'package:moatmat_teacher/Core/resources/colors_r.dart';
+
 
 class TopicSelector extends StatefulWidget {
   final void Function(List<String>) onChanged;

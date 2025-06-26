@@ -10,6 +10,10 @@ import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.
 import 'package:moatmat_teacher/Presentation/banks/views/add_bank_view.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/groups/students_groups_cubit.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/groups_views_manager.dart';
+import 'package:moatmat_teacher/Presentation/notifications/state/notifications_bloc/notifications_bloc.dart';
+import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/notifications_view.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_view.dart';
 import 'package:moatmat_teacher/Presentation/scanner/views/scanner_views_manager.dart';
 import 'package:moatmat_teacher/Presentation/students/views/add_results_v.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/add_test_vew.dart';
@@ -141,6 +145,35 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
             ),
+          SpeedDialChild(
+            label: "إرسال اشعارات",
+            child: const Icon(Icons.notification_add),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                          create: (context) => locator<SendNotificationBloc>(),
+                          child: SendNotificationView(),
+                        )),
+              );
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+          ),
+          SpeedDialChild(
+            label: "الاشعارات",
+            child: const Icon(Icons.notification_important),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => locator<NotificationsBloc>(),
+                    child: NotificationsView(),
+                  ),
+                ),
+              );
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+          ),
         ],
       ),
     );

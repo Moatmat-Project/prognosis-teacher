@@ -1,12 +1,12 @@
-import 'package:moatmat_teacher/Features/notifications/data/datasources/notifications_ds.dart';
-import 'package:moatmat_teacher/Features/notifications/data/repository/repository_impl.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/repository/repository.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/send_bulk_notification_uc.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/send_notification_uc.dart';
+import 'package:moatmat_teacher/Features/notifications2/data/datasources/notifications_ds.dart';
+import 'package:moatmat_teacher/Features/notifications2/data/repository/repository_impl.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/repository/repository.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/usecases/send_bulk_notification_uc.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/usecases/send_notification_uc.dart';
 
 import 'app_inj.dart';
 
-injectNotifications() {
+injectNotifications2() {
   injectDS();
   injectRepo();
   injectUC();

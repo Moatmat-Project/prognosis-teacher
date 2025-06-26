@@ -3,9 +3,9 @@ import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/validators/not_empty_v.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/elevated_button_widget.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart' as n;
+import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart' as n;
 
-import '../../../Features/notifications/domain/entities/notification.dart';
+import '../../../Features/notifications2/domain/entities/notification.dart';
 
 class WriteNotificationView extends StatefulWidget {
   const WriteNotificationView({super.key, required this.onSet});

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:moatmat_teacher/Features/notifications/data/models/notification_m.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart';
+import 'package:moatmat_teacher/Features/notifications2/data/models/notification_m.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class NotificationDS {

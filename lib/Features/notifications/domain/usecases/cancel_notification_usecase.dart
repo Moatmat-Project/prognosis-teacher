@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:moatmat_teacher/Core/errors/exceptions.dart';
-import 'package:moatmat_teacher/Core/errors/exceptions.dart';
 
 import '../repositories/notifications_repository.dart';
 

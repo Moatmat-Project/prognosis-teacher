@@ -4,6 +4,7 @@ import 'package:moatmat_teacher/Core/injection/buckets_inj.dart';
 import 'package:moatmat_teacher/Core/injection/cash_inj.dart';
 import 'package:moatmat_teacher/Core/injection/controllers_inj.dart';
 import 'package:moatmat_teacher/Core/injection/groups_inj.dart';
+import 'package:moatmat_teacher/Core/injection/notifications_inj.dart';
 import 'package:moatmat_teacher/Core/injection/outer_tests_inj.dart';
 import 'package:moatmat_teacher/Core/injection/purchases_inj.dart';
 import 'package:moatmat_teacher/Core/injection/reports_inj.dart';
@@ -12,7 +13,7 @@ import 'package:moatmat_teacher/Core/injection/update_inj.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'attendance_inj.dart';
 import 'auth_inj.dart';
-import 'notifications_inj.dart';
+import 'notifications2_inj.dart';
 import 'requests_inj.dart';
 import 'scanner_inj.dart';
 import 'students_inj.dart';
@@ -26,6 +27,8 @@ initGetIt() async {
   injectAuth();
   //
   injectOuterTests();
+  //
+  await injectNotifications();
   //
   injectTests();
   //
@@ -43,7 +46,7 @@ initGetIt() async {
   //
   injectGroups();
   //
-  injectNotifications();
+  injectNotifications2();
   //
   injectScanner();
   //

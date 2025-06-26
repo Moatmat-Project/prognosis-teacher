@@ -1,4 +1,4 @@
-import 'package:moatmat_admin/Features/notifications/data/models/app_notification_model.dart';
+import 'package:moatmat_teacher/Features/notifications/data/models/app_notification_model.dart';
 
 import '../../domain/entities/app_notification.dart';
 

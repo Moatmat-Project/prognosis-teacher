@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/repository/repository.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/repository/repository.dart';
 
 class SendNotification {
   final NotificationRepository repository;

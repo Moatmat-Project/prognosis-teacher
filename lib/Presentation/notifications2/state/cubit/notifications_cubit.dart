@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/send_bulk_notification_uc.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/send_notification_uc.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/usecases/send_bulk_notification_uc.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/usecases/send_notification_uc.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 
 part 'notifications_state.dart';

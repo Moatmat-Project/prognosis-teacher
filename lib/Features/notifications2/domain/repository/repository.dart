@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/entities/notification.dart';
+import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 
 abstract class NotificationRepository {

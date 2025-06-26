@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
-import 'package:moatmat_teacher/Presentation/notifications/state/cubit/notifications_cubit.dart';
-import 'package:moatmat_teacher/Presentation/notifications/views/write_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/notifications2/state/cubit/notifications_cubit.dart';
+import 'package:moatmat_teacher/Presentation/notifications2/views/write_notification_v.dart';
 
 class SendBulkNotificationView extends StatefulWidget {
   const SendBulkNotificationView({super.key, required this.usersData});

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
-import 'package:moatmat_admin/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
-import 'package:moatmat_admin/Presentation/notifications/views/select_students_view.dart';
-import 'package:moatmat_admin/Presentation/notifications/widgets/send_notification_body.dart';
+import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/select_students_view.dart';
+import 'package:moatmat_teacher/Presentation/notifications/widgets/send_notification_body.dart';
+
 
 class SendNotificationView extends StatefulWidget {
   const SendNotificationView({super.key});
