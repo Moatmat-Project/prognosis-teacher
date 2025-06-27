@@ -9,7 +9,6 @@ import 'package:moatmat_teacher/Presentation/notifications/widgets/send_notifica
 import 'package:moatmat_teacher/Presentation/notifications/widgets/state_feedback_widget.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/topic_selector_widget.dart';
 
-
 class SendNotificationBody extends StatelessWidget {
   final bool isUserMode;
   final File? selectedImage;
@@ -47,14 +46,22 @@ class SendNotificationBody extends StatelessWidget {
         children: [
           Center(
             child: ToggleButtons(
+              borderColor: ColorsResources.borders,
+              selectedBorderColor: ColorsResources.primary,
               borderRadius: BorderRadius.circular(4),
-              constraints: BoxConstraints.expand(width: SpacingResources.mainWidth(context) / 2),
+              constraints: BoxConstraints.expand(
+                  width: SpacingResources.mainWidth(context) / 2),
               isSelected: [isUserMode, !isUserMode],
-              selectedColor: ColorsResources.primary,
+              selectedColor: ColorsResources.whiteText1,
+              fillColor: ColorsResources.primary.withValues(alpha: 0.9),
               onPressed: (index) => onModeChanged(index == 0),
               children: const [
-                Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text("مستخدمين")),
-                Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text("مواضيع")),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("مستخدمين")),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("تطبيقات")),
               ],
             ),
           ),
@@ -66,7 +73,8 @@ class SendNotificationBody extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.file(selectedImage!, height: 200, width: double.infinity, fit: BoxFit.cover),
+                    child: Image.file(selectedImage!,
+                        height: 200, width: double.infinity, fit: BoxFit.cover),
                   ),
                   Positioned(
                     top: 8,
@@ -96,7 +104,8 @@ class SendNotificationBody extends StatelessWidget {
           ),
           if (isUserMode)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: SpacingResources.sidePadding, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SpacingResources.sidePadding, vertical: 8),
               child: Row(
                 children: [
                   // "اختر الطلاب" Button
@@ -122,7 +131,8 @@ class SendNotificationBody extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(right: 60.0),
-                          child: const Text("اختر الطلاب", textAlign: TextAlign.center),
+                          child: const Text("اختر الطلاب",
+                              textAlign: TextAlign.center),
                         ),
                       ),
                     ),
@@ -141,7 +151,8 @@ class SendNotificationBody extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.group, size: 20, color: ColorsResources.darkPrimary),
+                        const Icon(Icons.group,
+                            size: 20, color: ColorsResources.darkPrimary),
                         const SizedBox(width: 6),
                         Padding(
                           padding: const EdgeInsets.only(top: 6.0),

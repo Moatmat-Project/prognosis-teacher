@@ -5,7 +5,6 @@ import 'package:moatmat_teacher/Core/resources/shadows_r.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
 
-
 class NotificationForm extends StatefulWidget {
   final bool isUserMode;
   final TextEditingController titleController;
@@ -26,8 +25,6 @@ class NotificationForm extends StatefulWidget {
 
 class _NotificationFormState extends State<NotificationForm> {
   get validateNotificationTitle => null;
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +60,9 @@ class _NotificationFormState extends State<NotificationForm> {
         SizedBox(height: 10),
         MyTextFormFieldWidget(
           hintText: 'نص الإشعار',
-          controller: widget.bodyController, 
+          controller: widget.bodyController,
           maxLines: 3,
+          minLines: 1,
         ),
         const SizedBox(height: 20),
       ],

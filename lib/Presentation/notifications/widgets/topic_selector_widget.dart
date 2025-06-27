@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moatmat_teacher/Core/constant/topics_list.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 
-
 class TopicSelector extends StatefulWidget {
   final void Function(List<String>) onChanged;
   const TopicSelector({required this.onChanged, super.key});
@@ -27,7 +26,8 @@ class _TopicSelectorState extends State<TopicSelector> {
           selected: isSelected,
           selectedColor: ColorsResources.primaryLight,
           side: BorderSide(
-            color: isSelected ? ColorsResources.primary : ColorsResources.borders,
+            color:
+                isSelected ? ColorsResources.primary : ColorsResources.borders,
             width: isSelected ? 2 : 1,
           ),
           onSelected: (selected) {

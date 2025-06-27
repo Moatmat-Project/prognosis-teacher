@@ -1,3 +1,5 @@
+import 'package:moatmat_teacher/Core/constant/topics_list.dart' as topics;
+
 class AppRemoteNotificationsSettings {
   //
   static final bool showAlert = true;
@@ -5,7 +7,6 @@ class AppRemoteNotificationsSettings {
   static final bool showSound = true;
   //
   static final List<String> defaultTopicList = [
-    // TODO ABOUD
-    "test"
+    topics.defaultTopic,
   ];
 }
