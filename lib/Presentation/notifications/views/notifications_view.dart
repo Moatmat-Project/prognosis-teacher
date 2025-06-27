@@ -16,19 +16,22 @@ class NotificationsView extends StatefulWidget {
 }
 
 class _NotificationsViewState extends State<NotificationsView> {
+  bool _isInitialized = false;
+
   @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<NotificationsBloc>(context).add(GetNotifications());
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      BlocProvider.of<NotificationsBloc>(context).add(GetNotifications());
+      _isInitialized = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'الإشعارات'
-        ),
+        title: Text('الإشعارات'),
       ),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
         builder: (context, state) {
@@ -54,7 +57,8 @@ class _NotificationsViewState extends State<NotificationsView> {
               padding: const EdgeInsets.all(SpacingResources.sidePadding),
               child: ListView.separated(
                 itemCount: state.notifications.length,
-                separatorBuilder: (_, __) => const SizedBox(height: SizesResources.s1 / 2),
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: SizesResources.s1 / 2),
                 itemBuilder: (context, index) {
                   final notification = state.notifications[index];
                   return NotificationCard(notification: notification);

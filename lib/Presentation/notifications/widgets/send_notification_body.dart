@@ -6,7 +6,6 @@ import 'package:moatmat_teacher/Core/resources/shadows_r.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/notification_form_widget.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/send_notification_button_widget.dart';
-import 'package:moatmat_teacher/Presentation/notifications/widgets/state_feedback_widget.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/topic_selector_widget.dart';
 
 class SendNotificationBody extends StatelessWidget {
@@ -180,8 +179,6 @@ class SendNotificationBody extends StatelessWidget {
           ],
           const SizedBox(height: 10),
           SendNotificationButton(onSend: onSend),
-          const SizedBox(height: 20),
-          const Center(child: StateFeedback()),
         ],
       ),
     );
