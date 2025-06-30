@@ -145,8 +145,8 @@ class BucketsRemoteDSImpl implements BucketsRemoteDS {
     //
     var filesNames = files.map((e) => e.name).toList();
     //
-    if (newBank.information.video == oldBank.information.video) {
-      for (var v in oldBank.information.video ?? []) {
+    if (newBank.information.videos == oldBank.information.videos) {
+      for (var v in oldBank.information.videos ?? []) {
         filesNames.remove(linkToFileName(v));
       }
     }
@@ -160,10 +160,10 @@ class BucketsRemoteDSImpl implements BucketsRemoteDS {
         }
       }
     }
-    if (newBank.information.video != null) {
-      for (var v in newBank.information.video!) {
-        if (v.contains("supabase")) {
-          wantedFiles.add(linkToFileName(v));
+    if (newBank.information.videos != null) {
+      for (var v in newBank.information.videos!) {
+        if (v.url.contains("supabase")) {
+          wantedFiles.add(linkToFileName(v.url));
         }
       }
     }
@@ -227,10 +227,10 @@ class BucketsRemoteDSImpl implements BucketsRemoteDS {
         }
       }
     }
-    if (newTest.information.video != null) {
-      for (var v in newTest.information.video!) {
-        if (v.contains("supabase")) {
-          wantedFiles.add(linkToFileName(v));
+    if (newTest.information.videos != null) {
+      for (var v in newTest.information.videos!) {
+        if (v.url.contains("supabase")) {
+          wantedFiles.add(linkToFileName(v.url));
         }
       }
     }

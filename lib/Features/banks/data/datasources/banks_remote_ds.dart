@@ -4,6 +4,8 @@ import 'package:moatmat_teacher/Features/banks/data/models/bank_m.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_bank_files_uc.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/upload_file_uc.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/video_m.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../auth/domain/entites/teacher_data.dart';
@@ -83,7 +85,7 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
     // Bank Video
 
     // upload bank videos
-    for (int i = 0; i < (newBank.information.video ?? []).length; i++) {
+    for (int i = 0; i < (newBank.information.videos ?? []).length; i++) {
       //
       yield "رفع ملف المقطع رقم (${i + 1}/$filesLength)";
       //
@@ -91,22 +93,23 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
         bucket: "banks",
         material: newBank.information.material,
         id: newBank.id.toString(),
-        path: newBank.information.video![i],
+        path: newBank.information.videos![i].url,
       );
       res.fold(
         (l) {},
         (r) {
           //
-          List<String> newVideos = newBank.information.video ?? [];
+          List<Video> newVideos = newBank.information.videos ?? [];
           //
-          int index = newVideos.indexOf(newBank.information.video![i]);
+          int index = newVideos.indexOf(newBank.information.videos![i]);
           //
-          newVideos[index] = r;
+          // newVideos[index] = r;
+          newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(url: r);
           //
           // replace links
           newBank = newBank.copyWith(
             information: newBank.information.copyWith(
-              video: newVideos,
+              videos: newVideos,
             ),
           );
         },

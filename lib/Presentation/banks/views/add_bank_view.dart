@@ -52,7 +52,7 @@ class _AddBankViewState extends State<AddBankView> {
               teacher: state.information?.teacher,
               period: null,
               price: state.information?.price,
-              video: state.information?.video,
+              videos: state.information?.videos,
               files: state.information?.files,
               images: state.information?.images,
               isBank: true,
@@ -65,7 +65,7 @@ class _AddBankViewState extends State<AddBankView> {
                 required teacher,
                 required title,
                 required price,
-                required video,
+                required videos,
                 required files,
                 required images,
               }) {
@@ -76,7 +76,7 @@ class _AddBankViewState extends State<AddBankView> {
                   material: material,
                   teacher: teacher,
                   price: price,
-                  video: video,
+                  videos: videos,
                   files: files,
                   images: images,
                 );
