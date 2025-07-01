@@ -106,7 +106,9 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
           //
           var res = await locator<AddVideoUc>().call(video: newVideos[index]);
           res.fold(
-            (l) {},
+            (l) {
+              newVideos.removeAt(index);
+            },
             (id) {
               newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(
                 url: r,
