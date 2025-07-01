@@ -6,6 +6,7 @@ import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_bank_fil
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/upload_file_uc.dart';
 import 'package:moatmat_teacher/Features/tests/data/models/video_m.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/add_video_uc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../auth/domain/entites/teacher_data.dart';
@@ -97,20 +98,27 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
       );
       res.fold(
         (l) {},
-        (r) {
+        (r) async {
           //
           List<Video> newVideos = newBank.information.videos ?? [];
           //
           int index = newVideos.indexOf(newBank.information.videos![i]);
           //
-          // newVideos[index] = r;
-          newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(url: r);
-          //
-          // replace links
-          newBank = newBank.copyWith(
-            information: newBank.information.copyWith(
-              videos: newVideos,
-            ),
+          var res = await locator<AddVideoUc>().call(video: newVideos[index]);
+          res.fold(
+            (l) {},
+            (id) {
+              newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(
+                url: r,
+                id: id,
+              );
+              // replace links
+              newBank = newBank.copyWith(
+                information: newBank.information.copyWith(
+                  videos: newVideos,
+                ),
+              );
+            },
           );
         },
       );

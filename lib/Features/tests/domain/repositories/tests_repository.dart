@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 
 abstract class TestsRepository {
   //
@@ -27,5 +28,9 @@ abstract class TestsRepository {
   //
   Future<Either<Exception, List<Test>>> getMyTests({
     required bool update,
+  });
+  //
+  Future<Either<Exception, int>> addVideo({
+    required Video video,
   });
 }

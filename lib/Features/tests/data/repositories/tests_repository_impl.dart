@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 import 'package:moatmat_teacher/Features/tests/domain/repositories/tests_repository.dart';
 
 import '../datasources/tests_remote_ds.dart';
@@ -63,6 +64,18 @@ class TestsRepositoryImpl implements TestsRepository {
       {required List<int> ids, required bool update}) async {
     try {
       final res = await dataSource.getTestsByIds(ids: ids, update: update);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, int>> addVideo({
+    required Video video,
+  }) async {
+    try {
+      var res = await dataSource.addVideo(video: video);
       return right(res);
     } on Exception catch (e) {
       return left(e);
