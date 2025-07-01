@@ -114,22 +114,28 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
         (r) async {
           //
           List<Video> newVideos = newTest.information.videos ?? [];
+          print(newVideos.map((e) => "${e.id} : ${e.url}").toList());
           //
           int index = newVideos.indexOf(newTest.information.videos![i]);
           //
           //newVideos[index] = r;
+          print('type video before addVideoUc: ${newVideos[index].runtimeType}');
           var res = await locator<AddVideoUc>().call(video: newVideos[index]);
           res.fold(
             (l) {
               Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
               Clipboard.setData(ClipboardData(text: l.toString()));
-              newVideos.removeAt(index);
+              //newVideos.removeAt(index);
             },
             (id) {
-              newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(
+              print('id : $id');
+              newVideos[index] = VideoModel(
                 url: r,
                 id: id,
               );
+              print("id in : ${newVideos[index].id}");
+              print("url in : ${newVideos[index].url}");
+              print(newVideos.map((e)=>"${e.id} ${e.url}").toList());
               // replace links
               newTest = newTest.copyWith(
                 information: newTest.information.copyWith(
@@ -389,15 +395,13 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     final client = Supabase.instance.client;
     //
-    int id = -1;
-    //
     Map videoJson = VideoModel.fromClass(video).toJson();
+    print('videoJson being inserted: $videoJson');
     //
-    await client.from("videos").insert(videoJson);
+    var res = await client.from("videos").insert(videoJson).select().limit(1);
+    print('Response from insert: $res');
     //
-    var res = await client.from("videos").select().eq("url", video.url).limit(1);
-    //
-    id = VideoModel.fromJson(res.first).id;
+    int id = VideoModel.fromJson(res.first).id;
     //
     return id;
   }

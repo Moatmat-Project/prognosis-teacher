@@ -59,7 +59,7 @@ class TestInformationModel extends TestInformation {
       password: information.password,
       period: information.period,
       images: information.images,
-      videos: information.videos,
+      videos: information.videos?.map((e)=>VideoModel.fromClass(e)).toList(),
       files: information.files,
       previous: information.previous,
     );
@@ -73,7 +73,7 @@ class TestInformationModel extends TestInformation {
       "teacher": teacher,
       "price": price,
       "password": password,
-      "videos": (videos?.isNotEmpty ?? false) ? videos?.map((e) => VideoModel.fromClass(e).toJson()).toList() : [],
+      "videos": (videos?.isNotEmpty ?? false) ? videos?.map((e) => VideoModel.fromClass(e).toJson(addId: true)).toList() : [],
       "images": images,
       "period": period,
       "files": files ?? <String>[],
