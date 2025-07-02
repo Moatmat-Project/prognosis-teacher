@@ -90,10 +90,10 @@ class AuthCubit extends Cubit<AuthState> {
           }
         },
         (r) async {
-          if (r.options.isTeacher ?? false) {
+          if ((r.options.isTeacher ?? false)||kDebugMode) {
             injectTeacherData(r);
             emit(AuthDone());
-          } else {
+          } else if(!kDebugMode){
             emit(
               const AuthError(
                 error: "حساب غير مصرح \n تواصل على واتساب 0984993813 لتنشيط حسابك",

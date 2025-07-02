@@ -126,7 +126,8 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
               newVideos.removeAt(index);
             },
             (id) {
-              newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(
+              VideoModel model = VideoModel.fromClass(newVideos[index]);
+              newVideos[index] = (model as Video).copyWith(
                 url: r,
                 id: id,
               );

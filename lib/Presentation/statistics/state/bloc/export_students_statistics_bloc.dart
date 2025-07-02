@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:excel/excel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/functions/pdf/export_attendance_set_pdf.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/entities/attendance_set.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/usecases/get_attendance_sets_uc.dart';
@@ -43,6 +44,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
     final testsResponse = await _getMyStudentsStatisticsUc.call(students: even.students);
     await testsResponse.fold(
       (failure) {
+        Fluttertoast.showToast(msg: failure.toString());
         emit(ExportStatisticsInitial(
           sets: [],
           tests: [],
@@ -84,7 +86,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
     emit(ExportStatisticsLoading(state: state));
     final testsResponse = await _getMyStudentsStatisticsUc.call(students: state.students);
     await testsResponse.fold(
-      (failure) {
+      (failure) {Fluttertoast.showToast(msg: failure.toString());
         emit(ExportStatisticsPickTests(
           sets: state.sets,
           tests: state.tests,
@@ -124,9 +126,9 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
       return;
     }
     emit(ExportStatisticsLoading(state: state));
-    final setsResponse = await _getAttendanceSetsUsecase.call();
+    final setsResponse = await _getAttendanceSetsUsecase.call(isOffline: false);
     await setsResponse.fold(
-      (failure) {
+      (failure) {Fluttertoast.showToast(msg: failure.toString());
         emit(ExportStatisticsPickSets(
           sets: state.sets,
           tests: state.tests,

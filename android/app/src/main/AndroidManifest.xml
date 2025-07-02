@@ -6,7 +6,7 @@
 
 
     <application
-        android:label="تطبيق المعلم"
+        android:label="${applicationLabel}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

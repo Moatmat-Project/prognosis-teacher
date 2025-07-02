@@ -28,7 +28,7 @@ class TestInformationModel extends TestInformation {
       password: json["password"],
       period: json["period"],
       images: (json["images"] ?? []).cast<String>(),
-      videos: (json["videos"] as List).map((e) => VideoModel.fromJson(e)).toList(),
+      videos: (json["videos"] as List?)?.map((e) => VideoModel.fromJson(e)).toList(),
       files: List.generate(
         (json["files"] as List? ?? []).length,
         (i) => json["files"][i],

@@ -8,7 +8,7 @@ class VideoModel extends Video {
 
   factory VideoModel.fromJson(Map json) {
     return VideoModel(
-      id: json["id"],
+      id: json["id"] ?? 0,
       url: json["url"],
     );
   }
@@ -18,16 +18,25 @@ class VideoModel extends Video {
       url: video.url,
     );
   }
+  Video toClass() {
+    return Video(
+      id: id,
+      url: url,
+    );
+  }
+
   factory VideoModel.fromUrl(String url) {
     return VideoModel(
       id: -1,
       url: url,
     );
   }
-  toJson({bool addId = false,}) {
+  toJson({
+    bool addId = false,
+  }) {
     return {
       if (addId) "id": id,
-      "url" : url,
+      "url": url,
     };
   }
 }

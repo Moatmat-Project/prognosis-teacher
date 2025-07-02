@@ -61,6 +61,18 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("staging") {
+            dimension = "default"
+            manifestPlaceholders["applicationLabel"] = "تطبيق المعلم (تجريبي)"
+        }
+        create("production") {
+            dimension = "default"
+        }
+    }     
+    
 }
 
 flutter {
