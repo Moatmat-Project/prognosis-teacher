@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/attendance/data/models/attendance_record_model.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
@@ -120,10 +121,25 @@ class StudentsDSimpl implements StudentsDS {
     bool excludeCourseSubscribers = false,
     bool excludeBanks = false,
     bool excludeTests = false,
-  }) async {
+  }) async {    
     //
     // final client = client;
     final client = Supabase.instance.client;
+    if(kDebugMode){
+    final users = await client.from("users_data").select().limit(100);
+    final List<UserData> students = users.map((e) {
+      return UserDataModel.fromJson(e);
+    }).toList();
+
+    //
+    // return users;
+    return GetMyStudentsResponse(
+      banksIds: [],
+      testsIds: [],
+      students: students,
+    );
+    }
+
     //
     final teacherData = locator<TeacherData>();
     //
