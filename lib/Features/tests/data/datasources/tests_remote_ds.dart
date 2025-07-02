@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
@@ -40,7 +39,7 @@ abstract class TestsRemoteDS {
   //
   Future<List<Test>> getMyTests({required bool update});
   //
-  Future<int> addVideo({
+  Future<Video> addVideo({
     required Video video,
   });
 }
@@ -77,6 +76,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
         model = TestModel.fromClass(
           newTest.copyWith(properties: properties),
         ).toJson();
+        print("Model in uploadTestFile : $model");
         //
       }
     }
@@ -100,49 +100,38 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
       //
       yield "رفع ملف المقطع رقم (${i + 1}/$filesLength)";
       //
-      var res = await locator<UploadFileUC>().call(
+      var uploadRes = await locator<UploadFileUC>().call(
         bucket: "tests",
         material: newTest.information.material,
         id: newTest.id.toString(),
         path: newTest.information.videos![i].url,
       );
-      res.fold(
-        (l) {
-          Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
-          Clipboard.setData(ClipboardData(text: l.toString()));
-        },
-        (r) async {
-          //
-          List<Video> newVideos = newTest.information.videos ?? [];
-          //
-          int index = newVideos.indexOf(newTest.information.videos![i]);
-          //
-          //newVideos[index] = r;
-          var res = await locator<AddVideoUc>().call(video: newVideos[index]);
-          res.fold(
-            (l) {
-              Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
-              Clipboard.setData(ClipboardData(text: l.toString()));
-              newVideos.removeAt(index);
-            },
-            (id) {
-              VideoModel model = VideoModel.fromClass(newVideos[index]);
-              newVideos[index] = (model as Video).copyWith(
-                url: r,
-                id: id,
-              );
-              // replace links
-              newTest = newTest.copyWith(
-                information: newTest.information.copyWith(
-                  videos: newVideos,
-                ),
-              );
-              //
-            },
-          );
-        },
+
+      if (uploadRes.isLeft()) {
+        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
+        continue;
+      }
+
+      List<Video> newVideos = newTest.information.videos ?? [];
+
+      final uploadedUrl = uploadRes.getOrElse(() => "");
+
+      final addedVideoRes = await locator<AddVideoUc>().call(
+        video: VideoModel(id: -1, url: uploadedUrl),
       );
-      //
+
+      if (addedVideoRes.isLeft()) {
+        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
+        continue;
+      }
+
+      final video = addedVideoRes.getOrElse(() => Video(id: -1, url: ""));
+
+      newVideos[i] = video;
+
+      newTest = newTest.copyWith(
+        information: newTest.information.copyWith(videos: newVideos),
+      );
     }
     // upload test images
     for (int i = 0; i < (newTest.information.images ?? []).length; i++) {
@@ -384,22 +373,16 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
   }
 
   @override
-  Future<int> addVideo({
+  Future<Video> addVideo({
     required Video video,
   }) async {
     //
     final client = Supabase.instance.client;
     //
-    int id = -1;
-    //
     Map videoJson = VideoModel.fromClass(video).toJson();
     //
-    await client.from("videos").insert(videoJson);
+    var res = await client.from("videos").insert(videoJson).select().limit(1);
     //
-    var res = await client.from("videos").select().eq("url", video.url).limit(1);
-    //
-    id = VideoModel.fromJson(res.first).id;
-    //
-    return id;
+    return VideoModel.fromJson(res.first);
   }
 }

@@ -7,9 +7,11 @@ class AddVideoUc {
 
   AddVideoUc({required this.repository});
 
-  Future<Either<Exception, int>> call({
+  Future<Either<Exception, Video>> call({
     required Video video,
   }) async {
+    print('type inside AddVideoUc: ${video.runtimeType}');
+
     return await repository.addVideo(
       video: video,
     );

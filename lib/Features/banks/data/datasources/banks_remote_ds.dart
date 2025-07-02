@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/banks/data/models/bank_m.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank.dart';
@@ -90,39 +91,39 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
       //
       yield "رفع ملف المقطع رقم (${i + 1}/$filesLength)";
       //
-      var res = await locator<UploadFileUC>().call(
+      var uploadRes = await locator<UploadFileUC>().call(
         bucket: "banks",
         material: newBank.information.material,
         id: newBank.id.toString(),
         path: newBank.information.videos![i].url,
       );
-      res.fold(
-        (l) {},
-        (r) async {
-          //
-          List<Video> newVideos = newBank.information.videos ?? [];
-          //
-          int index = newVideos.indexOf(newBank.information.videos![i]);
-          //
-          var res = await locator<AddVideoUc>().call(video: newVideos[index]);
-          res.fold(
-            (l) {
-              newVideos.removeAt(index);
-            },
-            (id) {
-              newVideos[index] = VideoModel.fromClass(newVideos[index]).copyWith(
-                url: r,
-                id: id,
-              );
-              // replace links
-              newBank = newBank.copyWith(
-                information: newBank.information.copyWith(
-                  videos: newVideos,
-                ),
-              );
-            },
-          );
-        },
+
+      if (uploadRes.isLeft()) {
+      Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
+      continue;
+      }
+
+      List<Video> newVideos = newBank.information.videos ?? [];
+
+      final uploadedUrl = uploadRes.getOrElse(() => "");
+
+      final addedVideoRes = await locator<AddVideoUc>().call(
+        video: VideoModel(id: -1, url: uploadedUrl),
+      );
+
+      if (addedVideoRes.isLeft()) {
+        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
+        continue;
+      }
+
+      final video = addedVideoRes.getOrElse(() => Video(id: -1, url: ""));
+
+      newVideos[i] = video;
+
+      newBank = newBank.copyWith(
+        information: newBank.information.copyWith(
+          videos: newVideos,
+        ),
       );
       //
     }
@@ -138,7 +139,9 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
         path: newBank.information.images![i],
       );
       res.fold(
-        (l) {},
+        (l) {
+          Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع الصورة");
+        },
         (r) {
           //
           List<String> newImages = newBank.information.images ?? [];
@@ -173,7 +176,9 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
           path: newBank.information.files![i],
         );
         res.fold(
-          (l) => print(l),
+          (l) {
+            Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع ملف pdf");
+          },
           (r) {
             //
             List<String> newFiles = newBank.information.files ?? [];

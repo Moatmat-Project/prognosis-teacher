@@ -29,7 +29,7 @@ class TestModel extends Test {
     return TestModel(
       id: test.id,
       teacherEmail: test.teacherEmail,
-      information: test.information,
+      information: TestInformationModel.fromClass(test.information),
       properties: test.properties,
       questions: test.questions,
     );

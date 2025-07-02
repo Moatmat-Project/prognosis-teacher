@@ -27,6 +27,7 @@ class _MyTestsViewState extends State<MyTestsView> {
   @override
   void initState() {
     context.read<MyTestsCubit>().init();
+    print('hi');
     super.initState();
   }
 

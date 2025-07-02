@@ -30,7 +30,7 @@ abstract class TestsRepository {
     required bool update,
   });
   //
-  Future<Either<Exception, int>> addVideo({
+  Future<Either<Exception, Video>> addVideo({
     required Video video,
   });
 }
