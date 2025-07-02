@@ -139,13 +139,13 @@ class StudentTileWidget extends StatefulWidget {
     super.key,
     required this.userData,
     this.isSelected = false,
-    this.forSelecion = false,
+    this.forSelection = false,
     this.onLongPress,
     this.onTap,
   });
   final UserData userData;
   final bool? isSelected;
-  final bool? forSelecion;
+  final bool? forSelection;
   final void Function()? onTap;
   final Function()? onLongPress;
 
@@ -225,12 +225,12 @@ class _StudentTileWidgetState extends State<StudentTileWidget> {
                       ),
                     ),
                     //
-                    if(widget.isSelected ?? false)...[
+                    if (widget.isSelected == true) ...[
                       Icon(Icons.check_circle, color: ColorsResources.primary),
-                    ]
-                    else ...[
-                      if(!(widget.forSelecion ?? false))
-                        Icon(Icons.arrow_forward_ios, size: 10),
+                    ] else if (widget.isSelected == false && widget.forSelection == true) ...[
+                      Icon(Icons.check_circle_outline_sharp, color: ColorsResources.borders),
+                    ] else ...[
+                      if (!(widget.forSelection ?? false)) Icon(Icons.arrow_forward_ios, size: 10),
                     ]
                   ],
                 ),

@@ -103,15 +103,12 @@ class _GroupViewState extends State<GroupView> {
                   builder: (c) => PickStudents(group: group),
                 ),
               );
-
               if (addedUsers != null && addedUsers.isNotEmpty) {
                 await context.read<StudentsGroupsCubit>().update();
-
                 final updatedGroup = context.read<StudentsGroupsCubit>().groups.firstWhere(
                       (g) => g.id == group.id,
                       orElse: () => group,
                     );
-
                 setState(() {
                   group = updatedGroup;
                   items = group.items.where((e) {

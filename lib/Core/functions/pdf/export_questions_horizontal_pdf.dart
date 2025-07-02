@@ -87,16 +87,16 @@ Future<List<pw.Page>> getPages({
     final currentImage = images[i];
     final currentHeight = pagesImagesHolder.last.fold(0.0, (prev, img) => prev + img.height);
     double allowedHeight = maxColumnHeight;
-    if (pagesImagesHolder.length > 1) {
-      allowedHeight = maxColumnHeight + (headerHeight);
-    }
+
     if ((currentHeight + currentImage.height) >= allowedHeight) {
+      // print("over height , current height is $currentHeight , allowed height is $allowedHeight , a4 ${PdfPageFormat.a4.height}");
       pagesImagesHolder.add([]);
     }
     pagesImagesHolder.last.add(currentImage);
   }
   //
   for (int i = 0; i < pagesImagesHolder.length; i++) {
+    print("in ${i + 1}- ${pagesImagesHolder[i].length}");
     pages.add(
       getPage(
         index: i,
@@ -167,7 +167,8 @@ pw.Page getPage({
                   ),
                 ),
               pw.Container(
-                height: availablePageHeight,
+                padding: pw.EdgeInsets.zero,
+                height: availablePageHeight + 10,
                 child: pw.Directionality(
                   textDirection: pw.TextDirection.rtl,
                   child: pw.Column(
