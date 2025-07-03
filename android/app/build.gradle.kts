@@ -61,7 +61,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
-    flavorDimensions += "default"
+/* flavorDimensions += "default"
 
     productFlavors {
         create("staging") {
@@ -70,8 +70,10 @@ android {
         }
         create("production") {
             dimension = "default"
+            manifestPlaceholders["applicationLabel"] = "تطبيق المعلم"
         }
     }     
+    */
     
 }
 

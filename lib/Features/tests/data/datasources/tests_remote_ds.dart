@@ -121,6 +121,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
       );
 
       if (addedVideoRes.isLeft()) {
+        
         Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
         continue;
       }
