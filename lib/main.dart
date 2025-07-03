@@ -8,6 +8,7 @@ import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/gro
 import 'package:moatmat_teacher/Presentation/questions/state/cubit/create_question_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/add_outer_test/add_outer_test_cubit.dart';
+import 'package:moatmat_teacher/Presentation/tests/state/comment_managment/comments_managment_bloc.dart';
 import 'package:moatmat_teacher/firebase_options.dart';
 import 'Core/injection/app_inj.dart';
 import 'Core/services/cache/cache_manager.dart';
@@ -90,6 +91,7 @@ void main() async {
         BlocProvider(create: (context) => StudentReportsCubit()),
         BlocProvider(create: (context) => SwitchAccountsBloc()),
         BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
+        BlocProvider(create: (context) => CommentsManagmentBloc()),
       ],
       child: const AppRoot(),
     ),

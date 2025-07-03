@@ -2,8 +2,12 @@ import 'package:moatmat_teacher/Features/tests/data/datasources/tests_remote_ds.
 import 'package:moatmat_teacher/Features/tests/data/repositories/tests_repository_impl.dart';
 import 'package:moatmat_teacher/Features/tests/domain/repositories/tests_repository.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/add_video_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_comment_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_reply_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_test_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_comment_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_my_tests_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_replies_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_test_by_id_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_tests_by_ids_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/update_test_uc.dart';
@@ -51,6 +55,26 @@ void injectUC() {
   );
   locator.registerFactory<AddVideoUc>(
     () => AddVideoUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<GetCommentUc>(
+    () => GetCommentUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<GetRepliesUc>(
+    () => GetRepliesUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<DeleteCommentUc>(
+    () => DeleteCommentUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<DeleteReplyUc>(
+    () => DeleteReplyUc(
       repository: locator(),
     ),
   );
