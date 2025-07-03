@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Core/resources/colors_r.dart';
+import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/comment.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/reply_comment.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/comment_managment/comments_managment_bloc.dart';
@@ -22,8 +24,10 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsResources.onPrimary,
       appBar: AppBar(
         title: Text('إدارة التعليقات والردود'),
+        backgroundColor: ColorsResources.onPrimary,
       ),
       body: BlocBuilder<CommentsManagmentBloc, CommentsManagmentState>(
         builder: (context, state) {
@@ -39,60 +43,71 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
             return Center(child: Text('لا توجد تعليقات'));
           }
 
-          return ListView.builder(
+          return ListView.separated(
             itemCount: comments.length,
             itemBuilder: (context, index) {
               final Comment comment = comments[index];
+              //
               final replies = state.repliesMap[comment.id] ?? [];
-
-              return ExpansionTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(comment.username),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        _confirmDeleteComment(context, comment.id);
-                      },
-                    ),
-                  ],
-                ),
-                subtitle: Text(comment.comment),
-                children: [
-                  if (state.loadingRepliesForComments.contains(comment.id))
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircularProgressIndicator(),
-                    )
-                  else
-                    Column(
-                      children: replies.map((ReplyComment reply) {
-                        return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(reply.username),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  _confirmDeleteReply(context, comment.id, reply.id);
-                                },
-                              ),
-                            ],
-                          ),
-                          subtitle: Text(reply.comment),
-                        );
-                      }).toList(),
-                    ),
-                  TextButton(
-                    onPressed: () {
-                      context.read<CommentsManagmentBloc>().add(LoadReplies(commentId: comment.id));
-                    },
-                    child: Text('تحميل الردود (${comment.repliesNum})'),
+              //
+              return Card(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ColorsResources.onPrimary,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ],
+                  child: ExpansionTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(comment.username),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            _confirmDeleteComment(context, comment.id);
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(comment.comment),
+                    children: [
+                      if (state.loadingRepliesForComments.contains(comment.id))
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: CircularProgressIndicator(),
+                        )
+                      else
+                        Column(
+                          children: replies.map((ReplyComment reply) {
+                            return ListTile(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(reply.username),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      _confirmDeleteReply(context, comment.id, reply.id);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              subtitle: Text(reply.comment),
+                            );
+                          }).toList(),
+                        ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<CommentsManagmentBloc>().add(LoadReplies(commentId: comment.id));
+                        },
+                        child: Text('تحميل الردود (${comment.repliesNum})'),
+                      ),
+                    ],
+                  ),
+                ),
               );
+            }, separatorBuilder: (BuildContext context, int index) {
+              return Padding(padding: EdgeInsets.only(top: SizesResources.s1));
             },
           );
         },
