@@ -15,10 +15,10 @@ class _VideosListViewState extends State<VideosListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsResources.onPrimary,
+      backgroundColor: ColorsResources.background,
       appBar: AppBar(
         title: Text('قائمة الفيديوهات'),
-        backgroundColor: ColorsResources.onPrimary,
+        backgroundColor: ColorsResources.background,
       ),
       body: widget.videos.isEmpty
           ? const Center(child: Text('لا توجد فيديوهات'))

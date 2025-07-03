@@ -24,10 +24,10 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsResources.onPrimary,
+      backgroundColor: ColorsResources.background,
       appBar: AppBar(
         title: Text('إدارة التعليقات والردود'),
-        backgroundColor: ColorsResources.onPrimary,
+        backgroundColor: ColorsResources.background,
       ),
       body: BlocBuilder<CommentsManagmentBloc, CommentsManagmentState>(
         builder: (context, state) {
@@ -106,7 +106,8 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
                   ),
                 ),
               );
-            }, separatorBuilder: (BuildContext context, int index) {
+            },
+            separatorBuilder: (BuildContext context, int index) {
               return Padding(padding: EdgeInsets.only(top: SizesResources.s1));
             },
           );
