@@ -61,7 +61,7 @@ class _SendNotificationViewState extends State<SendNotificationView> {
     final body = bodyController.text.trim();
     final image = selectedImage;
     final notification = AppNotification(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: DateTime.now().millisecond.toString(),
       date: DateTime.now(),
       title: title,
       body: body,

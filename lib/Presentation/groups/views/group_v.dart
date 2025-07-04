@@ -7,7 +7,7 @@ import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group_item.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/manage_group_tests_view.dart';
-import 'package:moatmat_teacher/Presentation/notifications2/views/send_bulk_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_bulk_notification_v.dart';
 
 import '../../../Core/resources/colors_r.dart';
 import '../../../Core/resources/shadows_r.dart';

@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
+import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
 import 'package:moatmat_teacher/Presentation/notifications2/state/cubit/notifications_cubit.dart';
-import 'package:moatmat_teacher/Presentation/notifications2/views/write_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/write_notification_v.dart';
 
 class SendBulkNotificationView extends StatefulWidget {
   const SendBulkNotificationView({super.key, required this.usersData});
@@ -23,16 +24,24 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text('إرسال إشعار')),
       body: BlocBuilder<NotificationsCubit, NotificationsState>(
         builder: (context, state) {
           if (state is NotificationsBulkNotification) {
             return WriteNotificationView(
               onSet: (notification) async {
-                context.read<NotificationsCubit>().sendBulkNotification(
-                      userData: widget.usersData,
-                      notification: notification,
+
+                context.read<SendNotificationBloc>().add(
+                      SendNotificationToUsers(
+                        imageFile: null,
+                        userIds: widget.usersData.map((e) => e.id).toList(),
+                        notification: notification,
+                      ),
                     );
+                // context.read<NotificationsCubit>().sendBulkNotification(
+                //       userData: widget.usersData,
+                //       notification: notification,
+                //     );
               },
             );
           } else if (state is NotificationsSuccess) {

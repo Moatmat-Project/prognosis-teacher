@@ -3,13 +3,12 @@ import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/validators/not_empty_v.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/elevated_button_widget.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
-import 'package:moatmat_teacher/Features/notifications2/domain/entities/notification.dart' as n;
+import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
 
-import '../../../Features/notifications2/domain/entities/notification.dart';
 
 class WriteNotificationView extends StatefulWidget {
   const WriteNotificationView({super.key, required this.onSet});
-  final Function(NotificationData notification) onSet;
+  final Function(AppNotification notification) onSet;
 
   @override
   State<WriteNotificationView> createState() => _WriteNotificationViewState();
@@ -60,10 +59,10 @@ class _WriteNotificationViewState extends State<WriteNotificationView> {
               if (formKey.currentState?.validate() ?? false) {
                 formKey.currentState?.save();
                 //
-                var not = NotificationData(
-                  id: 0,
+                var not = AppNotification(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
                   title: title,
-                  content: body,
+                  body: body,
                   date: DateTime.now(),
                 );
                 //
