@@ -32,7 +32,7 @@ abstract class NotificationsRepository {
 
   ///
   Future<Either<Failure, Unit>> cancelNotification({
-    required int id,
+    required String id,
   });
 
   ///

@@ -12,6 +12,7 @@ extension AppNotificationModelMapper on AppNotificationModel {
       date: date,
       imageUrl: imageUrl,
       seen: seen,
+      data: data,
     );
   }
 }
@@ -26,6 +27,7 @@ extension AppNotificationMapper on AppNotification {
       date: date,
       imageUrl: imageUrl,
       seen: seen,
+      data: data,
     );
   }
 }

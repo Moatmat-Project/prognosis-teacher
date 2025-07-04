@@ -19,7 +19,7 @@ import '../../domain/entities/app_notification.dart';
 abstract class NotificationsRemoteDatasource {
   Future<Unit> initializeLocalNotification();
   Future<Unit> initializeFirebaseNotification();
-  Future<Unit> cancelNotification(int id);
+  Future<Unit> cancelNotification(String id);
   Future<Unit> createNotificationsChannel(AndroidNotificationChannel channel);
   Future<Unit> displayFirebaseNotification(RemoteMessage message);
   Future<Unit> displayLocalNotification({
@@ -94,8 +94,8 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
   }
 
   @override
-  Future<Unit> cancelNotification(int id) async {
-    await _localNotificationsPlugin.cancel(id);
+  Future<Unit> cancelNotification(String id) async {
+    await _localNotificationsPlugin.cancel(id.hashCode);
     return unit;
   }
 
@@ -108,7 +108,7 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
     if (!notification.isValid()) return unit;
 
     await _localNotificationsPlugin.show(
-      notification.id,
+      notification.id.hashCode,
       notification.title,
       notification.body,
       details ?? AppLocalNotificationsSettings.defaultNotificationsDetails(),

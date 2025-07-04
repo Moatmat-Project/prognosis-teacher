@@ -8,7 +8,7 @@ class CancelNotificationUsecase {
 
   CancelNotificationUsecase({required this.repository});
 
-  Future<Either<Failure, Unit>> call({required int id}) async {
+  Future<Either<Failure, Unit>> call({required String id}) async {
     return await repository.cancelNotification(id: id);
   }
 }

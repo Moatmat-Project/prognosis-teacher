@@ -36,7 +36,7 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> cancelNotification({required int id}) async {
+  Future<Either<Failure, Unit>> cancelNotification({required String id}) async {
     try {
       final response = await _remoteDatasource.cancelNotification(id);
       return right(response);
