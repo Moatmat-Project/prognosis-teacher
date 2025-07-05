@@ -7,7 +7,6 @@ import 'package:moatmat_teacher/Presentation/notifications/state/send_notificati
 import 'package:moatmat_teacher/Presentation/notifications/views/select_students_view.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/send_notification_body.dart';
 
-
 class SendNotificationView extends StatefulWidget {
   const SendNotificationView({super.key});
 
@@ -49,7 +48,8 @@ class _SendNotificationViewState extends State<SendNotificationView> {
 
     if (result != null && result.isNotEmpty) {
       setState(() {
-        selectedUserIds.addAll(result.where((id) => !selectedUserIds.contains(id)));
+        selectedUserIds
+            .addAll(result.where((id) => !selectedUserIds.contains(id)));
       });
     }
   }
@@ -91,7 +91,8 @@ class _SendNotificationViewState extends State<SendNotificationView> {
   }
 
   void _showSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _handleSuccess() {
@@ -107,7 +108,7 @@ class _SendNotificationViewState extends State<SendNotificationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('إرسال إشعار')),
+      appBar: AppBar(title: const Text('  إرسال إشعار')),
       body: BlocListener<SendNotificationBloc, SendNotificationState>(
         listener: (context, state) {
           if (state is SendNotificationSuccess) {

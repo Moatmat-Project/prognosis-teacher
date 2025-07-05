@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Core/injection/app_inj.dart';
+import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
@@ -10,10 +12,12 @@ class SendNotificationToUserView extends StatefulWidget {
   final UserData userData;
 
   @override
-  State<SendNotificationToUserView> createState() => _SendNotificationToUserViewState();
+  State<SendNotificationToUserView> createState() =>
+      _SendNotificationToUserViewState();
 }
 
-class _SendNotificationToUserViewState extends State<SendNotificationToUserView> {
+class _SendNotificationToUserViewState
+    extends State<SendNotificationToUserView> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final bodyController = TextEditingController();
@@ -28,11 +32,11 @@ class _SendNotificationToUserViewState extends State<SendNotificationToUserView>
   void _sendNotification() {
     if (_formKey.currentState?.validate() ?? false) {
       final notification = AppNotification(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: titleController.text.trim(),
-        body: bodyController.text.trim(),
-        date: DateTime.now(),
-      );
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: titleController.text.trim(),
+          body: bodyController.text.trim(),
+          date: DateTime.now(),
+          );
       context.read<SendNotificationBloc>().add(
             SendNotificationToUsers(
               imageFile: null,

@@ -13,7 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 import '../../domain/entities/app_notification.dart';
 
 abstract class NotificationsRemoteDatasource {
@@ -31,7 +30,8 @@ abstract class NotificationsRemoteDatasource {
   Future<Unit> unsubscribeToTopic(String topic);
   Future<String> getDeviceToken();
   Future<Unit> deleteDeviceToken();
-  Future<Unit> registerDeviceToken({required String deviceToken, required String platform});
+  Future<Unit> registerDeviceToken(
+      {required String deviceToken, required String platform});
   Future<Unit> sendNotificationToTopics({
     required SendNotificationToTopicsRequest sendNotificationRequest,
   });
@@ -42,7 +42,8 @@ abstract class NotificationsRemoteDatasource {
   Future<List<AppNotification>> getNotifications();
 }
 
-class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource {
+class NotificationsRemoteDatasourceImpl
+    implements NotificationsRemoteDatasource {
   final _supabase = Supabase.instance.client;
   final _firebaseMessaging = FirebaseMessaging.instance;
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -58,7 +59,8 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
     await _localNotificationsPlugin.initialize(
       AppLocalNotificationsSettings.settings,
       onDidReceiveNotificationResponse: (response) {},
-      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse:
+          onDidReceiveBackgroundNotificationResponse,
     );
 
     return unit;
@@ -75,7 +77,8 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
     );
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessage.listen(onData, onDone: onDone, onError: onError);
+    FirebaseMessaging.onMessage
+        .listen(onData, onDone: onDone, onError: onError);
     FirebaseMessaging.instance.onTokenRefresh.listen(onTokenRefreshed);
 
     for (var topic in AppRemoteNotificationsSettings.defaultTopicList) {
@@ -87,8 +90,11 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
   }
 
   @override
-  Future<Unit> createNotificationsChannel(AndroidNotificationChannel channel) async {
-    final androidImplementation = _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+  Future<Unit> createNotificationsChannel(
+      AndroidNotificationChannel channel) async {
+    final androidImplementation =
+        _localNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
     await androidImplementation?.createNotificationChannel(channel);
     return unit;
   }
@@ -156,7 +162,9 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
 
   @override
   Future<String> getDeviceToken() async {
-    final token = Platform.isIOS ? await _firebaseMessaging.getAPNSToken() : await _firebaseMessaging.getToken();
+    final token = Platform.isIOS
+        ? await _firebaseMessaging.getAPNSToken()
+        : await _firebaseMessaging.getToken();
 
     if (token == null) throw Exception("FCM token is null");
     return token;
@@ -172,7 +180,8 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
   }
 
   @override
-  Future<Unit> registerDeviceToken({required String deviceToken, required String platform}) async {
+  Future<Unit> registerDeviceToken(
+      {required String deviceToken, required String platform}) async {
     final user = _supabase.auth.currentUser;
     if (user == null) {
       debugPrint('User is null');
@@ -186,7 +195,11 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
     );
 
     try {
-      await _supabase.from('device_tokens').delete().eq('user_id', model.userId).eq('platform', model.platform);
+      await _supabase
+          .from('device_tokens')
+          .delete()
+          .eq('user_id', model.userId)
+          .eq('platform', model.platform);
 
       await _supabase.from('device_tokens').insert(model.toMap());
       debugPrint("✅ Device token registered successfully to Supabase");
@@ -204,7 +217,6 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
   Future<Unit> sendNotificationToTopics({
     required SendNotificationToTopicsRequest sendNotificationRequest,
   }) async {
-
     return _invokeNotificationFunction(
       functionName: 'send-notifications-to-topics',
       body: {
@@ -242,7 +254,9 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
 
       if (response.status != 200) {
         final data = response.data as Map<String, dynamic>?;
-        final errorMessage = data?['error']?['message'] ?? data?['message'] ?? 'Unknown error from function';
+        final errorMessage = data?['error']?['message'] ??
+            data?['message'] ??
+            'Unknown error from function';
         debugPrint('[$functionName] Failed: $errorMessage');
         throw Exception('Failed to $errorContext: $errorMessage');
       }
@@ -259,59 +273,50 @@ class NotificationsRemoteDatasourceImpl implements NotificationsRemoteDatasource
     }
   }
 
-@override
-Future<String> uploadNotificationImage(File imageFile) async {
-  try {
-    final fileExtension = imageFile.path.split('.').last;
-    final fileName = 'notification_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
-    
-    await _supabase.storage
-        .from('notifications2')
-        .upload(
-          fileName, 
-          imageFile,
-          fileOptions: FileOptions(
-            contentType: 'image/$fileExtension',
-          ),
-        );
-    
-   final imageUrlResponse = _supabase.storage
-        .from('notifications2')
-        .getPublicUrl(fileName);
-    
-    return imageUrlResponse;
-  } catch (e) {
-    debugPrint('[uploadImage] Upload failed: $e');
-    throw Exception('Image upload failed: $e');
+  @override
+  Future<String> uploadNotificationImage(File imageFile) async {
+    try {
+      final fileExtension = imageFile.path.split('.').last;
+      final fileName =
+          'notification_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
+
+      await _supabase.storage.from('notifications2').upload(
+            fileName,
+            imageFile,
+            fileOptions: FileOptions(
+              contentType: 'image/$fileExtension',
+            ),
+          );
+
+      final imageUrlResponse =
+          _supabase.storage.from('notifications2').getPublicUrl(fileName);
+
+      return imageUrlResponse;
+    } catch (e) {
+      debugPrint('[uploadImage] Upload failed: $e');
+      throw Exception('Image upload failed: $e');
+    }
+  }
+
+  @override
+  Future<List<AppNotification>> getNotifications() async {
+    try {
+      final user = _supabase.auth.currentUser;
+      final userId = user?.id;
+      final subscribedTopics = AppRemoteNotificationsSettings.defaultTopicList;
+
+      if (userId == null) return [];
+
+      final response = await _supabase.from('notifications2').select().or(
+            'and(type.eq.user,target_user_ids.cs.{$userId}),and(type.eq.topic,target_topics.cs.{${subscribedTopics.join(',')}})',
+          ) as List;
+
+      return response.map((e) {
+        return AppNotification.fromJson(e as Map<String, dynamic>);
+      }).toList();
+    } catch (e) {
+      debugPrint('Unexpected error while trying to get notifications: $e');
+      throw ServerException();
+    }
   }
 }
-@override
-Future<List<AppNotification>> getNotifications() async {
-  try {
-    
-
-  final user = _supabase.auth.currentUser;
-  final userId = user?.id;
-  final subscribedTopics = AppRemoteNotificationsSettings.defaultTopicList;
-
-  if (userId == null) return [];
-
-  final response = await _supabase
-      .from('notifications2')
-      .select()
-      .or(
-        'and(type.eq.user,target_user_ids.cs.{$userId}),and(type.eq.topic,target_topics.cs.{${subscribedTopics.join(',')}})',
-      ) as List;
-
-  return response
-      .map((e) {
-      return AppNotification.fromJson(e as Map<String, dynamic>);
-      })
-      .toList();
-      } catch (e) {
-        debugPrint('Unexpected error while trying to get notifications: $e');
-        throw ServerException();
-      }
-}
-}
-
