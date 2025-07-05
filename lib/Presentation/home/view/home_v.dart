@@ -151,10 +151,7 @@ class _HomeViewState extends State<HomeView> {
             onTap: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => locator<SendNotificationBloc>(),
-                          child: SendNotificationView(),
-                        )),
+                    builder: (context) => SendNotificationView(),),
               );
               FocusManager.instance.primaryFocus?.unfocus();
             },

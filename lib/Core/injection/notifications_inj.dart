@@ -109,13 +109,13 @@ Future<void> injectBlocs() async {
         unsubscribeFromTopic: locator(),
       ));
 
-  locator.registerLazySingleton(() => SendNotificationBloc(
+  locator.registerFactory(() => SendNotificationBloc(
         uploadNotificationImageUsecase: locator(),
         sendNotificationToUsersUsecase: locator(),
         sendNotificationToTopicsUsecase: locator(),
       ));
 
-  locator.registerLazySingleton(() => NotificationsBloc(
+  locator.registerFactory(() => NotificationsBloc(
         getNotificationsUsecase: locator(),
     
       ));

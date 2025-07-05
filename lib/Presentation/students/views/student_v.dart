@@ -6,7 +6,7 @@ import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Presentation/export/views/results/choose_export_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/add_to_group_v.dart';
-import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_to_user_view.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/student/student_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/views/student_reports_view.dart';
@@ -72,7 +72,7 @@ class _StudentViewState extends State<StudentView> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => SendNotificationView(
+                          builder: (context) => SendNotificationToUserView(
                             userData: state.userData,
                           ),
                         ),
