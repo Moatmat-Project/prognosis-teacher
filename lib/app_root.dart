@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:moatmat_teacher/Features/notifications/data/handlers/firebase_messaging_handlers.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:moatmat_teacher/Core/constant/navigation_key.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/notifications_view.dart';
 import 'Core/resources/colors_r.dart';
 import 'Core/resources/spacing_resources.dart';
 import 'Presentation/auth/view/auth_views_manager.dart';
 
-class AppRoot extends StatelessWidget {
+class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
+
+  @override
+  State<AppRoot> createState() => _AppRootState();
+}
+
+class _AppRootState extends State<AppRoot> {
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessagingHandlers().onInitialNotification();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +84,10 @@ class AppRoot extends StatelessWidget {
         Locale("ar"),
       ],
       home: const AuthViewsManager(),
+      navigatorKey: navigatorKey,
+      routes: {
+        '/notifications': (context) => const NotificationsView(),
+      },
     );
   }
 }

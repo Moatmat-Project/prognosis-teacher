@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:moatmat_teacher/Core/injection/banks_inj.dart';
 import 'package:moatmat_teacher/Core/injection/buckets_inj.dart';
 import 'package:moatmat_teacher/Core/injection/cash_inj.dart';
@@ -13,7 +14,6 @@ import 'package:moatmat_teacher/Core/injection/update_inj.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'attendance_inj.dart';
 import 'auth_inj.dart';
-import 'notifications2_inj.dart';
 import 'requests_inj.dart';
 import 'scanner_inj.dart';
 import 'students_inj.dart';
@@ -23,6 +23,10 @@ initGetIt() async {
   //
   var sp = await SharedPreferences.getInstance();
   locator.registerSingleton(sp);
+
+  if (!locator.isRegistered<SupabaseClient>()) {
+    locator.registerSingleton<SupabaseClient>(Supabase.instance.client);
+  }
   //
   injectAuth();
   //

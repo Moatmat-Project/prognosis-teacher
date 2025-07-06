@@ -76,10 +76,14 @@ class NotificationsRemoteDatasourceImpl
       sound: AppRemoteNotificationsSettings.showSound,
     );
 
+    final handlers = FirebaseMessagingHandlers();
+
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessage
-        .listen(onData, onDone: onDone, onError: onError);
-    FirebaseMessaging.instance.onTokenRefresh.listen(onTokenRefreshed);
+    FirebaseMessaging.onMessage.listen(handlers.onData,
+        onDone: handlers.onDone, onError: handlers.onError);
+    FirebaseMessaging.instance.onTokenRefresh.listen(handlers.onTokenRefreshed);
+    FirebaseMessaging.onMessageOpenedApp.listen(handlers.onNotificationOpened);
+
 
     for (var topic in AppRemoteNotificationsSettings.defaultTopicList) {
       await subscribeToTopic(topic);
