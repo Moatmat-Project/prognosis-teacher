@@ -9,6 +9,7 @@ import 'package:moatmat_teacher/Presentation/notifications/state/send_notificati
 import 'package:moatmat_teacher/Presentation/questions/state/cubit/create_question_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/add_outer_test/add_outer_test_cubit.dart';
+import 'package:moatmat_teacher/Presentation/tests/state/comment_managment/comments_managment_bloc.dart';
 import 'package:moatmat_teacher/firebase_options.dart';
 import 'Core/injection/app_inj.dart';
 import 'Core/services/cache/cache_manager.dart';
@@ -22,6 +23,7 @@ import 'Presentation/folders/state/folders_manager/folders_manager_cubit.dart';
 import 'Presentation/folders/state/pick_teacher_item/pick_teacher_item_cubit.dart';
 import 'Presentation/groups/state/groups/students_groups_cubit.dart';
 import 'Presentation/notifications2/state/cubit/notifications_cubit.dart';
+import 'Presentation/notifications/state/cubit/notifications_cubit.dart' as notifications_v1;
 import 'Presentation/outer_tests_results/state/cubit/outer_test_results_cubit.dart';
 import 'Presentation/picker/state/cubit/questions_picker_cubit.dart';
 import 'Presentation/purchases/state/cubit/purchases_cubit.dart';
@@ -77,6 +79,7 @@ void main() async {
         BlocProvider(create: (context) => FoldersManagerCubit()),
         BlocProvider(create: (context) => StudentsGroupsCubit()),
         BlocProvider(create: (context) => NotificationsCubit()),
+        BlocProvider(create: (context) => notifications_v1.NotificationsCubit()),
         BlocProvider(create: (context) => BankResultsCubit()),
         BlocProvider(create: (context) => ExploreClassStudentsCubit()),
         BlocProvider(create: (context) => QuestionsPickerCubit()),
@@ -92,6 +95,7 @@ void main() async {
         BlocProvider(create: (context) => SwitchAccountsBloc()),
         BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
         BlocProvider(create: (context) => locator<SendNotificationBloc>()),
+        BlocProvider(create: (context) => CommentsManagmentBloc()),
       ],
       child: const AppRoot(),
     ),

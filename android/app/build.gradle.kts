@@ -61,12 +61,34 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+/* flavorDimensions += "default"
+
+    productFlavors {
+        create("staging") {
+            dimension = "default"
+            manifestPlaceholders["applicationLabel"] = "تطبيق المعلم (تجريبي)"
+        }
+        create("production") {
+            dimension = "default"
+            manifestPlaceholders["applicationLabel"] = "تطبيق المعلم"
+        }
+    }     
+    */
+    
 }
 
 flutter {
     source = "../.."
 }
+
+
+repositories {
+    google()
+    mavenCentral()
+}
+
 dependencies {
+    implementation(project(":OpenCV"))
     implementation(project(":OpenCV"))
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

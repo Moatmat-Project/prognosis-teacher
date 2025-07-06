@@ -12,7 +12,9 @@ import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
 import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Core/widgets/view/attach_files_v.dart';
 import 'package:moatmat_teacher/Core/widgets/view/material_picker_v.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/video_m.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/mini_test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/pick_mini_test_v.dart';
 
 class SetInformationView extends StatefulWidget {
@@ -26,7 +28,7 @@ class SetInformationView extends StatefulWidget {
     this.price,
     this.afterSet,
     this.password,
-    this.video,
+    this.videos,
     this.images,
     this.files,
     this.previous,
@@ -41,7 +43,7 @@ class SetInformationView extends StatefulWidget {
   final int? period;
   final int? price;
   final List<String>? images;
-  final List<String>? video;
+  final List<Video>? videos;
   final List<String>? files;
   final MiniTest? previous;
   final bool isBank;
@@ -55,7 +57,7 @@ class SetInformationView extends StatefulWidget {
     required int? period,
     required int price,
     required List<String>? images,
-    required List<String>? video,
+    required List<Video>? videos,
     required List<String>? files,
     MiniTest? previous,
   })? afterSet;
@@ -75,7 +77,7 @@ class _SetInformationViewState extends State<SetInformationView> {
   int? price;
   //
   List<String>? images;
-  List<String>? video;
+  List<Video>? videos;
   List<String>? files;
   MiniTest? previous;
   //
@@ -88,7 +90,7 @@ class _SetInformationViewState extends State<SetInformationView> {
     password = widget.password;
     period = widget.period;
     price = widget.price;
-    video = widget.video;
+    videos = widget.videos;
     images = widget.images;
     files = widget.files;
     previous = widget.previous;
@@ -242,16 +244,16 @@ class _SetInformationViewState extends State<SetInformationView> {
               const SizedBox(height: SizesResources.s2),
               TouchableTileWidget(
                 title: "ارفاق مقاطع فيديو",
-                subTitle: "عدد مقاطع الفيديو : ${(video ?? []).length}",
+                subTitle: "عدد مقاطع الفيديو : ${(videos ?? []).length}",
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => AttachFilesView(
                         type: FileType.video,
-                        assets: video ?? [],
+                        assets: videos?.map((e) => e.url).toList() ?? [],
                         onSave: (res) {
                           setState(() {
-                            video = res;
+                            videos = res.map((e) => VideoModel.fromUrl(e)).toList();
                           });
                         },
                       ),
@@ -339,7 +341,7 @@ class _SetInformationViewState extends State<SetInformationView> {
                 password: password,
                 period: period,
                 price: price!,
-                video: video,
+                videos: videos,
                 files: files,
                 previous: previous,
                 images: images,

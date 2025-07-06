@@ -6,8 +6,10 @@ import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group_item.dart';
+import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/manage_group_tests_view.dart';
-import 'package:moatmat_teacher/Presentation/notifications/views/send_bulk_notification_view.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_bulk_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/students/views/pick_students_view.dart';
 
 import '../../../Core/resources/colors_r.dart';
 import '../../../Core/resources/shadows_r.dart';
@@ -58,6 +60,10 @@ class _GroupViewState extends State<GroupView> {
     super.initState();
   }
 
+  void refreshData(){
+    //
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<StudentsGroupsCubit>();
@@ -89,6 +95,31 @@ class _GroupViewState extends State<GroupView> {
               );
             },
             icon: const Icon(Icons.insert_chart),
+          ),
+          IconButton(
+            onPressed: () async {
+              final List<UserData>? addedUsers = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (c) => PickStudents(group: group),
+                ),
+              );
+              if (addedUsers != null && addedUsers.isNotEmpty) {
+                await context.read<StudentsGroupsCubit>().update();
+                final updatedGroup = context.read<StudentsGroupsCubit>().groups.firstWhere(
+                      (g) => g.id == group.id,
+                      orElse: () => group,
+                    );
+                setState(() {
+                  group = updatedGroup;
+                  items = group.items.where((e) {
+                    final con1 = e.userData.name.contains(_controller.text);
+                    final con2 = _controller.text.isEmpty;
+                    return con1 || con2;
+                  }).toList();
+                });
+              }
+            },
+            icon: const Icon(Icons.person_add),
           ),
         ],
       ),

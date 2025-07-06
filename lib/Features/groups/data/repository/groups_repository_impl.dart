@@ -9,13 +9,14 @@ class GroupsRepositoryImpl implements GroupsRepository {
   final GroupsDS dataSource;
 
   GroupsRepositoryImpl({required this.dataSource});
+
   @override
-  Future<Either<Exception, Unit>> addToGroup({
+  Future<Either<Exception, Unit>> addStudentsToGroup({
     required int groupId,
-    required GroupItem item,
+    required List<GroupItem> items,
   }) async {
     try {
-      await dataSource.addToGroup(groupId: groupId, item: item);
+      await dataSource.addStudentsToGroup(groupId: groupId, items: items);
       return right(unit);
     } on Exception catch (e) {
       return left(e);

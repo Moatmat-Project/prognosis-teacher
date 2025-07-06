@@ -1,0 +1,128 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Moatmat Teacher - Project Structure Rules
+
+## Overview
+This is a Flutter application for teachers using Clean Architecture with BLoC pattern. The app name is "moatmat_teacher" and it's an educational platform for teachers to manage students, tests, banks, and various educational resources.
+
+## Architecture Pattern
+The project follows **Clean Architecture** with clear separation of concerns:
+- **Domain Layer**: Business logic, entities, use cases, repository interfaces
+- **Data Layer**: Data sources, models, repository implementations  
+- **Presentation Layer**: UI, state management (BLoC/Cubit), widgets
+
+
+
+### `/lib/Core` - Shared Infrastructure
+- **`/injection`** - Dependency injection setup (GetIt)
+- **`/services`** - Core services (Supabase, cache, encryption, etc.)
+- **`/resources`** - App resources (colors, fonts, spacing, images, etc.)
+- **`/widgets`** - Reusable UI components
+- **`/functions`** - Utility functions (dialogs, PDF, Excel, math, parsers)
+- **`/validators`** - Input validation logic
+- **`/errors`** - Error handling (exceptions, failures)
+- **`/constant`** - App constants (classes, governorates, materials)
+- **`/app`** - App-level configuration
+
+### `/lib/Features` - Business Features (Clean Architecture)
+Each feature follows the same structure:
+```
+/feature_name/
+  /domain/
+    /entities/     - Business entities
+    /repository/   - Repository interfaces
+    /use_cases/    - Business use cases
+  /data/
+    /data_source/  - Remote/local data sources
+    /models/       - Data transfer objects
+    /repository/   - Repository implementations
+```
+
+
+
+### `/lib/Presentation` - UI Layer
+Each presentation module contains:
+- **`/state`** - BLoC/Cubit state management
+- **`/views`** - Screen/page widgets
+- **`/widgets`** - Feature-specific widgets
+
+**UI Modules:**
+- `auth` - Login, registration, account management
+- `home` - Dashboard/home screens
+- `students` - Student management UI
+- `tests` - Test creation/management UI
+- `banks` - Question bank UI
+- `groups` - Group management UI
+- `attendance` - Attendance tracking UI
+- `reports` - Reports and analytics UI
+- `notifications` - Notifications UI
+- `scanner` - Camera/scanning UI
+- `picker` - Item selection UI
+- `folders` - File/folder management
+- `questions` - Question creation/editing
+- `equations` - Math equation editor
+- `export` - Data export functionality
+- `videos` - Video management
+- `statistics` - Analytics dashboard
+- `purchases` - Payment UI
+- `tests_results` - Test results display
+- `banks_results` - Bank results display
+- `outer_tests_results` - External test results
+
+## Platform-Specific Code
+
+### `/android` - Android Configuration
+- `app/build.gradle.kts` - Android build configuration
+- `app/google-services.json` - Firebase Android config
+- `app/src/main/AndroidManifest.xml` - Android manifest
+
+### `/ios` - iOS Configuration  
+- `Runner/Info.plist` - iOS app configuration
+- `Runner/GoogleService-Info.plist` - Firebase iOS config
+- `Podfile` - iOS dependencies
+
+### `/web` - Web Configuration
+- `index.html` - Web entry point
+- `manifest.json` - PWA manifest
+
+
+
+
+
+
+## Development Guidelines
+
+### File Naming Conventions
+- Use snake_case for file names
+- Use descriptive names that indicate purpose
+- Suffix files with their type: `_cubit.dart`, `_bloc.dart`, `_widget.dart`
+
+### Code Organization
+- Follow Clean Architecture layers strictly
+- Keep business logic in domain layer
+- UI logic only in presentation layer
+- Use dependency injection for all services
+
+### Feature Development
+1. Start with domain layer (entities, use cases, repository interface)
+2. Implement data layer (models, data sources, repository)
+3. Create presentation layer (BLoC/Cubit, views, widgets)
+4. Add proper error handling and validation
+
+### Testing
+- Unit tests in `/test` directory
+- Follow same structure as `/lib` for test organization
+
+## Special Notes
+- App supports Arabic localization
+- Uses custom Tajawal font family
+- Implements Firebase for backend services
+- Supabase for real-time features
+- Math equation rendering capabilities
+- QR code scanning functionality
+- PDF generation and export features
+- Video player integration
+- Camera integration for scanning

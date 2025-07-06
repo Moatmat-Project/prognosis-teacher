@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/add_group_uc.dart';
-import 'package:moatmat_teacher/Features/groups/domain/usecases/add_to_group_uc.dart';
+import 'package:moatmat_teacher/Features/groups/domain/usecases/add_list_to_group_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/get_groups_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_from_group_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_group_uc.dart';
@@ -65,18 +65,20 @@ class StudentsGroupsCubit extends Cubit<StudentsGroupsState> {
     update();
   }
 
-  Future addGroupItem(
-      {required int groupId, required UserData userData}) async {
+  Future addGroupItem({required int groupId, required List<UserData> userDataList}) async {
     //
     emit(StudentsGroupsLoading());
     //
-    await locator<AddToGroupUc>().call(
+    await locator<AddListToGroupUc>().call(
       groupId: groupId,
-      item: GroupItem(
-        id: 0,
-        customClass: userData.classroom,
-        userData: userData,
-      ),
+      items: [
+        for (int i = 0; i < userDataList.length;i++)
+          GroupItem(
+            id: i,
+            customClass: userDataList[i].classroom,
+            userData: userDataList[i],
+          )
+      ],
     );
     //
     update();

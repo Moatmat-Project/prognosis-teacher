@@ -11,10 +11,14 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
 
   List<UserData> users = [];
   List<int> testsIds = [];
+  List<UserData> selectedUsers = [];
 
   init() async {
     //
     emit(MyStudentsLoading());
+    users = [];
+    testsIds = [];
+    selectedUsers = [];
     //
     var res = await locator<GetMyStudentsUC>().call();
     //
@@ -25,7 +29,7 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       (r) {
         users = r.students;
         testsIds = r.testsIds;
-        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds));
+        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds, selectedUsers: []));
       },
     );
   }
@@ -41,7 +45,11 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       (r) {
         users = r.students;
         testsIds = r.testsIds;
-        emit(MyStudentsInitial(users: r.students, testsIds: r.testsIds));
+        emit(MyStudentsInitial(
+          users: r.students,
+          testsIds: r.testsIds,
+          selectedUsers: [],
+        ));
       },
     );
   }
@@ -51,7 +59,23 @@ class MyStudentsCubit extends Cubit<MyStudentsState> {
       MyStudentsInitial(
         users: users.where((e) => e.name.contains(key) || key.isEmpty).toList(),
         testsIds: testsIds,
+        selectedUsers: selectedUsers,
       ),
     );
+  }
+
+  void toggleSelection(UserData user) {
+    if (selectedUsers.any((u) => u.id == user.id)) {
+      selectedUsers.removeWhere((u) => u.id == user.id);
+    } else {
+      selectedUsers.add(user);
+    }
+    emit(MyStudentsInitial(users: users, testsIds: testsIds, selectedUsers: selectedUsers));
+  }
+
+  List<UserData> get getSelectedUsers => selectedUsers;
+
+  bool isSelected(UserData user) {
+    return selectedUsers.any((u) => u.id == user.id);
   }
 }

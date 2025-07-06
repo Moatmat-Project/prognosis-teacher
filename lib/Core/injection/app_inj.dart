@@ -46,8 +46,6 @@ initGetIt() async {
   //
   injectGroups();
   //
-  injectNotifications2();
-  //
   injectScanner();
   //
   injectUpdate();
