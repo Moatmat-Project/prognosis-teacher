@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/comment.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/reply_comment.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 
 abstract class TestsRepository {
   //
@@ -27,5 +30,25 @@ abstract class TestsRepository {
   //
   Future<Either<Exception, List<Test>>> getMyTests({
     required bool update,
+  });
+  //
+  Future<Either<Exception, Video>> addVideo({
+    required Video video,
+  });
+  //
+  Future<Either<Exception, List<Comment>>> getComment({
+    required int videoId,
+  });
+  //
+  Future<Either<Exception, List<ReplyComment>>> getReplies({
+    required int commentId,
+  });
+  //
+  Future<Either<Exception, Unit>> deleteComment({
+    required int commentId,
+  });
+  //
+  Future<Either<Exception, Unit>> deleteReplies({
+    required int replyId,
   });
 }

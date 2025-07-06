@@ -1,4 +1,5 @@
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank_information.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/video_m.dart';
 
 class BankInformationModel extends BankInformation {
   BankInformationModel({
@@ -7,7 +8,7 @@ class BankInformationModel extends BankInformation {
     required super.material,
     required super.teacher,
     required super.price,
-    required super.video,
+    required super.videos,
     required super.images,
     required super.files,
   });
@@ -20,7 +21,7 @@ class BankInformationModel extends BankInformation {
       teacher: json["teacher"],
       price: json["price"],
       images: (json["images"] ?? []).cast<String>(),
-      video: stringToList(json["video"]),
+      videos: (json["videos"] as List?)?.map((e) => VideoModel.fromJson(e)).toList(),
       files: List.generate(
         (json["files"] as List? ?? []).length,
         (i) => json["files"][i],
@@ -46,7 +47,7 @@ class BankInformationModel extends BankInformation {
       material: information.material,
       teacher: information.teacher,
       price: information.price,
-      video: information.video,
+      videos: information.videos,
       images: information.images,
       files: information.files,
     );
@@ -59,7 +60,7 @@ class BankInformationModel extends BankInformation {
       "material": material,
       "teacher": teacher,
       "price": price,
-      "video": (video?.isNotEmpty ?? false) ? video!.join(",") : null,
+      "videos": (videos?.isNotEmpty ?? false) ? videos?.map((e) => VideoModel.fromClass(e).toJson()).toList() : [],
       "images": images,
       "files": files,
     };

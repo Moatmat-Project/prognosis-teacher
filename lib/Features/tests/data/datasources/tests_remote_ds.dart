@@ -1,12 +1,18 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_test_files_uc.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/upload_file_uc.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/comment_m.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/reply_comment_m.dart';
 import 'package:moatmat_teacher/Features/tests/data/models/test_m.dart';
+import 'package:moatmat_teacher/Features/tests/data/models/video_m.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/comment.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/reply_comment.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/add_video_uc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/question_m.dart';
@@ -36,6 +42,26 @@ abstract class TestsRemoteDS {
   });
   //
   Future<List<Test>> getMyTests({required bool update});
+  //
+  Future<Video> addVideo({
+    required Video video,
+  });
+  //
+  Future<List<Comment>> getComment({
+    required int videoId,
+  });
+  //
+  Future<List<ReplyComment>> getReplies({
+    required int commentId,
+  });
+  //
+  Future<Unit> deleteComment({
+    required int commentId,
+  });
+  //
+  Future<Unit> deleteReply({
+    required int replyId,
+  });
 }
 
 class TestsRemoteDSImpl implements TestsRemoteDS {
@@ -70,6 +96,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
         model = TestModel.fromClass(
           newTest.copyWith(properties: properties),
         ).toJson();
+        print("Model in uploadTestFile : $model");
         //
       }
     }
@@ -89,38 +116,42 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
 
     // upload test videos
-    for (int i = 0; i < (newTest.information.video ?? []).length; i++) {
+    for (int i = 0; i < (newTest.information.videos ?? []).length; i++) {
       //
       yield "رفع ملف المقطع رقم (${i + 1}/$filesLength)";
       //
-      var res = await locator<UploadFileUC>().call(
+      var uploadRes = await locator<UploadFileUC>().call(
         bucket: "tests",
         material: newTest.information.material,
         id: newTest.id.toString(),
-        path: newTest.information.video![i],
+        path: newTest.information.videos![i].url,
       );
-      res.fold(
-        (l) {
-          Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
-          Clipboard.setData(ClipboardData(text: l.toString()));
-        },
-        (r) {
-          //
-          List<String> newVideos = newTest.information.video ?? [];
-          //
-          int index = newVideos.indexOf(newTest.information.video![i]);
-          //
-          newVideos[index] = r;
-          //
-          // replace links
-          newTest = newTest.copyWith(
-            information: newTest.information.copyWith(
-              video: newVideos,
-            ),
-          );
-        },
+
+      if (uploadRes.isLeft()) {
+        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
+        continue;
+      }
+
+      List<Video> newVideos = newTest.information.videos ?? [];
+
+      final uploadedUrl = uploadRes.getOrElse(() => "");
+
+      final addedVideoRes = await locator<AddVideoUc>().call(
+        video: VideoModel(id: -1, url: uploadedUrl),
       );
-      //
+
+      if (addedVideoRes.isLeft()) {
+        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
+        continue;
+      }
+
+      final video = addedVideoRes.getOrElse(() => Video(id: -1, url: ""));
+
+      newVideos[i] = video;
+
+      newTest = newTest.copyWith(
+        information: newTest.information.copyWith(videos: newVideos),
+      );
     }
     // upload test images
     for (int i = 0; i < (newTest.information.images ?? []).length; i++) {
@@ -359,5 +390,81 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     }
     //
     return [];
+  }
+
+  @override
+  Future<Video> addVideo({
+    required Video video,
+  }) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    Map videoJson = VideoModel.fromClass(video).toJson();
+    //
+    var res = await client.from("videos").insert(videoJson).select().limit(1);
+    //
+    return VideoModel.fromJson(res.first);
+  }
+
+  @override
+  Future<List<Comment>> getComment({required int videoId}) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    var res = await client.from('get_comment_view').select().eq('video_id', videoId);
+    //
+    List<Comment> comments = res
+        .map(
+          (e) => CommentModel.fromJson(e),
+        )
+        .toList();
+    //
+    return comments;
+  }
+
+  @override
+  Future<List<ReplyComment>> getReplies({required int commentId}) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    var res = await client.from('get_replies_view').select().eq('comment_id', commentId);
+    //
+    List<ReplyComment> replies = res
+        .map(
+          (e) => ReplyCommentModel.fromJson(e),
+        )
+        .toList();
+    //
+    return replies;
+  }
+
+  @override
+  Future<Unit> deleteComment({
+    required int commentId,
+  }) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    await client
+        .from('comment')
+        .delete()
+        .eq('id', commentId);
+    //
+    return unit;
+  }
+
+  @override
+  Future<Unit> deleteReply({
+    required int replyId,
+  }) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    await client
+        .from('comment_reply')
+        .delete()
+        .eq('id', replyId);
+    //
+    return unit;
   }
 }

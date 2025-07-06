@@ -18,10 +18,12 @@ final class MyStudentsError extends MyStudentsState {
 final class MyStudentsInitial extends MyStudentsState {
   final List<UserData> users;
   final List<int> testsIds;
+  final List<UserData> selectedUsers;
 
   const MyStudentsInitial({
     required this.users,
     required this.testsIds,
+    required this.selectedUsers
   });
 
   @override

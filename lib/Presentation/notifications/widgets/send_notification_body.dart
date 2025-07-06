@@ -6,7 +6,6 @@ import 'package:moatmat_teacher/Core/resources/shadows_r.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/notification_form_widget.dart';
 import 'package:moatmat_teacher/Presentation/notifications/widgets/send_notification_button_widget.dart';
-import 'package:moatmat_teacher/Presentation/notifications/widgets/topic_selector_widget.dart';
 
 class SendNotificationBody extends StatelessWidget {
   final bool isUserMode;
@@ -43,28 +42,6 @@ class SendNotificationBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: ToggleButtons(
-              borderColor: ColorsResources.borders,
-              selectedBorderColor: ColorsResources.primary,
-              borderRadius: BorderRadius.circular(4),
-              constraints: BoxConstraints.expand(
-                  width: SpacingResources.mainWidth(context) / 2),
-              isSelected: [isUserMode, !isUserMode],
-              selectedColor: ColorsResources.whiteText1,
-              fillColor: ColorsResources.primary.withValues(alpha: 0.9),
-              onPressed: (index) => onModeChanged(index == 0),
-              children: const [
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text("مستخدمين")),
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text("تطبيقات")),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
           if (selectedImage != null)
             Padding(
               padding: EdgeInsets.all(SpacingResources.sidePadding),
@@ -170,13 +147,6 @@ class SendNotificationBody extends StatelessWidget {
                 ],
               ),
             ),
-          if (!isUserMode) ...[
-            const SizedBox(height: 10),
-            TopicSelector(
-                onChanged: (topics) => selectedTopics
-                  ..clear()
-                  ..addAll(topics)),
-          ],
           const SizedBox(height: 10),
           SendNotificationButton(onSend: onSend),
         ],

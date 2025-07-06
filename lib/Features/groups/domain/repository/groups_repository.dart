@@ -12,10 +12,10 @@ abstract class GroupsRepository {
   Future<Either<Exception, Unit>> addGroup({
     required Group group,
   });
-  // add to group
-  Future<Either<Exception, Unit>> addToGroup({
+  // add many students to groub
+  Future<Either<Exception, Unit>> addStudentsToGroup({
     required int groupId,
-    required GroupItem item,
+    required List<GroupItem> items,
   });
   // add to group
   Future<Either<Exception, Unit>> setGroupTests({

@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Core/functions/dialogs/add_to_group_d.dart';
 import 'package:moatmat_teacher/Core/services/classification_s.dart';
 import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Presentation/export/views/results/choose_export_v.dart';
-import 'package:moatmat_teacher/Presentation/groups/views/add_to_group_v.dart';
-import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_to_user_view.dart';
+import 'package:moatmat_teacher/Presentation/groups/state/groups/students_groups_cubit.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_notification_v.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/student/student_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/views/student_reports_view.dart';
@@ -72,7 +73,7 @@ class _StudentViewState extends State<StudentView> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => SendNotificationToUserView(
+                          builder: (context) => SendNotificationView(
                             userData: state.userData,
                           ),
                         ),
@@ -167,14 +168,27 @@ class _StudentViewState extends State<StudentView> {
                     ),
                     TouchableTileWidget(
                       title: "الإضافة إلى مجموعة",
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => AddToGroupView(
-                              userData: state.userData,
-                            ),
-                          ),
+                      onTap: () async {
+                        int cnt = await addStudentToGroupDialog(
+                          context: context,
+                          groups: context.read<StudentsGroupsCubit>().groups,
+                          onAdd: (groupId, filteredUsers) {
+                            context.read<StudentsGroupsCubit>().addGroupItem(
+                              groupId: groupId,
+                              userDataList: filteredUsers,
+                            );
+                          },
+                          userDataList: [state.userData],
                         );
+                        if (cnt > 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("تمت إضافة ${state.userData.name} طالب/ة إلى المجموعة")),
+                          );
+                        }else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("الطالب مضاف مسبقاً")),
+                          );
+                        }
                       },
                     ),
                     const SizedBox(height: SizesResources.s2),

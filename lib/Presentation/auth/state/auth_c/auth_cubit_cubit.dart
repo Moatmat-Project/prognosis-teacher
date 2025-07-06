@@ -8,9 +8,6 @@ import 'package:moatmat_teacher/Core/services/cache/cache_manager.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/cached_credentials.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/auth/domain/use_cases/update_teacher_data_uc.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/requests/register_device_token_request.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/get_device_token_usecase.dart';
-import 'package:moatmat_teacher/Features/notifications/domain/usecases/register_device_token_usecase.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -33,8 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
     //
     res.fold(
       (l) {
-        if (l is SocketException &&
-            Supabase.instance.client.auth.currentUser != null) {
+        if (l is SocketException && Supabase.instance.client.auth.currentUser != null) {
           emit(const OfflineError());
         } else {
           emit(const AuthError());
@@ -44,8 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
         //
         injectUpdateInfo(r);
         //
-        if (r.appVersion < r.currentVersion ||
-            r.appVersion < r.minimumVersion) {
+        if (r.appVersion < r.currentVersion || r.appVersion < r.minimumVersion) {
           emit(AuthUpdate(updateInfo: r));
         } else {
           //
@@ -88,23 +83,20 @@ class AuthCubit extends Cubit<AuthState> {
     locator<GetTeacherDataUC>().call().then((value) {
       value.fold(
         (l) {
-          if (l is SocketException &&
-              Supabase.instance.client.auth.currentUser != null) {
+          if (l is SocketException && Supabase.instance.client.auth.currentUser != null) {
             emit(const OfflineError());
           } else {
             emit(const AuthError());
           }
         },
         (r) async {
-          if (r.options.isTeacher ?? false) {
+          if ((r.options.isTeacher ?? false)||kDebugMode) {
             injectTeacherData(r);
-            await registerDeviceToken();
             emit(AuthDone());
-          } else {
+          } else if(!kDebugMode){
             emit(
               const AuthError(
-                error:
-                    "حساب غير مصرح \n تواصل على واتساب 0984993813 لتنشيط حسابك",
+                error: "حساب غير مصرح \n تواصل على واتساب 0984993813 لتنشيط حسابك",
               ),
             );
             //
@@ -143,9 +135,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   //
   startSignIn() async {
-    emit(AuthSignIn(
-        allowFastAuth: locator<CacheManager>()()
-            .exist(CacheConstant.cachedCredentialKey)));
+    emit(AuthSignIn(allowFastAuth: locator<CacheManager>()().exist(CacheConstant.cachedCredentialKey)));
   }
 
   //
@@ -171,8 +161,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //
-  finishAuth() async {
-    await registerDeviceToken();
+  finishAuth() {
     init();
   }
 
@@ -184,34 +173,15 @@ class AuthCubit extends Cubit<AuthState> {
     late final List<CachedCredentials> accounts;
     //
     if (locator<CacheManager>()().exist(CacheConstant.cachedCredentialKey)) {
-      cachedConditionals = await locator<CacheManager>()()
-          .read(CacheConstant.cachedCredentialKey);
+      cachedConditionals = await locator<CacheManager>()().read(CacheConstant.cachedCredentialKey);
     }
     //
     if (cachedConditionals.isEmpty) {
       return const [];
     }
     //
-    accounts = cachedConditionals
-        .map((e) => CachedCredentialsModel.fromJson(e))
-        .toList();
+    accounts = cachedConditionals.map((e) => CachedCredentialsModel.fromJson(e)).toList();
     //
     return accounts;
-  }
-
-  registerDeviceToken() async {
-    final platform = Platform.isAndroid ? 'android' : 'ios';
-    final deviceTokenResult = await locator<GetDeviceTokenUsecase>().call();
-    await deviceTokenResult.fold(
-      (l) async => debugPrint('Failed to get device token: $l'),
-      (deviceToken) async {
-        await locator<RegisterDeviceTokenUseCase>().call(
-          RegisterDeviceTokenRequest(
-            deviceToken: deviceToken,
-            platform: platform,
-          ),
-        );
-      },
-    );
   }
 }

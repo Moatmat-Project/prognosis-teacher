@@ -12,6 +12,8 @@ import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
 import 'package:moatmat_teacher/Presentation/export/views/questions/export_questions_v.dart';
 import 'package:moatmat_teacher/Presentation/folders/view/add_item_to_folder_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/group_test_details_v.dart';
+import 'package:moatmat_teacher/Presentation/tests/views/comment_managment_view.dart';
+import 'package:moatmat_teacher/Presentation/tests/views/video_view_list.dart';
 import 'package:moatmat_teacher/Presentation/tests_results/views/test_results_v.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/my_tests/my_tests_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/test_information/test_information_cubit.dart';
@@ -174,6 +176,18 @@ class _TestDetailsViewState extends State<TestDetailsView> {
                           builder: (context) => GroupTestDetailsView(
                             test: state.test,
                           ),
+                        ),
+                      );
+                    },
+                  ),
+                  TouchableTileWidget(
+                    title: "ادارة التعليقات",
+                    iconData: Icons.manage_accounts,
+                    onTap: () {
+                      final videos = widget.test?.information.videos;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => VideosListView(videos: videos ?? [],),
                         ),
                       );
                     },

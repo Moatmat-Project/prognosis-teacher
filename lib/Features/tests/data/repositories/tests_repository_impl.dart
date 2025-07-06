@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/comment.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/reply_comment.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
+import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 import 'package:moatmat_teacher/Features/tests/domain/repositories/tests_repository.dart';
 
 import '../datasources/tests_remote_ds.dart';
@@ -63,6 +66,62 @@ class TestsRepositoryImpl implements TestsRepository {
       {required List<int> ids, required bool update}) async {
     try {
       final res = await dataSource.getTestsByIds(ids: ids, update: update);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, Video>> addVideo({
+    required Video video,
+  }) async {
+    try {
+      var res = await dataSource.addVideo(video: video);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<Comment>>> getComment({
+    required int videoId,
+  }) async {
+    try {
+      var res = await dataSource.getComment(videoId: videoId);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<ReplyComment>>> getReplies({
+    required int commentId,
+  }) async {
+    try {
+      var res = await dataSource.getReplies(commentId: commentId);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+  
+  @override
+  Future<Either<Exception, Unit>> deleteComment({required int commentId,}) async {
+    try {
+      var res = await dataSource.deleteComment(commentId: commentId);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+  
+  @override
+  Future<Either<Exception, Unit>> deleteReplies({required int replyId,}) async {
+    try {
+      var res = await dataSource.deleteReply(replyId: replyId);
       return right(res);
     } on Exception catch (e) {
       return left(e);
