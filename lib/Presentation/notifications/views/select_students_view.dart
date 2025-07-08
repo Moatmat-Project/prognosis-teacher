@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Core/widgets/fields/text_input_field.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 
-
 class SelectStudentsView extends StatefulWidget {
   const SelectStudentsView({super.key});
 
@@ -31,15 +30,8 @@ class _SelectStudentsViewState extends State<SelectStudentsView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("اختر الطلاب"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(selectedUserIds.toList());
-            },
-            child: const Text("تأكيد", style: TextStyle(color: Colors.white)),
-          ),
-        ],
       ),
+      bottomNavigationBar: _CustomBottomWidget(selectedUserIds: selectedUserIds),
       body: BlocBuilder<MyStudentsCubit, MyStudentsState>(
         builder: (context, state) {
           if (state is MyStudentsInitial) {
@@ -83,6 +75,27 @@ class _SelectStudentsViewState extends State<SelectStudentsView> {
           }
           return const Center(child: CupertinoActivityIndicator());
         },
+      ),
+    );
+  }
+}
+
+class _CustomBottomWidget extends StatelessWidget {
+  final Set<String> selectedUserIds;
+  const _CustomBottomWidget({required this.selectedUserIds});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ColorsResources.primary,
+        ),
+        onPressed: () {
+          Navigator.of(context).pop(selectedUserIds);
+        },
+        child: const Text("تأكيد", style: TextStyle(color: ColorsResources.whiteText1)),
       ),
     );
   }
