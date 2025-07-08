@@ -11,7 +11,7 @@ class VideoModel extends Video {
     return VideoModel(
       id: json["id"] ?? 0,
       url: json["url"],
-      teacherId : json["teacher_id"] ?? "-",
+      teacherId: json["teacher_id"] ?? "-",
     );
   }
   factory VideoModel.fromClass(Video video) {
@@ -33,7 +33,7 @@ class VideoModel extends Video {
     return VideoModel(
       id: -1,
       url: url,
-      teacherId : "",
+      teacherId: "",
     );
   }
   toJson({
