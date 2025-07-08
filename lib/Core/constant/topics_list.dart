@@ -15,4 +15,5 @@ const List<Topic> topics = [
   // Topic(showName: "اختبار", name: "test"),
 ];
 
-final String defaultTopic = kDebugMode ? "tests" : "teachers";
+final String defaultTopic = "teachers";
+//final String defaultTopic = "tests";
