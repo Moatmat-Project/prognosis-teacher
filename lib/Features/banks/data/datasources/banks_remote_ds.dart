@@ -97,29 +97,41 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
         id: newBank.id.toString(),
         path: newBank.information.videos![i].url,
       );
-
+      //
       if (uploadRes.isLeft()) {
       Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
       continue;
       }
-
+      //
+      final client = Supabase.instance.client;
+      //
       List<Video> newVideos = newBank.information.videos ?? [];
-
+      //
       final uploadedUrl = uploadRes.getOrElse(() => "");
-
+      //
       final addedVideoRes = await locator<AddVideoUc>().call(
-        video: VideoModel(id: -1, url: uploadedUrl),
+        video: VideoModel(
+          id: -1,
+          url: uploadedUrl,
+          teacherId: client.auth.currentUser!.id,
+        ),
       );
-
+      //
       if (addedVideoRes.isLeft()) {
         Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
         continue;
       }
-
-      final video = addedVideoRes.getOrElse(() => Video(id: -1, url: ""));
-
+      //
+      final video = addedVideoRes.getOrElse(
+        () => Video(
+          id: -1,
+          url: "",
+          teacherId: client.auth.currentUser!.id,
+        ),
+      );
+      //
       newVideos[i] = video;
-
+      //
       newBank = newBank.copyWith(
         information: newBank.information.copyWith(
           videos: newVideos,

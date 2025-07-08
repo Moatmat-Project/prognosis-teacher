@@ -126,29 +126,43 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
         id: newTest.id.toString(),
         path: newTest.information.videos![i].url,
       );
-
+      //
       if (uploadRes.isLeft()) {
         Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
         continue;
       }
-
+      //
+      final client = Supabase.instance.client;
+      //
       List<Video> newVideos = newTest.information.videos ?? [];
-
+      //
       final uploadedUrl = uploadRes.getOrElse(() => "");
-
+      //
       final addedVideoRes = await locator<AddVideoUc>().call(
-        video: VideoModel(id: -1, url: uploadedUrl),
+        video: VideoModel(
+          id: -1,
+          url: uploadedUrl,
+          teacherId: client.auth.currentUser!.id,
+        ),
       );
-
+      //
       if (addedVideoRes.isLeft()) {
         Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
         continue;
       }
-
-      final video = addedVideoRes.getOrElse(() => Video(id: -1, url: ""));
-
+      //
+      final video = addedVideoRes.getOrElse(
+        () => Video(
+          id: -1,
+          url: "",
+          teacherId: client.auth.currentUser!.id,
+        ),
+      );
+      //
+      print("id : ${video.id} ,url : ${video.url} , teacher id : ${video.teacherId}");
+      //
       newVideos[i] = video;
-
+      //
       newTest = newTest.copyWith(
         information: newTest.information.copyWith(videos: newVideos),
       );
@@ -399,6 +413,12 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     final client = Supabase.instance.client;
     //
+    final existing = await client.from("videos").select().eq("url", video.url).maybeSingle();
+    //
+    if (existing != null) {
+      return VideoModel.fromJson(existing);
+    }
+    //
     Map videoJson = VideoModel.fromClass(video).toJson();
     //
     var res = await client.from("videos").insert(videoJson).select().limit(1);
@@ -445,10 +465,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     final client = Supabase.instance.client;
     //
-    await client
-        .from('comment')
-        .delete()
-        .eq('id', commentId);
+    await client.from('comment').delete().eq('id', commentId);
     //
     return unit;
   }
@@ -460,10 +477,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     final client = Supabase.instance.client;
     //
-    await client
-        .from('comment_reply')
-        .delete()
-        .eq('id', replyId);
+    await client.from('comment_reply').delete().eq('id', replyId);
     //
     return unit;
   }
