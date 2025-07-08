@@ -3,21 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Core/constant/classes_list.dart';
 import 'package:moatmat_teacher/Core/functions/show_alert.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
-import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group.dart';
 import 'package:moatmat_teacher/Features/groups/domain/entities/group_item.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/manage_group_tests_view.dart';
-import 'package:moatmat_teacher/Presentation/notifications/views/send_bulk_notification_v.dart';
+import 'package:moatmat_teacher/Presentation/notifications/views/send_bulk_notification_view.dart';
 import 'package:moatmat_teacher/Presentation/students/views/pick_students_view.dart';
-
 import '../../../Core/resources/colors_r.dart';
-import '../../../Core/resources/shadows_r.dart';
 import '../../../Core/resources/sizes_resources.dart';
 import '../../../Core/widgets/fields/text_input_field.dart';
 import '../../statistics/views/export_students_statistics_view.dart';
 import '../../students/views/my_students_v.dart';
-import '../../students/views/students_statistics_v.dart';
 import '../state/groups/students_groups_cubit.dart';
 
 class GroupView extends StatefulWidget {
@@ -60,7 +56,7 @@ class _GroupViewState extends State<GroupView> {
     super.initState();
   }
 
-  void refreshData(){
+  void refreshData() {
     //
   }
 

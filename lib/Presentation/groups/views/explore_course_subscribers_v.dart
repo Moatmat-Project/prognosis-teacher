@@ -11,7 +11,7 @@ import 'package:moatmat_teacher/Features/students/domain/usecases/get_my_student
 import '../../../Core/resources/colors_r.dart';
 import '../../../Core/resources/sizes_resources.dart';
 import '../../../Core/widgets/fields/text_input_field.dart';
-import '../../notifications/views/send_bulk_notification_v.dart';
+import '../../notifications/views/send_bulk_notification_view.dart';
 import '../../statistics/views/export_students_statistics_view.dart';
 import '../../students/views/my_students_v.dart';
 import '../../students/views/students_statistics_v.dart';
