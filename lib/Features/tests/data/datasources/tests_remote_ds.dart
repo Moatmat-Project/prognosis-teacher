@@ -116,57 +116,73 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
 
     // upload test videos
-    for (int i = 0; i < (newTest.information.videos ?? []).length; i++) {
+    List<Video> uploadedVideos = [];
+    //
+    for (var video in newTest.information.videos ?? []) {
+      bool isLocal = video.url.startsWith("/");
       //
-      yield "رفع ملف المقطع رقم (${i + 1}/$filesLength)";
+      String finalUrl = video.url;
       //
-      var uploadRes = await locator<UploadFileUC>().call(
-        bucket: "tests",
-        material: newTest.information.material,
-        id: newTest.id.toString(),
-        path: newTest.information.videos![i].url,
-      );
-      //
-      if (uploadRes.isLeft()) {
-        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة رفع مقطع الفيديو");
-        continue;
+      if (isLocal) {
+        //
+        yield "رفع فيديو جديد...";
+        //
+        final uploadRes = await locator<UploadFileUC>().call(
+          bucket: "tests",
+          material: newTest.information.material,
+          id: newTest.id.toString(),
+          path: video.url,
+        );
+        //
+        if (uploadRes.isLeft()) {
+          print("❌ فشل في رفع الفيديو: $uploadRes");
+          continue;
+        }
+        //
+        finalUrl = uploadRes.getOrElse(() => "");
+        //
+        print("✅ تم رفع الفيديو، الرابط: $finalUrl");
+        //
+        if (finalUrl.startsWith("/")) {
+          print("⚠️ الرابط الناتج ما زال محليًا، لن يتم إدخاله.");
+          continue;
+        }
       }
       //
-      final client = Supabase.instance.client;
-      //
-      List<Video> newVideos = newTest.information.videos ?? [];
-      //
-      final uploadedUrl = uploadRes.getOrElse(() => "");
+      if (finalUrl.startsWith("/")) {
+        print("⚠️ تم تجاهل الفيديو لأن رابطه ما زال محلي: $finalUrl");
+        continue;
+      }
       //
       final addedVideoRes = await locator<AddVideoUc>().call(
         video: VideoModel(
           id: -1,
-          url: uploadedUrl,
-          teacherId: client.auth.currentUser!.id,
+          url: finalUrl,
+          teacherId: Supabase.instance.client.auth.currentUser!.id,
         ),
       );
       //
       if (addedVideoRes.isLeft()) {
-        Fluttertoast.showToast(msg: "حصل خطأ ما اثناء محاولة حفظ الفيديو");
+        print("❌ فشل في إدخال الفيديو بجدول videos: $addedVideoRes");
         continue;
       }
       //
-      final video = addedVideoRes.getOrElse(
-        () => Video(
-          id: -1,
-          url: "",
-          teacherId: client.auth.currentUser!.id,
-        ),
-      );
+      final addedVideo = addedVideoRes.getOrElse(() => Video(
+        id: -1,
+        url: finalUrl,
+        teacherId: Supabase.instance.client.auth.currentUser!.id,
+      ));
       //
-      print("id : ${video.id} ,url : ${video.url} , teacher id : ${video.teacherId}");
-      //
-      newVideos[i] = video;
-      //
-      newTest = newTest.copyWith(
-        information: newTest.information.copyWith(videos: newVideos),
-      );
+      uploadedVideos.add(addedVideo);
     }
+    //
+    newTest = newTest.copyWith(
+      information: newTest.information.copyWith(
+        videos: uploadedVideos,
+      ),
+    );
+    //
+    print(newTest.information.videos?.map((v) => VideoModel.fromClass(v).toJson(addId: true)).toList());
     // upload test images
     for (int i = 0; i < (newTest.information.images ?? []).length; i++) {
       //
@@ -413,7 +429,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     //
     final client = Supabase.instance.client;
     //
-    final existing = await client.from("videos").select().eq("url", video.url).maybeSingle();
+    final existing = await client.from("videos").select().eq("url", video.url).limit(1).maybeSingle();
     //
     if (existing != null) {
       return VideoModel.fromJson(existing);
