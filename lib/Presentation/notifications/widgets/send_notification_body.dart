@@ -42,6 +42,7 @@ class SendNotificationBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 8),
           if (selectedImage != null)
             Padding(
               padding: EdgeInsets.all(SpacingResources.sidePadding),
