@@ -24,7 +24,6 @@ class NotificationForm extends StatefulWidget {
 }
 
 class _NotificationFormState extends State<NotificationForm> {
-  get validateNotificationTitle => null;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,12 @@ class _NotificationFormState extends State<NotificationForm> {
                 width: SpacingResources.mainWidth(context) - 52,
                 hintText: 'عنوان الإشعار',
                 controller: widget.titleController,
-                validator: validateNotificationTitle,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'عنوان الاشعار  لا يمكن ان يكون فارغا';
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(width: 4),

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
@@ -17,6 +20,7 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final bodyController = TextEditingController();
+  File? selectedImage;
 
   @override
   void dispose() {
@@ -24,6 +28,16 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
     bodyController.dispose();
     super.dispose();
   }
+
+    Future<void> _pickImage() async {
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      setState(() => selectedImage = File(file.path));
+    }
+  }
+
+  void _removeImage() => setState(() => selectedImage = null);
+
 
   void _sendNotification(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
@@ -39,7 +53,7 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
 
     context.read<SendNotificationBloc>().add(
           SendNotificationToUsers(
-            imageFile: null,
+            imageFile:  selectedImage,
             userIds: widget.usersData.map((e) => e.uuid).toList(),
             notification: notification,
           ),
@@ -71,6 +85,10 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
           }
         },
         child: SendBulkNotificationBody(
+                      onPickImage: _pickImage,
+
+          selectedImage: selectedImage,
+          onRemoveImage: _removeImage,
           formKey: _formKey,
           titleController: titleController,
           bodyController: bodyController,
