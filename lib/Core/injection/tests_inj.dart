@@ -10,6 +10,7 @@ import 'package:moatmat_teacher/Features/tests/domain/usecases/get_my_tests_uc.d
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_replies_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_test_by_id_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_tests_by_ids_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_video_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/update_test_uc.dart';
 
 import 'package:moatmat_teacher/Features/tests/domain/usecases/upload_test_uc.dart';
@@ -75,6 +76,11 @@ void injectUC() {
   );
   locator.registerFactory<DeleteReplyUc>(
     () => DeleteReplyUc(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<GetVideoUc>(
+    () => GetVideoUc(
       repository: locator(),
     ),
   );

@@ -12,11 +12,9 @@ class CommentsManagmentView extends StatefulWidget {
   const CommentsManagmentView({
     super.key,
     required this.videoId,
-    // required this.url,
     this.commentId,
   });
   final int videoId;
-  // final String url;
   final int? commentId;
   @override
   State<CommentsManagmentView> createState() => _CommentsManagmentViewState();
@@ -26,6 +24,7 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   @override
   void initState() {
     super.initState();
+    context.read<CommentsManagmentBloc>().add(LoadVideo(videoId: widget.videoId));
     context.read<CommentsManagmentBloc>().add(LoadComments(videoId: widget.videoId));
   }
 
@@ -51,7 +50,16 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
           final comments = state.comments ?? [];
           //
           if (comments.isEmpty) {
-            return Center(child: Text('لا توجد تعليقات'));
+            return Column(
+              children: [
+                // video player
+                ChewiePlayerWidget(videoUrl: state.url ?? ""),
+                //
+                Padding(padding: EdgeInsets.only(top: SizesResources.s3)),
+                //
+                Center(child: Text('لا توجد تعليقات')),
+              ],
+            );
           }
           //
           Comment? specificComment;
@@ -66,7 +74,7 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
               Column(
                 children: [
                   // video player
-                  // ChewiePlayerWidget(videoUrl: widget.url),
+                  ChewiePlayerWidget(videoUrl: state.url ?? ""),
                   //
                   Padding(padding: EdgeInsets.only(top: SizesResources.s3)),
                 ],

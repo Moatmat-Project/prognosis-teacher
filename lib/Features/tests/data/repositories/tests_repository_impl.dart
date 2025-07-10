@@ -31,8 +31,7 @@ class TestsRepositoryImpl implements TestsRepository {
   }
 
   @override
-  Future<Either<Exception, List<Test>>> getMyTests(
-      {required bool update}) async {
+  Future<Either<Exception, List<Test>>> getMyTests({required bool update}) async {
     try {
       final res = await dataSource.getMyTests(update: update);
       return right(res);
@@ -42,8 +41,7 @@ class TestsRepositoryImpl implements TestsRepository {
   }
 
   @override
-  Future<Either<Exception, Test?>> getTestById(
-      {required int testId, required bool update}) async {
+  Future<Either<Exception, Test?>> getTestById({required int testId, required bool update}) async {
     try {
       final res = await dataSource.getTestById(testId: testId, update: update);
       return right(res);
@@ -62,8 +60,7 @@ class TestsRepositoryImpl implements TestsRepository {
   }
 
   @override
-  Future<Either<Exception, List<Test>>> getTestsByIds(
-      {required List<int> ids, required bool update}) async {
+  Future<Either<Exception, List<Test>>> getTestsByIds({required List<int> ids, required bool update}) async {
     try {
       final res = await dataSource.getTestsByIds(ids: ids, update: update);
       return right(res);
@@ -107,9 +104,11 @@ class TestsRepositoryImpl implements TestsRepository {
       return left(e);
     }
   }
-  
+
   @override
-  Future<Either<Exception, Unit>> deleteComment({required int commentId,}) async {
+  Future<Either<Exception, Unit>> deleteComment({
+    required int commentId,
+  }) async {
     try {
       var res = await dataSource.deleteComment(commentId: commentId);
       return right(res);
@@ -117,11 +116,25 @@ class TestsRepositoryImpl implements TestsRepository {
       return left(e);
     }
   }
-  
+
   @override
-  Future<Either<Exception, Unit>> deleteReplies({required int replyId,}) async {
+  Future<Either<Exception, Unit>> deleteReplies({
+    required int replyId,
+  }) async {
     try {
       var res = await dataSource.deleteReply(replyId: replyId);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<Exception, String>> getVideo({
+    required int videoId,
+  }) async {
+    try {
+      var res = await dataSource.getVideo(videoId: videoId);
       return right(res);
     } on Exception catch (e) {
       return left(e);

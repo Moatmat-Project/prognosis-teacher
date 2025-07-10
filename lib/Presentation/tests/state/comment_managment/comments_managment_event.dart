@@ -11,6 +11,11 @@ class LoadComments extends CommentsManagmentEvent {
   const LoadComments({required this.videoId});
 }
 
+class LoadVideo extends CommentsManagmentEvent {
+  final int videoId;
+  const LoadVideo({required this.videoId});
+}
+
 class LoadReplies extends CommentsManagmentEvent {
   final int commentId;
   const LoadReplies({required this.commentId});

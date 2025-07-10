@@ -7,6 +7,7 @@ import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_comment_uc
 import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_reply_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_comment_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_replies_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_video_uc.dart';
 
 part 'comments_managment_event.dart';
 part 'comments_managment_state.dart';
@@ -14,6 +15,7 @@ part 'comments_managment_state.dart';
 class CommentsManagmentBloc extends Bloc<CommentsManagmentEvent, CommentsManagmentState> {
   CommentsManagmentBloc() : super(CommentsManagmentState()) {
     on<LoadComments>(_onLoadComments);
+    on<LoadVideo>(_onLoadVideo);
     on<LoadReplies>(_onLoadReplies);
     on<DeleteComment>(_onDeleteComment);
     on<DeleteReply>(_onDeleteReply);
@@ -25,6 +27,15 @@ class CommentsManagmentBloc extends Bloc<CommentsManagmentEvent, CommentsManagme
     res.fold(
       (l) => emit(state.copyWith(isLoadingComments: false, errorMsg: l.toString())),
       (r) => emit(state.copyWith(isLoadingComments: false, comments: r, errorMsg: null)),
+    );
+  }
+
+  Future<void> _onLoadVideo(LoadVideo event, Emitter<CommentsManagmentState> emit) async {
+    emit(state.copyWith(isLoadingUrl: true, errorMsg: null));
+    final res = await locator<GetVideoUc>().call(videoId: event.videoId);
+    res.fold(
+      (l) => emit(state.copyWith(isLoadingUrl: false, errorMsg: l.toString())),
+      (r) => emit(state.copyWith(isLoadingUrl: false,url: r, errorMsg: r == "" ? "video not exist" :null)),
     );
   }
 
