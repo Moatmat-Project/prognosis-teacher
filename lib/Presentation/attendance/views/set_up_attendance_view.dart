@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/functions/dialogs/add_attendance_records_d.dart';
+import 'package:moatmat_teacher/Core/functions/show_alert.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
@@ -31,9 +32,11 @@ class SetUpAttendanceView extends StatefulWidget {
 }
 
 class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
+  late bool canPop;
   @override
   void initState() {
     locator<SetUpAttendanceBloc>().add(LoadRecordsEvent(widget.set, isOffline: widget.isOffline));
+    canPop = true;
     super.initState();
   }
 
@@ -49,6 +52,9 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
             }
           },
           builder: (context, state) {
+            if (state.canSave == true && canPop == true) {
+              canPop = false;
+            }
             if (state.isLoading) {
               return const Center(
                 child: CupertinoActivityIndicator(),
@@ -63,214 +69,236 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
               records = state.records;
             }
 
-            return Scaffold(
-              appBar: AppBar(
-                shadowColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                elevation: 0.0,
-                centerTitle: false,
-                title: Text(
-                  widget.set.title,
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SearchInAttendanceRecordsView(records: records),
-                        ),
-                      );
+            return PopScope(
+              canPop: canPop,
+              onPopInvokedWithResult: (didPop, result) {
+                if (state.canSave && !didPop) {
+                  showAlert(
+                    context: context,
+                    title: "تغييرات غير محفوظة",
+                    body: "هل تريد الخروج دون حفظ التغييرات؟",
+                    onAgree: () {
+                      setState(() {
+                        canPop = true;
+                      });
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      });
                     },
-                    icon: Icon(Icons.search),
+                  );
+                }
+              },
+              child: Scaffold(
+                appBar: AppBar(
+                  shadowColor: Colors.transparent,
+                  surfaceTintColor: Colors.transparent,
+                  elevation: 0.0,
+                  centerTitle: false,
+                  title: Text(
+                    widget.set.title,
                   ),
-                ],
-              ),
-              bottomNavigationBar: state.canSave || state.isSaving
-                  ? SafeArea(
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SearchInAttendanceRecordsView(records: records),
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.search),
+                    ),
+                  ],
+                ),
+                bottomNavigationBar: state.canSave || state.isSaving
+                    ? SafeArea(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButtonWidget(
+                              loading: state.isSaving,
+                              onPressed: () {
+                                locator<SetUpAttendanceBloc>().add(
+                                  SaveChangesEvent(isOffline: widget.isOffline),
+                                );
+                              },
+                              text: ("حفظ التغييرات"),
+                            ),
+                          ],
+                        ),
+                      )
+                    : null,
+                body: Column(
+                  children: [
+                    SizedBox(
+                      width: SpacingResources.mainWidth(context),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButtonWidget(
-                            loading: state.isSaving,
-                            onPressed: () {
-                              locator<SetUpAttendanceBloc>().add(
-                                SaveChangesEvent(isOffline: widget.isOffline),
+                          _BoxedButton(
+                            icon: Icons.qr_code,
+                            text: "بدء المسح",
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ScanningStudentsCodesView(
+                                    setId: widget.set.id.toString(),
+                                    onReadRecord: (record) {
+                                      locator<SetUpAttendanceBloc>().add(
+                                        AddRecordEvent(record),
+                                      );
+                                    },
+                                  ),
+                                ),
                               );
                             },
-                            text: ("حفظ التغييرات"),
                           ),
-                        ],
-                      ),
-                    )
-                  : null,
-              body: Column(
-                children: [
-                  SizedBox(
-                    width: SpacingResources.mainWidth(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _BoxedButton(
-                          icon: Icons.qr_code,
-                          text: "بدء المسح",
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ScanningStudentsCodesView(
-                                  setId: widget.set.id.toString(),
-                                  onReadRecord: (record) {
-                                    locator<SetUpAttendanceBloc>().add(
-                                      AddRecordEvent(record),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        _BoxedButton(
-                            icon: Icons.keyboard,
-                            text: "ادخال يدوي",
-                            onTap: () {
-                              addAttendanceRecordsFunction(
-                                context: context,
-                                onAdd: (studentId) {
-                                  locator<SetUpAttendanceBloc>().add(
-                                    AddRecordEvent(
-                                      AttendanceRecord(
-                                        id: DateTime.now().millisecondsSinceEpoch,
-                                        attendanceSetId: widget.set.id.toString(),
-                                        studentName: "",
-                                        studentId: studentId,
-                                        date: DateTime.now(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }),
-                        _BoxedButton(
-                          icon: Icons.person,
-                          text: "أختيار طالب",
-                          enabled: !widget.isOffline,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PickStudentsView(
-                                  onPick: (user) {
+                          _BoxedButton(
+                              icon: Icons.keyboard,
+                              text: "ادخال يدوي",
+                              onTap: () {
+                                addAttendanceRecordsFunction(
+                                  context: context,
+                                  onAdd: (studentId) {
                                     locator<SetUpAttendanceBloc>().add(
                                       AddRecordEvent(
-                                        AttendanceRecord.fromUserData(
+                                        AttendanceRecord(
+                                          id: DateTime.now().millisecondsSinceEpoch,
                                           attendanceSetId: widget.set.id.toString(),
-                                          user: user,
+                                          studentName: "",
+                                          studentId: studentId,
+                                          date: DateTime.now(),
                                         ),
                                       ),
                                     );
                                   },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (!widget.isOffline) ...[
-                    TouchableTileWidget(
-                      icon: RichText(
-                        text: TextSpan(
-                          children: [
-                            WidgetSpan(
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      "  ${records.length}  ",
-                                      style: TextStyle(
-                                        color: ColorsResources.blackText1,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.person,
-                                    size: 20,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      title: "تصدير الحضور ",
-                      onTap: records.isEmpty
-                          ? null
-                          : () {
+                                );
+                              }),
+                          _BoxedButton(
+                            icon: Icons.person,
+                            text: "أختيار طالب",
+                            enabled: !widget.isOffline,
+                            onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => ExportAttendanceSetView(
-                                    set: widget.set,
-                                    records: records,
+                                  builder: (context) => PickStudentsView(
+                                    onPick: (user) {
+                                      locator<SetUpAttendanceBloc>().add(
+                                        AddRecordEvent(
+                                          AttendanceRecord.fromUserData(
+                                            attendanceSetId: widget.set.id.toString(),
+                                            user: user,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               );
                             },
-                    ),
-                    TouchableTileWidget(
-                      title: "مجموعات الطلاب",
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 10,
-                      ),
-                      onTap: () async {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ExploreGroupAttendanceView(
-                              set: widget.set,
-                              records: records,
-                            ),
                           ),
-                        );
-                      },
+                        ],
+                      ),
+                    ),
+                    if (!widget.isOffline) ...[
+                      TouchableTileWidget(
+                        icon: RichText(
+                          text: TextSpan(
+                            children: [
+                              WidgetSpan(
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        "  ${records.length}  ",
+                                        style: TextStyle(
+                                          color: ColorsResources.blackText1,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.person,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        title: "تصدير الحضور ",
+                        onTap: records.isEmpty
+                            ? null
+                            : () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ExportAttendanceSetView(
+                                      set: widget.set,
+                                      records: records,
+                                    ),
+                                  ),
+                                );
+                              },
+                      ),
+                      TouchableTileWidget(
+                        title: "مجموعات الطلاب",
+                        icon: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 10,
+                        ),
+                        onTap: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ExploreGroupAttendanceView(
+                                set: widget.set,
+                                records: records,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                    if (state.records.isNotEmpty && state.starting != null && state.starting != null)
+                      TimeRangeWidget(
+                        studentsCount: state.records.length,
+                        starting: state.starting!,
+                        ending: state.ending!,
+                        onChangeEndingDate: (date) {
+                          locator<SetUpAttendanceBloc>().add(
+                            ChangeRangeFiltersEvent(ending: date),
+                          );
+                        },
+                        onChangeStartingDate: (date) {
+                          locator<SetUpAttendanceBloc>().add(
+                            ChangeRangeFiltersEvent(starting: date),
+                          );
+                        },
+                      ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        itemCount: records.length,
+                        itemBuilder: (context, index) {
+                          final record = records[index];
+
+                          return AttendanceRecordTileWidget(
+                            record: record,
+                            onRemove: () {
+                              locator<SetUpAttendanceBloc>().add(
+                                DeleteRecordEvent(record),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
-                  if (state.records.isNotEmpty && state.starting != null && state.starting != null)
-                    TimeRangeWidget(
-                      studentsCount: state.records.length,
-                      starting: state.starting!,
-                      ending: state.ending!,
-                      onChangeEndingDate: (date) {
-                        locator<SetUpAttendanceBloc>().add(
-                          ChangeRangeFiltersEvent(ending: date),
-                        );
-                      },
-                      onChangeStartingDate: (date) {
-                        locator<SetUpAttendanceBloc>().add(
-                          ChangeRangeFiltersEvent(starting: date),
-                        );
-                      },
-                    ),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      itemCount: records.length,
-                      itemBuilder: (context, index) {
-                        final record = records[index];
-
-                        return AttendanceRecordTileWidget(
-                          record: record,
-                          onRemove: () {
-                            locator<SetUpAttendanceBloc>().add(
-                              DeleteRecordEvent(record),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
             );
           },

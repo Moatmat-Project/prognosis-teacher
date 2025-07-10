@@ -6,6 +6,7 @@ import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/widgets/cards/home_feature_card_w.dart';
+import 'package:moatmat_teacher/Core/widgets/appbar/notifications_icon_w.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/views/add_bank_view.dart';

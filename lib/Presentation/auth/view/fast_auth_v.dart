@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -41,13 +42,14 @@ class _FastAuthViewState extends State<FastAuthView> {
             ),
           );
         },
-        (r) {
+        (r) async {
           if (!GetIt.instance.isRegistered<TeacherData>()) {
             locator.registerFactory<TeacherData>(() => r);
           } else {
             GetIt.instance.unregister<TeacherData>();
             locator.registerFactory<TeacherData>(() => r);
           }
+          await context.read<AuthCubit>().registerDeviceToken();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("تم تسجيل الدخول بنجاح"),
@@ -87,18 +89,53 @@ class _FastAuthViewState extends State<FastAuthView> {
           AppBarTitles.changeAccount,
         ),
       ),
-      body: widget.state.accounts.isNotEmpty
-          ? ListView.builder(
-              itemCount: widget.state.accounts.length,
-              itemBuilder: (context, index) {
-                final account = widget.state.accounts[index];
-                if (index == widget.state.accounts.length - 1) {
-                  return Column(
+      body: loading
+          ? const Center(child: CupertinoActivityIndicator())
+          : widget.state.accounts.isNotEmpty
+              ? ListView.builder(
+                  itemCount: widget.state.accounts.length,
+                  itemBuilder: (context, index) {
+                    final account = widget.state.accounts[index];
+                    if (index == widget.state.accounts.length - 1) {
+                      return Column(
+                        children: [
+                          CachedAccountWidget(
+                            account: account,
+                            onPickAccount: onPickAccount,
+                            onDeleteAccount: onDeleteAccount,
+                          ),
+                          const SizedBox(height: SizesResources.s4),
+                          TextButton(
+                            onPressed: () {
+                              context.read<AuthCubit>().init(forceSigning: true);
+                            },
+                            child: Text(
+                              "اضافة حساب جديد",
+                              style: TextStyle(
+                                color: ColorsResources.primary,
+                                fontSize: SizesResources.s4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return CachedAccountWidget(
+                      account: account,
+                      onPickAccount: onPickAccount,
+                      onDeleteAccount: onDeleteAccount,
+                    );
+                  },
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CachedAccountWidget(
-                        account: account,
-                        onPickAccount: onPickAccount,
-                        onDeleteAccount: onDeleteAccount,
+                      Text(
+                        "لا يوجد حسابات مؤرشفة",
+                        style: TextStyle(
+                          fontSize: SizesResources.s4,
+                        ),
                       ),
                       const SizedBox(height: SizesResources.s4),
                       TextButton(
@@ -114,41 +151,8 @@ class _FastAuthViewState extends State<FastAuthView> {
                         ),
                       ),
                     ],
-                  );
-                }
-                return CachedAccountWidget(
-                  account: account,
-                  onPickAccount: onPickAccount,
-                  onDeleteAccount: onDeleteAccount,
-                );
-              },
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "لا يوجد حسابات مؤرشفة",
-                    style: TextStyle(
-                      fontSize: SizesResources.s4,
-                    ),
                   ),
-                  const SizedBox(height: SizesResources.s4),
-                  TextButton(
-                    onPressed: () {
-                      context.read<AuthCubit>().init(forceSigning: true);
-                    },
-                    child: Text(
-                      "اضافة حساب جديد",
-                      style: TextStyle(
-                        color: ColorsResources.primary,
-                        fontSize: SizesResources.s4,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }

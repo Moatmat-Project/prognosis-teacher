@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 import 'package:moatmat_teacher/Presentation/reports/state/reports/reports_cubit.dart';
 
 import '../../../Presentation/reports/view/reports_v.dart';
@@ -36,7 +36,7 @@ class _ReportIconWidgetState extends State<ReportIconWidget> {
 
 class _ReportIcon extends StatelessWidget {
   final bool unread;
-  const _ReportIcon(this.unread, {super.key});
+  const _ReportIcon(this.unread);
 
   @override
   Widget build(BuildContext context) {

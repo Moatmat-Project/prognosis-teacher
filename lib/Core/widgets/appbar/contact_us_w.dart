@@ -35,6 +35,23 @@ class _ContactUsWidgetState extends State<ContactUsWidget> {
           icon: Icon(
             Icons.support,
           ),
+          // icon: const Stack(
+          //   children: [
+          //     Icon(
+          //       Icons.support,
+          //     ),
+          //     Opacity(
+          //       opacity: 0,
+          //       child: Align(
+          //         alignment: Alignment.topRight,
+          //         child: CircleAvatar(
+          //           radius: 3,
+          //           backgroundColor: Colors.red,
+          //         ),
+          //       ),
+          //     )
+          //   ],
+          // ),
         );
       },
     );

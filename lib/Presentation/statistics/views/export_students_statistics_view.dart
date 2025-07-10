@@ -227,6 +227,7 @@ class _ExportStatisticsPickTestsViewState extends State<ExportStatisticsPickTest
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("تحديد الاختبارات"),
         leading: IconButton(
@@ -236,16 +237,6 @@ class _ExportStatisticsPickTestsViewState extends State<ExportStatisticsPickTest
           icon: Icon(Icons.arrow_back_ios),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButtonWidget(
-          onPressed: () => locator<ExportStudentsStatisticsBloc>().add(
-            SetTestsEvent(selectedTests),
-          ),
-          text: "تحديد ${selectedTests.length} اختبار",
-        ),
-      )),
       body: Column(
         children: [
           //
@@ -254,6 +245,9 @@ class _ExportStatisticsPickTestsViewState extends State<ExportStatisticsPickTest
           MyTextFormFieldWidget(
             hintText: "البحث عن اختبار",
             controller: _controller,
+            maxLines: 1,
+            minLines: 1,
+            textInputAction: TextInputAction.done,
           ),
           //
           const SizedBox(height: SizesResources.s2),
@@ -318,6 +312,17 @@ class _ExportStatisticsPickTestsViewState extends State<ExportStatisticsPickTest
                   ),
                 );
               },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom + SizesResources.s2,
+            ),
+            child: ElevatedButtonWidget(
+              onPressed: () => locator<ExportStudentsStatisticsBloc>().add(
+                SetTestsEvent(selectedTests),
+              ),
+              text: "تحديد ${selectedTests.length} اختبار",
             ),
           ),
         ],

@@ -12,20 +12,23 @@ class SearchIconWidget extends StatelessWidget {
           builder: (context) => const MyStudentsView(),
         ));
       },
-      icon: const Stack(
-        children: [
-          Icon(
-            Icons.group,
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: CircleAvatar(
-              radius: 3,
-              backgroundColor: Colors.transparent,
-            ),
-          )
-        ],
+      icon: Icon(
+        Icons.group,
       ),
+      // const Stack(
+      //   children: [
+      //     Icon(
+      //       Icons.group,
+      //     ),
+      //     Align(
+      //       alignment: Alignment.topRight,
+      //       child: CircleAvatar(
+      //         radius: 3,
+      //         backgroundColor: Colors.transparent,
+      //       ),
+      //     )
+      //   ],
+      // ),
     );
   }
 }

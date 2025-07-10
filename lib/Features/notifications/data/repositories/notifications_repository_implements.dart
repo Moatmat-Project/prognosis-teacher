@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moatmat_teacher/Core/errors/exceptions.dart';
+import 'package:moatmat_teacher/Features/notifications/data/datasources/notification_local_data_source.dart';
 import 'package:moatmat_teacher/Features/notifications/data/datasources/notifications_remote_datasource.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/requests/send_notification_to_topics_request.dart';
@@ -13,8 +14,10 @@ import '../../domain/repositories/notifications_repository.dart';
 
 class NotificationsRepositoryImplements implements NotificationsRepository {
   final NotificationsRemoteDatasource _remoteDatasource;
+  final NotificationLocalDataSource _localDataSourse;
 
-  NotificationsRepositoryImplements( this._remoteDatasource);
+  NotificationsRepositoryImplements(
+      this._remoteDatasource, this._localDataSourse);
   @override
   Future<Either<Failure, Unit>> initializeLocalNotification() async {
     try {
@@ -46,9 +49,11 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> createNotificationsChannel({required AndroidNotificationChannel channel}) async {
+  Future<Either<Failure, Unit>> createNotificationsChannel(
+      {required AndroidNotificationChannel channel}) async {
     try {
-      final response = await _remoteDatasource.createNotificationsChannel(channel);
+      final response =
+          await _remoteDatasource.createNotificationsChannel(channel);
       debugPrint("createNotificationsChannel : $response");
 
       return right(unit);
@@ -58,9 +63,11 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> displayFirebaseNotification({required RemoteMessage message}) async {
+  Future<Either<Failure, Unit>> displayFirebaseNotification(
+      {required RemoteMessage message}) async {
     try {
-      final response1 = await _remoteDatasource.displayFirebaseNotification(message);
+      final response1 =
+          await _remoteDatasource.displayFirebaseNotification(message);
       return right(response1);
     } on Exception catch (e) {
       debugPrint("debugging error ${e.toString()}");
@@ -89,19 +96,28 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   @override
   Future<Either<Failure, List<AppNotification>>> getNotifications() async {
     try {
-      final response = await _remoteDatasource.getNotifications();
-      return right(response);
-    } on Exception {
-      return left(AnonFailure());
+      final List<AppNotification> remoteNotifications =
+          await _remoteDatasource.getNotifications();
+
+      final List<AppNotification> updatedNotifications =
+          await Future.wait(remoteNotifications.map((notification) async {
+        final bool isSeen = await _localDataSourse
+            .isNotificationSeen(notification.id.toString());
+
+        return notification.copyWith(seen: isSeen);
+      }));
+
+      return Right(updatedNotifications);
+    } on AnonException {
+      return Left(AnonFailure());
+    } catch (e) {
+      return Left(AnonFailure());
     }
   }
 
-
-
-
-
   @override
-  Future<Either<Failure, Unit>> subscribeToTopic({required String topic}) async {
+  Future<Either<Failure, Unit>> subscribeToTopic(
+      {required String topic}) async {
     try {
       await _remoteDatasource.subscribeToTopic(topic);
       return right(unit);
@@ -121,7 +137,8 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> unsubscribeToTopic({required String topic}) async {
+  Future<Either<Failure, Unit>> unsubscribeToTopic(
+      {required String topic}) async {
     try {
       await _remoteDatasource.unsubscribeToTopic(topic);
       return right(unit);
@@ -166,9 +183,12 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> sendNotificationToTopics({required SendNotificationToTopicsRequest sendNotificationRequest}) async {
+  Future<Either<Failure, Unit>> sendNotificationToTopics(
+      {required SendNotificationToTopicsRequest
+          sendNotificationRequest}) async {
     try {
-      final response = await _remoteDatasource.sendNotificationToTopics(sendNotificationRequest: sendNotificationRequest);
+      final response = await _remoteDatasource.sendNotificationToTopics(
+          sendNotificationRequest: sendNotificationRequest);
       return right(response);
     } on Exception catch (e) {
       debugPrint(e.toString());
@@ -181,7 +201,8 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
     required SendNotificationToUsersRequest sendNotificationRequest,
   }) async {
     try {
-      final response = await _remoteDatasource.sendNotificationToUsers(sendNotificationRequest: sendNotificationRequest);
+      final response = await _remoteDatasource.sendNotificationToUsers(
+          sendNotificationRequest: sendNotificationRequest);
       return right(response);
     } on Exception catch (e) {
       debugPrint(e.toString());
@@ -190,13 +211,26 @@ class NotificationsRepositoryImplements implements NotificationsRepository {
   }
 
   @override
-  Future<Either<Failure, String>> uploadNotificationImage({required File imageFile}) async {
+  Future<Either<Failure, String>> uploadNotificationImage(
+      {required File imageFile}) async {
     try {
-      final String imageUrl = await _remoteDatasource.uploadNotificationImage(imageFile);
+      final String imageUrl =
+          await _remoteDatasource.uploadNotificationImage(imageFile);
       return right(imageUrl);
     } on Exception catch (e) {
       debugPrint(e.toString());
       return left(AnonFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> markNotificationAsSeen(
+      String notificationId) async {
+    try {
+      await _localDataSourse.addSeenNotification(notificationId);
+      return const Right(unit);
+    } catch (e) {
+      return Left(AnonFailure());
     }
   }
 }

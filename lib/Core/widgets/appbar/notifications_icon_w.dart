@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moatmat_teacher/Presentation/reports/state/reports/reports_cubit.dart';
+import 'package:moatmat_teacher/Core/resources/colors_r.dart';
 
 import '../../../Presentation/notifications/state/notifications_bloc/notifications_bloc.dart';
 import '../../../Presentation/notifications/views/notifications_view.dart';
-import '../../resources/colors_r.dart';
 
 class NotificationsIconWidget extends StatefulWidget {
   const NotificationsIconWidget({super.key});
@@ -18,7 +16,7 @@ class _NotificationsIconWidgetState extends State<NotificationsIconWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocSelector<NotificationsBloc, NotificationsState, bool>(
-      selector: (s) => false,
+      selector: (s) => s is NotificationsLoaded ? s.unreadCount > 0 : false,
       builder: (context, state) {
         return IconButton(
           onPressed: () {
@@ -37,7 +35,7 @@ class _NotificationsIconWidgetState extends State<NotificationsIconWidget> {
 
 class _NotificationIcon extends StatelessWidget {
   final bool unread;
-  const _NotificationIcon(this.unread, {super.key});
+  const _NotificationIcon(this.unread);
 
   @override
   Widget build(BuildContext context) {
