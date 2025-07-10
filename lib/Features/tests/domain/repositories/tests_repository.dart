@@ -51,4 +51,9 @@ abstract class TestsRepository {
   Future<Either<Exception, Unit>> deleteReplies({
     required int replyId,
   });
+  //
+  Future<Either<Exception, String>> getVideo({
+    required int videoId,
+  });
+  //
 }

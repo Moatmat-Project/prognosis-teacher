@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_test_files_uc.dart';
@@ -62,6 +61,11 @@ abstract class TestsRemoteDS {
   Future<Unit> deleteReply({
     required int replyId,
   });
+  //
+  Future<String> getVideo({
+    required int videoId,
+  });
+  //
 }
 
 class TestsRemoteDSImpl implements TestsRemoteDS {
@@ -169,10 +173,10 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
       }
       //
       final addedVideo = addedVideoRes.getOrElse(() => Video(
-        id: -1,
-        url: finalUrl,
-        teacherId: Supabase.instance.client.auth.currentUser!.id,
-      ));
+            id: -1,
+            url: finalUrl,
+            teacherId: Supabase.instance.client.auth.currentUser!.id,
+          ));
       //
       uploadedVideos.add(addedVideo);
     }
@@ -497,5 +501,19 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
     await client.from('comment_reply').delete().eq('id', replyId);
     //
     return unit;
+  }
+
+  @override
+  Future<String> getVideo({
+    required int videoId,
+  }) async {
+    //
+    final client = Supabase.instance.client;
+    //
+    var res = await client.from('videos').select('url').eq('id', videoId).limit(1).maybeSingle();
+    //
+    String url = res?['url'].toString() ?? "";
+    //
+    return url;
   }
 }
