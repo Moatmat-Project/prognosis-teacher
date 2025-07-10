@@ -132,6 +132,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
           material: newTest.information.material,
           id: newTest.id.toString(),
           path: video.url,
+          name: video.url.split('/').last,
         );
         //
         if (uploadRes.isLeft()) {
