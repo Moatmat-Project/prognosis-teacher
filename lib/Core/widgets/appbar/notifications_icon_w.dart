@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Presentation/reports/state/reports/reports_cubit.dart';
 
+import '../../../Presentation/notifications/state/notifications_bloc/notifications_bloc.dart';
 import '../../../Presentation/notifications/views/notifications_view.dart';
+import '../../resources/colors_r.dart';
 
 class NotificationsIconWidget extends StatefulWidget {
   const NotificationsIconWidget({super.key});
@@ -15,32 +17,40 @@ class NotificationsIconWidget extends StatefulWidget {
 class _NotificationsIconWidgetState extends State<NotificationsIconWidget> {
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => NotificationsView(),
-          ),
+    return BlocSelector<NotificationsBloc, NotificationsState, bool>(
+      selector: (s) => false,
+      builder: (context, state) {
+        return IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => NotificationsView(),
+              ),
+            );
+          },
+          icon: _NotificationIcon(state),
         );
       },
-      icon: Stack(
-        children: [
-          // report icon
-          const Icon(
-            Icons.notifications,
-          ),
-          Opacity(
-            opacity: 0,
-            // opacity: (state is ReportsInitial && state.newReports) ? 1 : 0,
-            child: const Align(
-              alignment: Alignment.topRight,
-              child: CircleAvatar(
-                radius: 3,
-                backgroundColor: Colors.red,
-              ),
-            ),
-          )
-        ],
+    );
+  }
+}
+
+class _NotificationIcon extends StatelessWidget {
+  final bool unread;
+  const _NotificationIcon(this.unread, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Badge(
+      isLabelVisible: unread,
+      backgroundColor: ColorsResources.red,
+      offset: const Offset(6, -12),
+      smallSize: 4,
+      largeSize: 8,
+      alignment: Alignment.topRight,
+      child: Icon(
+        Icons.notifications,
+        size: 22,
       ),
     );
   }
