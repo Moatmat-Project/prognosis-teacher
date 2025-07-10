@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:moatmat_teacher/Core/functions/dialogs/add_group_d.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
+import 'package:moatmat_teacher/Core/widgets/appbar/notifications_icon_w.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/views/add_bank_view.dart';
@@ -41,6 +42,7 @@ class _HomeViewState extends State<HomeView> {
         title: const Text("الصفحة الرئيسية"),
         actions: const [
           SearchIconWidget(),
+          NotificationsIconWidget(),
           ReportIconWidget(),
           ContactUsWidget(),
         ],

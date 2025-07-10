@@ -80,4 +80,6 @@ abstract class NotificationsRepository {
   Future<Either<Failure, String>> uploadNotificationImage({
     required File imageFile,
   });
+
+  Future<Either<Failure, Unit>> markNotificationAsSeen(String notificationId);
 }
