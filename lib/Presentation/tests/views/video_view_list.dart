@@ -37,7 +37,7 @@ class _VideosListViewState extends State<VideosListView> {
                         MaterialPageRoute(
                           builder: (context) => CommentsManagmentView(
                             videoId: widget.videos[index].id,
-                            url: widget.videos[index].url,
+                            // url: widget.videos[index].url,
                           ),
                         ),
                       );

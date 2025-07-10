@@ -25,8 +25,9 @@ class _ReportIconWidgetState extends State<ReportIconWidget> {
           },
           icon: Stack(
             children: [
+              // report icon
               const Icon(
-                Icons.notifications,
+                Icons.report,
               ),
               Opacity(
                 opacity: (state is ReportsInitial && state.newReports) ? 1 : 0,

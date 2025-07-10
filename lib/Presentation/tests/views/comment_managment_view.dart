@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
@@ -11,11 +12,11 @@ class CommentsManagmentView extends StatefulWidget {
   const CommentsManagmentView({
     super.key,
     required this.videoId,
-    required this.url,
+    // required this.url,
     this.commentId,
   });
   final int videoId;
-  final String url;
+  // final String url;
   final int? commentId;
   @override
   State<CommentsManagmentView> createState() => _CommentsManagmentViewState();
@@ -65,7 +66,7 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
               Column(
                 children: [
                   // video player
-                  ChewiePlayerWidget(videoUrl: widget.url),
+                  // ChewiePlayerWidget(videoUrl: widget.url),
                   //
                   Padding(padding: EdgeInsets.only(top: SizesResources.s3)),
                 ],
@@ -76,7 +77,7 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
                   itemBuilder: (context, index) {
                     //
                     if (index == 0 && specificComment != null) {
-                      return _buildCommentCard(context, specificComment, state,isHighlighted:  true);
+                      return _buildCommentCard(context, specificComment, state, isHighlighted: true);
                     }
                     //
                     final actualIndex = specificComment != null ? index - 1 : index;
@@ -142,86 +143,295 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   Widget _buildCommentCard(BuildContext context, Comment comment, CommentsManagmentState state, {bool isHighlighted = false}) {
     final replies = state.repliesMap[comment.id] ?? [];
 
-    return Card(
-      elevation: isHighlighted ? 4 : 1,
-      color: isHighlighted ? ColorsResources.onPrimary.withOpacity(0.95) : ColorsResources.onPrimary,
-      shape: RoundedRectangleBorder(
-        side: isHighlighted
-            ? BorderSide(color: Colors.blueAccent, width: 1.5)
-            : BorderSide.none,
-        borderRadius: BorderRadius.circular(20),
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: SizesResources.s3,
+        vertical: SizesResources.s1,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+      decoration: BoxDecoration(
+        color: isHighlighted ? ColorsResources.primary.withOpacity(0.05) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isHighlighted ? ColorsResources.primary.withOpacity(0.3) : ColorsResources.borders,
+          width: isHighlighted ? 1.5 : 0.5,
         ),
-        child: ExpansionTile(
-          initiallyExpanded: isHighlighted,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  if (isHighlighted)
-                    Icon(Icons.push_pin, size: 18, color: Colors.blueAccent),
-                  if (isHighlighted) SizedBox(width: 6),
-                  Text(comment.username),
-                ],
-              ),
-              TextButton(
-                onPressed: () => _confirmDeleteComment(context, comment.id),
-                child: Text('حذف'),
-              ),
-            ],
+        boxShadow: [
+          BoxShadow(
+            color: ColorsResources.primary.withOpacity(0.05),
+            spreadRadius: 0.5,
+            blurRadius: 8,
+            offset: Offset(0, 2),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(comment.comment),
-              if (isHighlighted)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    'تعليق محدد',
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Comment header
+          Container(
+            padding: EdgeInsets.all(SizesResources.s3),
+            decoration: BoxDecoration(
+              color: isHighlighted ? ColorsResources.primary.withOpacity(0.1) : ColorsResources.background.withOpacity(0.3),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              children: [
+                // User icon and highlight indicator
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: isHighlighted ? ColorsResources.primary : ColorsResources.primary.withOpacity(0.7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    isHighlighted ? Icons.push_pin : Icons.person,
+                    color: Colors.white,
+                    size: 18,
                   ),
                 ),
-            ],
-          ),
-          children: [
-            if (state.loadingRepliesForComments.contains(comment.id))
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: CircularProgressIndicator(),
-              )
-            else
-              Column(
-                children: replies.map((ReplyComment reply) {
-                  return ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(reply.username),
-                        TextButton(
-                          onPressed: () => _confirmDeleteReply(context, comment.id, reply.id),
-                          child: Text('حذف'),
+                SizedBox(width: SizesResources.s2),
+
+                // Username and highlight label
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        comment.username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black87,
                         ),
-                      ],
+                      ),
+                      if (isHighlighted)
+                        Text(
+                          'تعليق محدد',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: ColorsResources.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+                // Delete button
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => _confirmDeleteComment(context, comment.id),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizesResources.s2,
+                        vertical: SizesResources.s1,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.red.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'حذف',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                    subtitle: Text(reply.comment),
-                  );
-                }).toList(),
-              ),
-            TextButton(
-              onPressed: () {
-                context.read<CommentsManagmentBloc>().add(LoadReplies(commentId: comment.id));
-              },
-              child: Text('تحميل الردود (${comment.repliesNum})'),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+
+          // Comment content
+          Padding(
+            padding: EdgeInsets.all(SizesResources.s3),
+            child: Text(
+              comment.comment,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black87,
+                height: 1.4,
+              ),
+            ),
+          ),
+
+          // Replies section
+          if (replies.isNotEmpty || state.loadingRepliesForComments.contains(comment.id))
+            Container(
+              margin: EdgeInsets.only(
+                left: SizesResources.s4,
+                right: SizesResources.s4,
+                bottom: SizesResources.s2,
+              ),
+              padding: EdgeInsets.all(SizesResources.s2),
+              decoration: BoxDecoration(
+                color: ColorsResources.background.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: ColorsResources.borders.withOpacity(0.5),
+                  width: 0.5,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Replies header
+                  Padding(
+                    padding: EdgeInsets.only(bottom: SizesResources.s2),
+                    child: Text(
+                      'الردود (${comment.repliesNum})',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: ColorsResources.primary,
+                      ),
+                    ),
+                  ),
+
+                  // Loading indicator or replies list
+                  if (state.loadingRepliesForComments.contains(comment.id))
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(SizesResources.s2),
+                        child: CupertinoActivityIndicator(
+                          color: ColorsResources.primary,
+                        ),
+                      ),
+                    )
+                  else
+                    ...replies.map((ReplyComment reply) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: SizesResources.s1),
+                        padding: EdgeInsets.all(SizesResources.s2),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: ColorsResources.borders.withOpacity(0.3),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            // Reply user icon
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                color: ColorsResources.primary.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.reply,
+                                color: ColorsResources.primary,
+                                size: 12,
+                              ),
+                            ),
+                            SizedBox(width: SizesResources.s1),
+
+                            // Reply content
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    reply.username,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    reply.comment,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black54,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Delete reply button
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(6),
+                                onTap: () => _confirmDeleteReply(context, comment.id, reply.id),
+                                child: Padding(
+                                  padding: EdgeInsets.all(SizesResources.s1),
+                                  child: Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red.withOpacity(0.7),
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                ],
+              ),
+            ),
+
+          // Load replies button
+          if (comment.repliesNum > 0)
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                left: SizesResources.s3,
+                right: SizesResources.s3,
+                bottom: SizesResources.s3,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    context.read<CommentsManagmentBloc>().add(LoadReplies(commentId: comment.id));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: SizesResources.s2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: ColorsResources.primary.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        replies.isEmpty ? 'تحميل الردود (${comment.repliesNum})' : 'إعادة تحميل الردود',
+                        style: TextStyle(
+                          color: ColorsResources.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
-
 }

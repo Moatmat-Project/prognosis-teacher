@@ -125,20 +125,7 @@ class StudentsDSimpl implements StudentsDS {
     //
     // final client = client;
     final client = Supabase.instance.client;
-    if(kDebugMode){
-    final users = await client.from("users_data").select().limit(100);
-    final List<UserData> students = users.map((e) {
-      return UserDataModel.fromJson(e);
-    }).toList();
 
-    //
-    // return users;
-    return GetMyStudentsResponse(
-      banksIds: [],
-      testsIds: [],
-      students: students,
-    );
-    }
 
     //
     final teacherData = locator<TeacherData>();
