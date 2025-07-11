@@ -140,10 +140,10 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
       }
       //
       final addedVideo = addedVideoRes.getOrElse(() => Video(
-        id: -1,
-        url: finalUrl,
-        teacherId: Supabase.instance.client.auth.currentUser!.id,
-      ));
+            id: -1,
+            url: finalUrl,
+            teacherId: Supabase.instance.client.auth.currentUser!.id,
+          ));
       //
       uploadedVideos.add(addedVideo);
     }
