@@ -13,7 +13,6 @@ import '../../../Features/students/domain/entities/result.dart';
 Future<void> exportResultsPdf(List<Result> results, String name) async {
   final pdf = pw.Document();
   //
-  //
   var reqFont = pw.Font.ttf(
     await rootBundle.load("assets/fonts/Tajawal/Tajawal-Regular.ttf"),
   );
@@ -43,27 +42,28 @@ Future<void> exportResultsPdf(List<Result> results, String name) async {
   );
   // Save the PDF file to local storage
   try {
-  var directory = await getApplicationDocumentsDirectory();
-  if (!(await directory.exists())) {
-    await directory.create(recursive: true);
-  }
-  String filePath = '${directory.path}/results_of_${name.replaceAll(" ", "_")}.pdf';
-  final file = File(filePath);
-  var pdfFile = await file.writeAsBytes(await pdf.save());
-  // Open the PDF file
-  if (kDebugMode&&1==2) {
-    OpenFile.open(pdfFile.path);
-  } else {
-    await Share.shareXFiles(
-      [XFile(pdfFile.path)],
-    );
-  }
+    var directory = await getApplicationDocumentsDirectory();
+    if (!(await directory.exists())) {
+      await directory.create(recursive: true);
+    }
+    String filePath = '${directory.path}/results_of_${name.replaceAll(" ", "_")}.pdf';
+    final file = File(filePath);
+    var pdfFile = await file.writeAsBytes(await pdf.save());
+
+    // Open the PDF file
+    if (kDebugMode && 1 == 2) {
+      await OpenFile.open(pdfFile.path);
+    } else {
+      await Share.shareXFiles(
+        [XFile(pdfFile.path)],
+      );
+    }
   } on Exception catch (e) {
-     await Share.shareXFiles(
-      [XFile.fromData(await pdf.save(), name: "results_of_${name.replaceAll(" ", "_")}.pdf",mimeType: "application/pdf")],
+    await Share.shareXFiles(
+      [XFile.fromData(await pdf.save(), name: "results_of_${name.replaceAll(" ", "_")}.pdf", mimeType: "application/pdf")],
     );
-  rethrow;
-}
+    rethrow;
+  }
 }
 
 pw.Widget getResultRow(Result result) {
@@ -256,6 +256,7 @@ pw.Widget getColumnCell(String title, int flex) {
         )),
   );
 }
+
 Future<bool> checkStoragePermission() async {
   var status = await Permission.storage.status;
   if (!status.isGranted) {

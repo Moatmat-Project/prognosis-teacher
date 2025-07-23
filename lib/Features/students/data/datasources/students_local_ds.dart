@@ -348,3 +348,13 @@ class StudentsLocalDSImpl implements StudentsLocalDS {
     return markData;
   }
 }
+/*
+cd moatmat_admin &&  flutter clean && flutter build apk --release --split-per-abi
+
+cd moatmat_app &&  flutter clean && flutter build apk --release --split-per-abi
+
+cd moatmat_teacher &&  flutter clean && flutter build apk --release --split-per-abi
+
+cd moatmat_uploader &&  flutter clean && flutter build apk --release --split-per-abi
+
+*/

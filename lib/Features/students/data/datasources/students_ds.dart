@@ -121,11 +121,10 @@ class StudentsDSimpl implements StudentsDS {
     bool excludeCourseSubscribers = false,
     bool excludeBanks = false,
     bool excludeTests = false,
-  }) async {    
+  }) async {
     //
     // final client = client;
     final client = Supabase.instance.client;
-
 
     //
     final teacherData = locator<TeacherData>();
@@ -482,8 +481,6 @@ class StudentsDSimpl implements StudentsDS {
     final List<Result> results = resultsJson.map((e) => ResultModel.fromStatisticsQuery(e)).toList();
     final List<AttendanceRecord> records = recordsJson.map((e) => AttendanceRecordModel.fromStatisticsQuery(e)).toList();
     // final List<Test> tests = testsJson.map((e) => TestModel.fromJson(e)).toList();
-    // filter results
-    results.removeWhere((e) => e.answers.any((e) => e == null));
 
     // Store user marks
     Map<String, List<StudentTestMarkDetails>> userMarksHolder = {};

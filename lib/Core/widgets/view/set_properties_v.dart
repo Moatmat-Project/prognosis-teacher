@@ -14,6 +14,7 @@ class SetPropertiesView extends StatefulWidget {
     this.showAnswers,
     this.visible,
     this.scrollable,
+    this.downloadable,
     this.isTest = true,
     required this.onPop,
   });
@@ -24,6 +25,7 @@ class SetPropertiesView extends StatefulWidget {
   final bool? showAnswers;
   final bool? visible;
   final bool? scrollable;
+  final bool? downloadable;
   final bool isTest;
   //
   final VoidCallback onPop;
@@ -35,6 +37,7 @@ class SetPropertiesView extends StatefulWidget {
     required bool? repeatable,
     required bool? visible,
     required bool? scrollable,
+    required bool? downloadable,
   })? afterSet;
   //
   @override
@@ -48,6 +51,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
   late bool timePerQuestion;
   late bool repeatable;
   late bool showAnswers;
+  late bool downloadable;
   late bool visible;
   late bool scrollable;
   @override
@@ -56,6 +60,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
     timePerQuestion = widget.timePerQuestion ?? false;
     repeatable = widget.repeatable ?? false;
     showAnswers = widget.showAnswers ?? true;
+    downloadable = widget.downloadable ?? false;
     visible = widget.visible ?? true;
     scrollable = widget.scrollable ?? false;
     super.initState();
@@ -118,6 +123,15 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
                   onUpdate();
                 },
               ),
+            if (widget.isTest)
+              CheckingWidget(
+                title: "السماح بالتحميل",
+                value: downloadable,
+                onChanged: (value) {
+                  downloadable = value ?? true;
+                  onUpdate();
+                },
+              ),
             CheckingWidget(
               title: "اخفاء",
               value: !visible,
@@ -150,6 +164,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
               timePerQuestion: timePerQuestion,
               repeatable: repeatable,
               showAnswers: showAnswers,
+              downloadable: downloadable,
               visible: visible,
               scrollable: scrollable,
             );

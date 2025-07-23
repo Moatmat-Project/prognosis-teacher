@@ -98,8 +98,12 @@ class _AddBankViewState extends State<AddBankView> {
                 timePerQuestion,
                 visible,
                 scrollable,
+                downloadable,
               }) {
-                final properties = BankProperties(visible: visible, scrollable: scrollable);
+                final properties = BankProperties(
+                  visible: visible,
+                  scrollable: scrollable,
+                );
                 //
                 context.read<AddBankCubit>().setTestProperties(
                       properties: properties,

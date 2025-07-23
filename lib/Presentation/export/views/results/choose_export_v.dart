@@ -63,7 +63,8 @@ class _ChooseExportVState extends State<ChooseExportV> {
             onTap: () async {
               try {
                 await onFilter();
-                await exportResultsPdf(results, widget.name);
+                //156778
+                await exportResultsPdf(results.reversed.toList(), widget.name);
               } on Exception catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('error : $e')),
