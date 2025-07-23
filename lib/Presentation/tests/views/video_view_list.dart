@@ -4,8 +4,9 @@ import 'package:moatmat_teacher/Features/tests/domain/entities/video.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/comment_managment_view.dart';
 
 class VideosListView extends StatefulWidget {
-  const VideosListView({super.key, required this.videos});
+  const VideosListView({super.key, required this.videos, required this.testId});
   final List<Video> videos;
+  final int testId;
 
   @override
   State<VideosListView> createState() => _VideosListViewState();
@@ -37,6 +38,7 @@ class _VideosListViewState extends State<VideosListView> {
                         MaterialPageRoute(
                           builder: (context) => CommentsManagmentView(
                             videoId: widget.videos[index].id,
+                            testId: widget.testId,
                           ),
                         ),
                       );

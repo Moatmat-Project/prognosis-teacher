@@ -8,15 +8,16 @@ import 'package:moatmat_teacher/Features/tests/domain/entities/reply_comment.dar
 import 'package:moatmat_teacher/Presentation/tests/state/comment_managment/comments_managment_bloc.dart';
 import 'package:moatmat_teacher/Presentation/tests/widgets/chewie_player_widget.dart';
 
-
 class CommentsManagmentView extends StatefulWidget {
   const CommentsManagmentView({
     super.key,
     required this.videoId,
+    required this.testId,
     this.commentId,
   });
   final int videoId;
   final int? commentId;
+  final int testId;
   @override
   State<CommentsManagmentView> createState() => _CommentsManagmentViewState();
 }
@@ -25,33 +26,48 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   @override
   void initState() {
     super.initState();
+    context.read<CommentsManagmentBloc>().add(GetTestTitle(testId: widget.testId));
     context.read<CommentsManagmentBloc>().add(LoadVideo(videoId: widget.videoId));
     context.read<CommentsManagmentBloc>().add(LoadComments(videoId: widget.videoId));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsResources.background,
-      appBar: AppBar(
-        title: Text('إدارة التعليقات والردود'),
-        backgroundColor: ColorsResources.background,
-      ),
-      body: BlocBuilder<CommentsManagmentBloc, CommentsManagmentState>(
-        builder: (context, state) {
-          //
-          if (state.isLoadingComments) {
-            return Center(child: CircularProgressIndicator());
-          }
-          //
-          if (state.errorMsg != null) {
-            return Center(child: Text('خطأ: ${state.errorMsg}'));
-          }
-          //
-          final comments = state.comments ?? [];
-          //
-          if (comments.isEmpty) {
-            return Column(
+    return BlocBuilder<CommentsManagmentBloc, CommentsManagmentState>(
+      builder: (context, state) {
+        //
+        if (state.isLoadingComments) {
+          return Scaffold(
+            backgroundColor: ColorsResources.background,
+            appBar: AppBar(
+              title: Text(state.testTitle ?? 'إدارة التعليقات والردود'),
+              backgroundColor: ColorsResources.background,
+            ),
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        //
+        if (state.errorMsg != null) {
+          return Scaffold(
+            backgroundColor: ColorsResources.background,
+            appBar: AppBar(
+              title: Text(state.testTitle ?? 'إدارة التعليقات والردود'),
+              backgroundColor: ColorsResources.background,
+            ),
+            body: Center(child: Text('خطأ: ${state.errorMsg}')),
+          );
+        }
+        //
+        final comments = state.comments ?? [];
+        //
+        if (comments.isEmpty) {
+          return Scaffold(
+            backgroundColor: ColorsResources.background,
+            appBar: AppBar(
+              title: Text(state.testTitle ?? 'إدارة التعليقات والردود'),
+              backgroundColor: ColorsResources.background,
+            ),
+            body: Column(
               children: [
                 // video player
                 ChewiePlayerWidget(videoUrl: state.url ?? ""),
@@ -60,17 +76,24 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
                 //
                 Center(child: Text('لا توجد تعليقات')),
               ],
-            );
-          }
-          //
-          Comment? specificComment;
-          if (widget.commentId != null) {
-            try {
-              specificComment = comments.firstWhere((c) => c.id == widget.commentId);
-            } catch (_) {}
-          }
-          //
-          return Column(
+            ),
+          );
+        }
+        //
+        Comment? specificComment;
+        if (widget.commentId != null) {
+          try {
+            specificComment = comments.firstWhere((c) => c.id == widget.commentId);
+          } catch (_) {}
+        }
+        //
+        return Scaffold(
+          backgroundColor: ColorsResources.background,
+          appBar: AppBar(
+            title: Text(state.testTitle ?? 'إدارة التعليقات والردود'),
+            backgroundColor: ColorsResources.background,
+          ),
+          body: Column(
             children: [
               Column(
                 children: [
@@ -103,9 +126,9 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

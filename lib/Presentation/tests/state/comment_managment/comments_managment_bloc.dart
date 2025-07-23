@@ -7,6 +7,7 @@ import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_comment_uc
 import 'package:moatmat_teacher/Features/tests/domain/usecases/delete_reply_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_comment_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_replies_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_test_by_id_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_video_uc.dart';
 
 part 'comments_managment_event.dart';
@@ -19,6 +20,7 @@ class CommentsManagmentBloc extends Bloc<CommentsManagmentEvent, CommentsManagme
     on<LoadReplies>(_onLoadReplies);
     on<DeleteComment>(_onDeleteComment);
     on<DeleteReply>(_onDeleteReply);
+    on<GetTestTitle>(_onGetTestTitle);
   }
 
   Future<void> _onLoadComments(LoadComments event, Emitter<CommentsManagmentState> emit) async {
@@ -27,6 +29,15 @@ class CommentsManagmentBloc extends Bloc<CommentsManagmentEvent, CommentsManagme
     res.fold(
       (l) => emit(state.copyWith(isLoadingComments: false, errorMsg: l.toString())),
       (r) => emit(state.copyWith(isLoadingComments: false, comments: r, errorMsg: null)),
+    );
+  }
+
+  Future<void> _onGetTestTitle(GetTestTitle event, Emitter<CommentsManagmentState> emit) async {
+    emit(state.copyWith(errorMsg: null));
+    final res = await locator<GetTestByIdUC>().call(testId: event.testId,update: true);
+    res.fold(
+      (l) => emit(state.copyWith(errorMsg: l.toString())),
+      (r) => emit(state.copyWith(testTitle: r?.information.title, errorMsg: null)),
     );
   }
 

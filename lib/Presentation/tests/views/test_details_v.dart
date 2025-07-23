@@ -185,9 +185,13 @@ class _TestDetailsViewState extends State<TestDetailsView> {
                     iconData: Icons.manage_accounts,
                     onTap: () {
                       final videos = widget.test?.information.videos;
+                      final testId = widget.test?.id ?? -1;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => VideosListView(videos: videos ?? [],),
+                          builder: (context) => VideosListView(
+                            videos: videos ?? [],
+                            testId: testId,
+                          ),
                         ),
                       );
                     },
