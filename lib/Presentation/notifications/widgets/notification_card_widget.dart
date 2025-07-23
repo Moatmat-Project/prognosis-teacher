@@ -284,11 +284,6 @@ class NotificationCard extends StatelessWidget {
     return videoId != null && commentId != null;
   }
 
-  // Helper method to get video URL from data
-  String? _getVideoUrl() {
-    return notification.data?["video_url"]?.toString();
-  }
-
   // Helper method to navigate to comment management view
   void _navigateToCommentManagement(BuildContext context) {
     final videoId = notification.data?["video_id"];
@@ -299,9 +294,8 @@ class NotificationCard extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => CommentsManagmentView(
             videoId: int.tryParse(videoId.toString()) ?? 0,
-            // url: videoUrl,
             commentId: int.tryParse(commentId.toString()),
-            testId: int.fromEnvironment(testId.toString()),
+            testId: int.tryParse(testId.toString()),
           ),
         ),
       );

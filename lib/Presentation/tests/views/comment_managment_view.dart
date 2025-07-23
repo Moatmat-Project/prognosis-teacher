@@ -17,7 +17,7 @@ class CommentsManagmentView extends StatefulWidget {
   });
   final int videoId;
   final int? commentId;
-  final int testId;
+  final int? testId;
   @override
   State<CommentsManagmentView> createState() => _CommentsManagmentViewState();
 }
@@ -26,7 +26,7 @@ class _CommentsManagmentViewState extends State<CommentsManagmentView> {
   @override
   void initState() {
     super.initState();
-    context.read<CommentsManagmentBloc>().add(GetTestTitle(testId: widget.testId));
+    if (widget.testId != null) context.read<CommentsManagmentBloc>().add(GetTestTitle(testId: widget.testId!));
     context.read<CommentsManagmentBloc>().add(LoadVideo(videoId: widget.videoId));
     context.read<CommentsManagmentBloc>().add(LoadComments(videoId: widget.videoId));
   }
