@@ -293,8 +293,6 @@ class NotificationCard extends StatelessWidget {
   void _navigateToCommentManagement(BuildContext context) {
     final videoId = notification.data?["video_id"];
     final commentId = notification.data?["comment_id"];
-    final videoUrl = _getVideoUrl();
-
     if (videoId != null && commentId != null) {
       Navigator.of(context).push(
         MaterialPageRoute(
