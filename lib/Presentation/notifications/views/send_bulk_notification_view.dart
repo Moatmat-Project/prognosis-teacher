@@ -29,7 +29,7 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
     super.dispose();
   }
 
-    Future<void> _pickImage() async {
+  Future<void> _pickImage() async {
     final file = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (file != null) {
       setState(() => selectedImage = File(file.path));
@@ -37,7 +37,6 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
   }
 
   void _removeImage() => setState(() => selectedImage = null);
-
 
   void _sendNotification(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
@@ -53,11 +52,11 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
 
     context.read<SendNotificationBloc>().add(
           SendNotificationToUsers(
-            imageFile:  selectedImage,
+            imageFile: selectedImage,
             userIds: widget.usersData.map((e) => e.uuid).toList(),
             notification: notification,
           ),
-    );
+        );
   }
 
   void _showSnackbar(String message) {
@@ -85,8 +84,7 @@ class _SendBulkNotificationViewState extends State<SendBulkNotificationView> {
           }
         },
         child: SendBulkNotificationBody(
-                      onPickImage: _pickImage,
-
+          onPickImage: _pickImage,
           selectedImage: selectedImage,
           onRemoveImage: _removeImage,
           formKey: _formKey,

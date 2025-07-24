@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moatmat_teacher/Core/functions/show_alert.dart';
 import 'package:moatmat_teacher/Features/notifications/domain/entities/app_notification.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
 import 'package:moatmat_teacher/Presentation/notifications/views/select_students_view.dart';
@@ -48,8 +49,7 @@ class _SendNotificationViewState extends State<SendNotificationView> {
 
     if (result != null && result.isNotEmpty) {
       setState(() {
-        selectedUserIds
-            .addAll(result.where((id) => !selectedUserIds.contains(id)));
+        selectedUserIds.addAll(result.where((id) => !selectedUserIds.contains(id)));
       });
     }
   }
@@ -91,8 +91,7 @@ class _SendNotificationViewState extends State<SendNotificationView> {
   }
 
   void _showSnackbar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _handleSuccess() {
@@ -108,7 +107,21 @@ class _SendNotificationViewState extends State<SendNotificationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('  إرسال إشعار')),
+      appBar: AppBar(
+        title: const Text('  إرسال إشعار'),
+        leading: IconButton(
+            onPressed: () {
+              showAlert(
+                context: context,
+                title: 'تاكيد الخروج',
+                body: 'هل أنت متأكد من الخروج؟',
+                onAgree: () {
+                  Navigator.pop(context);
+                },
+              );
+            },
+            icon: const Icon(Icons.close)),
+      ),
       body: BlocListener<SendNotificationBloc, SendNotificationState>(
         listener: (context, state) {
           if (state is SendNotificationSuccess) {

@@ -24,7 +24,6 @@ class NotificationForm extends StatefulWidget {
 }
 
 class _NotificationFormState extends State<NotificationForm> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,6 +36,7 @@ class _NotificationFormState extends State<NotificationForm> {
                 width: SpacingResources.mainWidth(context) - 52,
                 hintText: 'عنوان الإشعار',
                 controller: widget.titleController,
+                textInputAction: TextInputAction.done,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'عنوان الاشعار  لا يمكن ان يكون فارغا';
@@ -65,6 +65,7 @@ class _NotificationFormState extends State<NotificationForm> {
         MyTextFormFieldWidget(
           hintText: 'نص الإشعار',
           controller: widget.bodyController,
+          textInputAction: TextInputAction.done,
           maxLines: 3,
           minLines: 1,
         ),
