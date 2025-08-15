@@ -109,18 +109,6 @@ class _SendNotificationViewState extends State<SendNotificationView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('  إرسال إشعار'),
-        leading: IconButton(
-            onPressed: () {
-              showAlert(
-                context: context,
-                title: 'تاكيد الخروج',
-                body: 'هل أنت متأكد من الخروج؟',
-                onAgree: () {
-                  Navigator.pop(context);
-                },
-              );
-            },
-            icon: const Icon(Icons.close)),
       ),
       body: BlocListener<SendNotificationBloc, SendNotificationState>(
         listener: (context, state) {
@@ -130,20 +118,38 @@ class _SendNotificationViewState extends State<SendNotificationView> {
             _showSnackbar(state.message);
           }
         },
-        child: Form(
-          key: _formKey,
-          child: SendNotificationBody(
-            isUserMode: isUserMode,
-            selectedTopics: selectedTopics,
-            selectedUserIds: selectedUserIds,
-            selectedImage: selectedImage,
-            titleController: titleController,
-            bodyController: bodyController,
-            onModeChanged: (val) => setState(() => isUserMode = val),
-            onPickImage: _pickImage,
-            onRemoveImage: _removeImage,
-            onSelectUsers: _selectUsers,
-            onSend: () => _sendNotification(context),
+        child: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (selectedUserIds.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            showAlert(
+              context: context,
+              title: 'تاكيد الخروج',
+              body: 'هل أنت متأكد من الخروج؟',
+              onAgree: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+          child: Form(
+            key: _formKey,
+            child: SendNotificationBody(
+              isUserMode: isUserMode,
+              selectedTopics: selectedTopics,
+              selectedUserIds: selectedUserIds,
+              selectedImage: selectedImage,
+              titleController: titleController,
+              bodyController: bodyController,
+              onModeChanged: (val) => setState(() => isUserMode = val),
+              onPickImage: _pickImage,
+              onRemoveImage: _removeImage,
+              onSelectUsers: _selectUsers,
+              onSend: () => _sendNotification(context),
+            ),
           ),
         ),
       ),

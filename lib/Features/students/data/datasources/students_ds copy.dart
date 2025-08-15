@@ -31,10 +31,8 @@ abstract class StudentsDS {
     required bool excludeTests,
   });
   //
-  Future<List<Result>> getMyStudentsResults({
-    required List<String> studentsIds,
-    required List<String> testsIds,
-    required List<String> setsIds,
+  Future<GetMyStudentsStatisticsResponse> getMyStudentsResults({
+    required List<UserData> students,
   });
   // get my students
   Future<List<UserData>> getMyStudentsByIds({
@@ -118,9 +116,6 @@ class StudentsDSimpl implements StudentsDS {
     //
     return myUsers.map((e) => UserDataModel.fromJson(e)).toList();
   }
-  /*
-  
-  */
 
   @override
   Future<GetMyStudentsResponse> getMyStudents({
@@ -130,12 +125,12 @@ class StudentsDSimpl implements StudentsDS {
   }) async {
     try {
       final response = await Supabase.instance.client.rpc(
-        "get_teacher_students",
+        "testing",
         params: {
-          "p_teacher_email": locator<TeacherData>().email,
-          "p_exclude_course_subscribers": excludeCourseSubscribers,
-          "p_exclude_banks": excludeBanks,
-          "p_exclude_tests": excludeTests,
+          "teacher_email_param": locator<TeacherData>().email,
+          "exclude_course_subscribers": excludeCourseSubscribers,
+          "exclude_banks": excludeBanks,
+          "exclude_tests": excludeTests,
         },
       );
 
@@ -407,27 +402,78 @@ class StudentsDSimpl implements StudentsDS {
   }
 
   @override
-  Future<List<Result>> getMyStudentsResults({
-    required List<String> studentsIds,
-    required List<String> testsIds,
-    required List<String> setsIds,
+  Future<GetMyStudentsStatisticsResponse> getMyStudentsResults({
+    required List<UserData> students,
   }) async {
-    ///
     final client = Supabase.instance.client;
 
-    ///
-    final params = {
-      'p_users_uuid': studentsIds,
-      'p_tests_ids': testsIds,
-      'p_sets_ids': setsIds,
-    };
+    // Call the new function
+    final statsResponse = await client.rpc(
+      'get_teacher_student_statistics',
+      params: {
+        'teacher_email_param': client.auth.currentUser?.email,
+        'student_ids_param': students.map((e) => e.id).toList(),
+      },
+    );
 
-    ///
-    final response = await client.rpc('get_results_with_filters', params: params).select();
-    debugPrint(response.toString());
+    // Parse the raw data - handle the single row result
+    final testsJson = (statsResponse[0]['tests_data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final recordsJson = (statsResponse[0]['attendance_data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final resultsJson = (statsResponse[0]['results_data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
 
-    ///
-    return response.map((e) => ResultModel.fromStatisticsQuery(e)).toList();
+    // Continue with your existing processing logic...
+    final List<AttendanceRecord> records = recordsJson.map((e) => AttendanceRecordModel.fromStatisticsQuery(e)).toList();
+    final List<Result> results = resultsJson.map((e) => ResultModel.fromJson(e)).toList();
+
+    // Rest of your existing code remains the same...
+    Map<String, List<StudentTestMarkDetails>> userMarksHolder = {};
+    for (var r in results) {
+      userMarksHolder.putIfAbsent(r.userId, () => []).add(
+            StudentTestMarkDetails(
+              testId: r.testId ?? -1,
+              mark: r.mark,
+              date: r.date,
+            ),
+          );
+    }
+
+    // Generate student row details
+    final List<StudentRowDetails> rows = students.map((s) {
+      List<StudentTestMarkDetails> marks = userMarksHolder[s.uuid] ?? [];
+      //
+      // Step 1: Group by ID
+      Map<int, List<StudentTestMarkDetails>> grouped = {};
+
+      for (var mark in marks) {
+        int id = mark.testId;
+        grouped.putIfAbsent(id, () => []).add(mark);
+      }
+      //
+      // Step 2: Sort each group by date
+      grouped.forEach((id, list) {
+        list.sort((a, b) => a.date.compareTo(b.date)); // Oldest first
+      });
+      //
+      // Step 3: Extract the oldest item from each group
+      List<StudentTestMarkDetails> newMarks = grouped.values.map((list) => list.first).toList();
+      //
+      return StudentRowDetails(
+        name: s.name,
+        userId: s.id,
+        marks: newMarks,
+        records: records.where((e) => e.studentId == s.id).toList(),
+      );
+    }).toList();
+
+    return GetMyStudentsStatisticsResponse(
+      rows: rows,
+      tests: testsJson.map((e) {
+        return (
+          e['id'] as int,
+          (e['information'] as Map<String, dynamic>)['title'] as String,
+        );
+      }).toList(),
+    );
   }
 }
 

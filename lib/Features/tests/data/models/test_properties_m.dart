@@ -18,7 +18,7 @@ class TestPropertiesModel extends TestProperties {
       repeatable: json["repeatable"],
       visible: json["visible"],
       scrollable: json["scrollable"],
-      downloadable: json["downloadable"],
+      downloadable: json["downloadable"] ?? true,
     );
   }
   factory TestPropertiesModel.fromClass(TestProperties properties) {

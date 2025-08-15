@@ -70,9 +70,10 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
             }
 
             return PopScope(
-              canPop: canPop,
+              canPop: false,
               onPopInvokedWithResult: (didPop, result) {
-                if (state.canSave && !didPop) {
+                if (didPop) return;
+                if (state.canSave) {
                   showAlert(
                     context: context,
                     title: "تغييرات غير محفوظة",
@@ -88,6 +89,9 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
                       });
                     },
                   );
+                  return;
+                } else {
+                  Navigator.of(context).pop();
                 }
               },
               child: Scaffold(

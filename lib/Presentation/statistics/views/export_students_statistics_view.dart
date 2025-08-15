@@ -54,6 +54,8 @@ class _ExportStudentsStatisticsViewState extends State<ExportStudentsStatisticsV
             return ExportStatisticsProcessingView(state: state);
           } else if (state is ExportStatisticsCompleted) {
             return ExportStatisticsCompletedView(state: state);
+          } else if (state is ExportStatisticsLoading) {
+            return ExportStatisticsLoadingView();
           }
           return Scaffold(
             appBar: AppBar(
@@ -502,6 +504,19 @@ class ExportStatisticsProcessingView extends StatelessWidget {
   }
 }
 
+class ExportStatisticsLoadingView extends StatelessWidget {
+  const ExportStatisticsLoadingView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CupertinoActivityIndicator(),
+      ),
+    );
+  }
+}
+
 class ExportStatisticsCompletedView extends StatelessWidget {
   const ExportStatisticsCompletedView({super.key, required this.state});
   final ExportStatisticsCompleted state;
@@ -576,26 +591,26 @@ class ExportStatisticsCompletedView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future<String> save(excel.Excel excel) async {
-    var directory = await getApplicationDocumentsDirectory();
-    String filePath = '${directory.path}/statistics_of_students_${DateTime.now().toString().replaceAll(" ", "_").replaceAll("-", "_")}.xlsx';
-    var fileBytes = excel.save();
-    if (fileBytes != null) {
-      File(filePath)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes);
-    }
-    return filePath;
+Future<String> save(excel.Excel excel) async {
+  var directory = await getApplicationDocumentsDirectory();
+  String filePath = '${directory.path}/statistics_of_students_${DateTime.now().toString().replaceAll(" ", "_").replaceAll("-", "_")}.xlsx';
+  var fileBytes = excel.save();
+  if (fileBytes != null) {
+    File(filePath)
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(fileBytes);
   }
+  return filePath;
+}
 
-  Future<void> share(excel.Excel excel) async {
-    var filePath = await save(excel);
-    await Share.shareXFiles([XFile(filePath)]);
-  }
+Future<void> share(excel.Excel excel) async {
+  var filePath = await save(excel);
+  await Share.shareXFiles([XFile(filePath)]);
+}
 
-  Future<void> open(excel.Excel excel) async {
-    var filePath = await save(excel);
-    await OpenFile.open(filePath);
-  }
+Future<void> open(excel.Excel excel) async {
+  var filePath = await save(excel);
+  await OpenFile.open(filePath);
 }

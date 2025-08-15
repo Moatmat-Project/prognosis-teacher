@@ -60,7 +60,7 @@ class _SetPropertiesViewState extends State<SetPropertiesView> {
     timePerQuestion = widget.timePerQuestion ?? false;
     repeatable = widget.repeatable ?? false;
     showAnswers = widget.showAnswers ?? true;
-    downloadable = widget.downloadable ?? false;
+    downloadable = widget.downloadable ?? true;
     visible = widget.visible ?? true;
     scrollable = widget.scrollable ?? false;
     super.initState();

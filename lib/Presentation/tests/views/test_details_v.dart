@@ -7,33 +7,25 @@ import 'package:moatmat_teacher/Core/resources/sizes_resources.dart';
 import 'package:moatmat_teacher/Core/resources/spacing_resources.dart';
 import 'package:moatmat_teacher/Core/widgets/toucheable_tile_widget.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
-import 'package:moatmat_teacher/Features/teachers/domain/entities/teacher.dart';
 import 'package:moatmat_teacher/Features/tests/domain/entities/test/test.dart';
 import 'package:moatmat_teacher/Presentation/export/views/questions/export_questions_v.dart';
 import 'package:moatmat_teacher/Presentation/folders/view/add_item_to_folder_v.dart';
 import 'package:moatmat_teacher/Presentation/groups/views/group_test_details_v.dart';
-import 'package:moatmat_teacher/Presentation/tests/views/comment_managment_view.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/video_view_list.dart';
 import 'package:moatmat_teacher/Presentation/tests_results/views/test_results_v.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/my_tests/my_tests_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/test_information/test_information_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/views/add_test_vew.dart';
 import 'package:moatmat_teacher/Presentation/tests/widgets/purchases_informations_w.dart';
-
-import '../../../Core/functions/dialogs/add_item_to_folder.dart';
 import '../../../Core/resources/colors_r.dart';
 import '../../../Core/resources/shadows_r.dart';
-import '../../../Core/services/folders_s.dart';
-import '../../folders/state/folders_manager/folders_manager_cubit.dart';
 
 class TestDetailsView extends StatefulWidget {
   const TestDetailsView({
     super.key,
-    this.test,
     this.testId,
   });
   final int? testId;
-  final Test? test;
   @override
   State<TestDetailsView> createState() => _TestDetailsViewState();
 }
@@ -43,7 +35,6 @@ class _TestDetailsViewState extends State<TestDetailsView> {
   @override
   void initState() {
     context.read<TestInformationCubit>().init(
-          test: widget.test,
           testId: widget.testId,
         );
     super.initState();
@@ -184,8 +175,8 @@ class _TestDetailsViewState extends State<TestDetailsView> {
                     title: "ادارة التعليقات",
                     iconData: Icons.manage_accounts,
                     onTap: () {
-                      final videos = widget.test?.information.videos;
-                      final testId = widget.test?.id ?? -1;
+                      final videos = state.test.information.videos;
+                      final testId = state.test.id;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => VideosListView(

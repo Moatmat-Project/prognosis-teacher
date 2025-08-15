@@ -234,7 +234,7 @@ class SubFoldersView extends StatelessWidget {
               await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => TestDetailsView(
-                    test: tests[index - fLength],
+                    testId: tests[index - fLength].id,
                   ),
                 ),
               );

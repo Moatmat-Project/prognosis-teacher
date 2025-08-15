@@ -30,6 +30,7 @@ abstract class TestsRepository {
   //
   Future<Either<Exception, List<Test>>> getMyTests({
     required bool update,
+    required bool queryIds,
   });
   //
   Future<Either<Exception, Video>> addVideo({

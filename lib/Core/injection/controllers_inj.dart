@@ -7,6 +7,7 @@ import 'package:moatmat_teacher/Features/attendance/domain/usecases/get_student_
 import 'package:moatmat_teacher/Features/attendance/domain/usecases/sync_attendance_uc.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/usecases/update_attendance_set_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/set_group_tests_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_my_tests_uc.dart';
 import 'package:moatmat_teacher/Features/tests/domain/usecases/get_tests_by_ids_uc.dart';
 import 'package:moatmat_teacher/Presentation/attendance/state/explore_attendance/explore_attendance_bloc.dart';
 import 'package:moatmat_teacher/Presentation/students/state/blocs/explore_student_attendance_bloc.dart';
@@ -52,8 +53,9 @@ injectControllers() {
   );
   locator.registerSingleton(
     ExportStudentsStatisticsBloc(
-      locator<GetMyStudentsStatisticsUc>(),
+      locator<GetMyStudentsResultsUc>(),
       locator<GetAttendanceSetsUsecase>(),
+      locator<GetMyTestsUC>(),
     ),
   );
   locator.registerSingleton(

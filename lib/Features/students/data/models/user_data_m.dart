@@ -20,17 +20,17 @@ class UserDataModel extends UserData {
     return UserDataModel(
       uuid: json["uuid"],
       id: json["id"].toString(),
-      balance: json["balance"],
+      balance: json["balance"] ?? 0,
       name: json["name"],
-      email: json["email"],
-      motherName: json["mother_name"],
-      age: json["age"],
-      classroom: json["classroom"],
-      schoolName: json["school_name"],
-      governorate: json["governorate"],
-      phoneNumber: json["phone_number"],
-      whatsappNumber: json["whatsapp_number"],
-      tests: List.generate((json["tests"] as List).length, (index) {
+      email: json["email"] ?? "",
+      motherName: json["mother_name"] ?? "",
+      age: json["age"]?.toString() ?? "",
+      classroom: json["classroom"] ?? "",
+      schoolName: json["school_name"] ?? "",
+      governorate: json["governorate"] ?? "",
+      phoneNumber: json["phone_number"] ?? "",
+      whatsappNumber: json["whatsapp_number"] ?? "",
+      tests: List.generate((json["tests"] as List?)?.length ?? 0, (index) {
         return (
           json["tests"][0]["id"] as int,
           json["tests"][0]["name"] as String,

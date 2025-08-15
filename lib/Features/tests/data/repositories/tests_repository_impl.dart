@@ -31,9 +31,9 @@ class TestsRepositoryImpl implements TestsRepository {
   }
 
   @override
-  Future<Either<Exception, List<Test>>> getMyTests({required bool update}) async {
+  Future<Either<Exception, List<Test>>> getMyTests({required bool update, required bool queryIds}) async {
     try {
-      final res = await dataSource.getMyTests(update: update);
+      final res = await dataSource.getMyTests(update: update, queryIds: queryIds);
       return right(res);
     } on Exception catch (e) {
       return left(e);

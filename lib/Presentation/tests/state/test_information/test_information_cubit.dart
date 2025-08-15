@@ -10,25 +10,22 @@ part 'test_information_state.dart';
 
 class TestInformationCubit extends Cubit<TestInformationState> {
   TestInformationCubit() : super(TestInformationLoading());
-
-  init({Test? test, int? testId}) async {
+  Test? test;
+  init({int? testId}) async {
     //
     emit(TestInformationLoading());
     //
-    if (test == null) {
-      //
-      var res1 = await locator<GetTestByIdUC>().call(
-        testId: testId!,
-        update: true,
-      );
-      //
-      res1.fold(
-        (l) => null,
-        (r) {
-          test = r;
-        },
-      );
-    }
+    var res1 = await locator<GetTestByIdUC>().call(
+      testId: testId!,
+      update: true,
+    );
+    //
+    res1.fold(
+      (l) => null,
+      (r) {
+        test = r;
+      },
+    );
     //
     if (test != null) {
       var res2 = await locator<TestPurchasesUC>().call(test: test!);

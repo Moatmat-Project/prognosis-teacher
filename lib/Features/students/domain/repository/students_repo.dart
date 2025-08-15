@@ -18,8 +18,10 @@ abstract class StudentsRepository {
   });
 
   // get my students
-  Future<Either<Exception, GetMyStudentsStatisticsResponse>> getMyStudentsStatistics({
-    required List<UserData> students,
+  Future<Either<Exception, List<Result>>> getMyStudentsResults({
+    required List<String> studentsIds,
+    required List<String> testsIds,
+    required List<String> setsIds,
   });
   // get my students by ids
   Future<Either<Exception, List<UserData>>> getMyStudentsByIds({

@@ -18,6 +18,8 @@ class TestInformationModel extends TestInformation {
     required super.previous,
   });
 
+  
+
   factory TestInformationModel.fromJson(Map json) {
     return TestInformationModel(
       title: json["title"],

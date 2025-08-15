@@ -92,21 +92,7 @@ class _PickStudentsState extends State<PickStudents> {
             ),
             appBar: AppBar(
               title: const Text("تحديد طلاب"),
-              actions: [
-                // Text(' عدد الطلاب : ${context.read<MyStudentsCubit>().getSelectedUsers.length}  '),
-                // TextButton(
-                //   onPressed: () {
-                //     Navigator.of(context).push(
-                //       MaterialPageRoute(
-                //         builder: (c) => ExportStudentsStatisticsView(
-                //           students: state.users,
-                //         ),
-                //       ),
-                //     );
-                //   },
-                //   child: Text("الإحصائيات"),
-                // ),
-              ],
+              actions: [],
             ),
             body: RefreshIndicator(
               onRefresh: () async {

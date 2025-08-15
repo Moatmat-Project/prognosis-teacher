@@ -27,6 +27,7 @@ dependencies:
   chewie: ^1.11.3
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
+  dio: ^5.8.0+1
   encrypt: ^5.0.3
   equatable: ^2.0.5
   excel: ^4.0.2

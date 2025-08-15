@@ -24,7 +24,7 @@ class AttendanceRecordModel extends AttendanceRecord {
       attendanceSetId: json["attendance_set_id"].toString(),
       studentName: "",
       studentId: json["student_id"].toString(),
-      date: DateTime.now(),
+      date: json["date"] != null ? DateTime.parse(json["date"]) : DateTime.now(),
     );
   }
   Map<String, dynamic> toJson({bool includeId = false}) {

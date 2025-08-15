@@ -7,13 +7,12 @@ sealed class ExportStudentsStatisticsState extends Equatable {
     required this.tests,
     required this.selectedTests,
     required this.selectedSets,
-    required this.studentsRows,
     required this.students,
   });
   final String? message;
   final List<AttendanceSet> sets, selectedSets;
   final List<(int, String)> tests, selectedTests;
-  final List<StudentRowDetails> studentsRows;
+
   final List<UserData> students;
   @override
   List<Object?> get props => [
@@ -22,7 +21,6 @@ sealed class ExportStudentsStatisticsState extends Equatable {
         tests,
         selectedSets,
         selectedTests,
-        studentsRows,
         students,
       ];
 }
@@ -33,10 +31,9 @@ final class ExportStatisticsLoading extends ExportStudentsStatisticsState {
           sets: state?.sets ?? List.empty(growable: true),
           tests: state?.tests ?? List.empty(growable: true),
           selectedTests: state?.selectedTests ?? List.empty(growable: true),
-          studentsRows: state?.studentsRows ?? List.empty(growable: true),
           selectedSets: state?.selectedSets ?? List.empty(growable: true),
           students: state?.students ?? List.empty(growable: true),
-          message: state?.message,
+          message: null,
         );
 }
 
@@ -47,7 +44,6 @@ final class ExportStatisticsInitial extends ExportStudentsStatisticsState {
     required super.selectedTests,
     required super.selectedSets,
     required super.tests,
-    required super.studentsRows,
     required super.students,
   });
 }
@@ -60,7 +56,6 @@ final class ExportStatisticsCompleted extends ExportStudentsStatisticsState {
           tests: List.empty(growable: true),
           selectedTests: List.empty(growable: true),
           selectedSets: List.empty(growable: true),
-          studentsRows: List.empty(growable: true),
           students: List.empty(growable: true),
           message: null,
         );
@@ -73,7 +68,6 @@ final class ExportStatisticsPickTests extends ExportStudentsStatisticsState {
     required super.selectedTests,
     required super.selectedSets,
     required super.tests,
-    required super.studentsRows,
     required super.students,
   });
 }
@@ -85,7 +79,6 @@ final class ExportStatisticsPickSets extends ExportStudentsStatisticsState {
     required super.selectedTests,
     required super.selectedSets,
     required super.tests,
-    required super.studentsRows,
     required super.students,
   });
 }
@@ -97,7 +90,6 @@ final class ExportStatisticsProcessing extends ExportStudentsStatisticsState {
     required super.selectedTests,
     required super.selectedSets,
     required super.tests,
-    required super.studentsRows,
     required super.students,
   });
 }

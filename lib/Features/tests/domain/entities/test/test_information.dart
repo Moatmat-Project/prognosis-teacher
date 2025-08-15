@@ -54,4 +54,20 @@ class TestInformation {
       previous: previous ?? this.previous,
     );
   }
+
+  factory TestInformation.empty() {
+    return TestInformation(
+      title: '',
+      classs: '',
+      material: '',
+      teacher: '',
+      price: null,
+      password: null,
+      period: null,
+      images: [],
+      videos: [],
+      files: [],
+      previous: null,
+    );
+  }
 }

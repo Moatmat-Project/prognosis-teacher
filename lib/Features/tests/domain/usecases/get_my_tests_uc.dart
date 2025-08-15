@@ -8,7 +8,7 @@ class GetMyTestsUC {
 
   GetMyTestsUC({required this.repository});
 
-  Future<Either<Exception, List<Test>>> call({ bool update=false}) async {
-    return await repository.getMyTests(update: update);
+  Future<Either<Exception, List<Test>>> call({bool update = false, bool queryIds = false}) async {
+    return await repository.getMyTests(update: update, queryIds: queryIds);
   }
 }

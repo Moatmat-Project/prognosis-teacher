@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:excel/excel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:moatmat_teacher/Core/functions/pdf/export_attendance_set_pdf.dart';
+import 'package:moatmat_teacher/Features/attendance/domain/entities/attendance_record.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/entities/attendance_set.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/usecases/get_attendance_sets_uc.dart';
+import 'package:moatmat_teacher/Features/students/domain/entities/result.dart';
 import 'package:moatmat_teacher/Features/students/domain/entities/user_data.dart';
 import 'package:moatmat_teacher/Features/students/domain/usecases/get_my_students_statistics_uc.dart';
+import 'package:moatmat_teacher/Features/tests/domain/usecases/get_my_tests_uc.dart';
+import 'package:moatmat_teacher/Presentation/statistics/views/export_students_statistics_view.dart';
+import 'package:open_file/open_file.dart';
 import '../../../../Core/functions/pdf/export_group_attendance_pdf.dart';
 import '../../../../Features/students/data/responses/get_my_students_statistics_response.dart';
 part 'export_students_statistics_event.dart';
@@ -16,19 +20,20 @@ part 'export_students_statistics_state.dart';
 
 class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, ExportStudentsStatisticsState> {
   //
-  final GetMyStudentsStatisticsUc _getMyStudentsStatisticsUc;
+  final GetMyStudentsResultsUc _getMyStudentsResultsUc;
   final GetAttendanceSetsUsecase _getAttendanceSetsUsecase;
+  final GetMyTestsUC _getTestsUsecase;
   //
   Sheet? resultsSheet;
   List<int> testsIds = [], setsIds = [];
-
+  List<Result> results = [];
   List<double> studentsAverages = [];
   List<double> sortedStudentsAverages = [];
   List<List<StatisticsCellValue>> cells = [];
 
   Completer completer = Completer();
   //
-  ExportStudentsStatisticsBloc(this._getMyStudentsStatisticsUc, this._getAttendanceSetsUsecase) : super(ExportStatisticsLoading()) {
+  ExportStudentsStatisticsBloc(this._getMyStudentsResultsUc, this._getAttendanceSetsUsecase, this._getTestsUsecase) : super(ExportStatisticsLoading()) {
     on<InitializeStudentsStatisticsEvent>(onInitializeStudentsStatisticsEvent);
     on<PickTestsEvent>(onPickTestsEvent);
     on<PickSetsEvent>(onPickSetsEvent);
@@ -41,100 +46,83 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
   ///
   onInitializeStudentsStatisticsEvent(InitializeStudentsStatisticsEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
     emit(ExportStatisticsLoading(state: state));
-    final testsResponse = await _getMyStudentsStatisticsUc.call(students: even.students);
-    await testsResponse.fold(
-      (failure) {
-        Fluttertoast.showToast(msg: failure.toString());
-        emit(ExportStatisticsInitial(
-          sets: [],
-          tests: [],
-          selectedSets: [],
-          selectedTests: [],
-          message: failure.toString(),
-          studentsRows: state.studentsRows,
-          students: even.students,
-        ));
-      },
-      (response) async {
-        if (state is ExportStatisticsLoading) {
-          emit(ExportStatisticsInitial(
-            sets: [],
-            tests: response.tests,
-            selectedSets: [],
-            selectedTests: [],
-            studentsRows: response.rows,
-            students: even.students,
-          ));
-        }
-      },
-    );
+    emit(ExportStatisticsInitial(
+      sets: [],
+      tests: [],
+      selectedSets: [],
+      selectedTests: [],
+      students: even.students,
+    ));
+    // final testsResponse = await _getMyStudentsResultsUc.call(students: even.students);
+    // await testsResponse.fold(
+    //   (failure) {
+    //     Fluttertoast.showToast(msg: failure.toString());
+    //     emit(ExportStatisticsInitial(
+    //       sets: [],
+    //       tests: [],
+    //       selectedSets: [],
+    //       selectedTests: [],
+    //       message: failure.toString(),
+    //       studentsRows: state.studentsRows,
+    //       students: even.students,
+    //     ));
+    //   },
+    //   (response) async {
+    //     if (state is ExportStatisticsLoading) {
+    //       emit(ExportStatisticsInitial(
+    //         sets: [],
+    //         tests: response.tests,
+    //         selectedSets: [],
+    //         selectedTests: [],
+    //         studentsRows: response.rows,
+    //         students: even.students,
+    //       ));
+    //     }
+    //   },
+    // );
   }
 
   ///
   onPickTestsEvent(PickTestsEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
-    if (state.tests.isNotEmpty) {
-      emit(ExportStatisticsPickTests(
-        sets: state.sets,
-        tests: state.tests,
-        selectedSets: state.selectedSets,
-        selectedTests: state.selectedTests,
-        studentsRows: state.studentsRows,
-        students: state.students,
-      ));
-      return;
-    }
     emit(ExportStatisticsLoading(state: state));
-    final testsResponse = await _getMyStudentsStatisticsUc.call(students: state.students);
+    final testsResponse = await _getTestsUsecase.call(queryIds: true);
     await testsResponse.fold(
-      (failure) {Fluttertoast.showToast(msg: failure.toString());
+      (failure) async {
+        Fluttertoast.showToast(msg: failure.toString());
         emit(ExportStatisticsPickTests(
           sets: state.sets,
           tests: state.tests,
           selectedSets: state.selectedSets,
           selectedTests: state.selectedTests,
-          message: failure.toString(),
-          studentsRows: state.studentsRows,
           students: state.students,
+          message: failure.toString(),
         ));
       },
-      (response) async {
-        if (state is ExportStatisticsLoading) {
-          emit(ExportStatisticsPickTests(
-            sets: state.sets,
-            tests: response.tests,
-            selectedSets: state.selectedSets,
-            selectedTests: state.selectedTests,
-            studentsRows: response.rows,
-            students: state.students,
-          ));
-        }
+      (tests) async {
+        tests.sort((a, b) => (state.selectedTests.contains((b.id, b.information.title)) ? 1 : 0).compareTo(state.selectedTests.contains((a.id, a.information.title)) ? 1 : 0));
+        emit(ExportStatisticsPickTests(
+          sets: state.sets,
+          tests: tests.map((e) => (e.id, e.information.title)).toList(),
+          selectedSets: state.selectedSets,
+          selectedTests: state.selectedTests,
+          students: state.students,
+        ));
       },
     );
   }
 
   ///
   onPickSetsEvent(PickSetsEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
-    if (state.sets.isNotEmpty) {
-      emit(ExportStatisticsPickSets(
-        sets: state.sets,
-        tests: state.tests,
-        studentsRows: state.studentsRows,
-        selectedSets: state.selectedSets,
-        selectedTests: state.selectedTests,
-        students: state.students,
-      ));
-      return;
-    }
     emit(ExportStatisticsLoading(state: state));
     final setsResponse = await _getAttendanceSetsUsecase.call(isOffline: false);
     await setsResponse.fold(
-      (failure) {Fluttertoast.showToast(msg: failure.toString());
+      (failure) {
+        Fluttertoast.showToast(msg: failure.toString());
         emit(ExportStatisticsPickSets(
           sets: state.sets,
           tests: state.tests,
           selectedTests: state.selectedTests,
           selectedSets: state.selectedSets,
-          studentsRows: state.studentsRows,
           message: failure.toString(),
           students: state.students,
         ));
@@ -144,7 +132,6 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
           emit(ExportStatisticsPickSets(
             sets: sets,
             tests: state.tests,
-            studentsRows: state.studentsRows,
             selectedSets: state.selectedSets,
             selectedTests: state.selectedTests,
             students: state.students,
@@ -162,14 +149,12 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
         selectedTests: even.selectedTests,
         selectedSets: state.selectedSets,
         tests: state.tests,
-        studentsRows: state.studentsRows,
         students: state.students,
       ),
     );
   }
 
   ///
-
   onSetSetsEvent(SetSetsEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
     emit(
       ExportStatisticsInitial(
@@ -177,33 +162,73 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
         selectedTests: state.selectedTests,
         selectedSets: even.selectedSets,
         tests: state.tests,
-        studentsRows: state.studentsRows,
         students: state.students,
       ),
     );
   }
 
+  ///
   onExportStatisticsPdfEvent(ExportStatisticsPdfEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
-    await exportGroupAttendancePdf(
-      rows: state.studentsRows,
-      sets: state.selectedSets,
-    );
-  }
-
-  onExportStatisticsExcelEvent(ExportStatisticsExcelEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
     ///
     emit(ExportStatisticsProcessing(
       sets: state.sets,
       tests: state.tests,
-      studentsRows: state.studentsRows,
       selectedTests: state.selectedTests,
       students: state.students,
       selectedSets: state.selectedSets,
     ));
 
     ///
+    final rows = await getStudentsRows();
+    if (rows == null) {
+      Fluttertoast.showToast(msg: "حصل خطا ما اثناء الحصول على بيانات الطلاب");
+      emit(ExportStatisticsInitial(
+        sets: state.sets,
+        selectedTests: state.selectedTests,
+        selectedSets: state.selectedSets,
+        tests: state.tests,
+        students: state.students,
+        message: "حصل خطا ما اثناء الحصول على بيانات الطلاب",
+      ));
+      return;
+    }
+    await exportGroupAttendancePdf(
+      rows: rows,
+      sets: state.selectedSets,
+    );
+  }
+
+  ///
+  onExportStatisticsExcelEvent(ExportStatisticsExcelEvent even, Emitter<ExportStudentsStatisticsState> emit) async {
+    ///
+    emit(ExportStatisticsProcessing(
+      sets: state.sets,
+      tests: state.tests,
+      selectedTests: state.selectedTests,
+      students: state.students,
+      selectedSets: state.selectedSets,
+    ));
+
+    ///
+    final rows = await getStudentsRows();
+    if (rows == null) {
+      Fluttertoast.showToast(msg: "حصل خطا ما اثناء الحصول على بيانات الطلاب");
+      emit(ExportStatisticsInitial(
+        sets: state.sets,
+        selectedTests: state.selectedTests,
+        selectedSets: state.selectedSets,
+        tests: state.tests,
+        students: state.students,
+        message: "حصل خطا ما اثناء الحصول على بيانات الطلاب",
+      ));
+      return;
+    }
+
+    ///
     testsIds = state.selectedTests.map((e) => e.$1).toList();
     setsIds = state.selectedSets.map((e) => e.id).toList();
+
+    ///
     studentsAverages = [];
     sortedStudentsAverages = [];
     cells = [];
@@ -217,7 +242,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
 
     if (state.selectedTests.isNotEmpty) {
       ///
-      for (var row in state.studentsRows) {
+      for (var row in rows) {
         cells.add(
           row.toExcelRow(
             testsIds: testsIds,
@@ -230,7 +255,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
       }
     } else {
       ///
-      for (var row in state.studentsRows) {
+      for (var row in rows) {
         int studentAbsents = 0;
         for (var set in setsIds) {
           if (!row.records.any((e) => e.attendanceSetId == set.toString())) {
@@ -264,7 +289,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
           )
         ]);
       }
-    }
+    } // 2921 937
 
     /// insert cells
     for (var cell in cells) {
@@ -289,9 +314,24 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
 
     //
     // // Save the file to the local storage
+    if (kDebugMode) {
+      emit(
+        ExportStatisticsInitial(
+          sets: state.sets,
+          selectedTests: state.selectedTests,
+          selectedSets: state.selectedSets,
+          tests: state.tests,
+          students: state.students,
+        ),
+      );
+      var filePath = await save(excel);
+      await OpenFile.open(filePath);
+      return;
+    }
     emit(ExportStatisticsCompleted(excel));
   }
 
+  ///
   Future<void> onSetStudentsRate() async {
     int length = sortedStudentsAverages.length;
     int groupSize = (length / 5).ceil();
@@ -319,6 +359,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
     }
   }
 
+  ///
   List<StatisticsCellValue> headerRow() {
     if (state.selectedTests.isEmpty) {
       return [
@@ -340,6 +381,88 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
       if (state.selectedTests.isNotEmpty) ...state.selectedTests.map((e) => StatisticsCellValue(value: TextCellValue(e.$2))),
       if (state.selectedSets.isNotEmpty) ...state.selectedSets.map((e) => StatisticsCellValue(value: TextCellValue(e.title))),
     ];
+  }
+
+  ///
+  Future<List<StudentRowDetails>?> getStudentsRows() async {
+    print(state.selectedTests.map((e) => e.$1.toString()).toList());
+
+    ///
+    final response = await _getMyStudentsResultsUc.call(
+      studentsIds: state.students.map((e) => e.uuid).toList(),
+      testsIds: state.selectedTests.map((e) => e.$1.toString()).toList(),
+      setsIds: state.selectedSets.map((e) => e.id.toString()).toList(),
+    );
+
+    if (response.isLeft()) {
+      return null;
+    }
+
+    ///
+    testsIds = state.selectedTests.map((e) => e.$1).toList();
+    setsIds = state.selectedSets.map((e) => e.id).toList();
+    results = response.fold(
+      (failure) {
+        return [];
+      },
+      (results) => results,
+    );
+
+    ///
+    List<StudentRowDetails> rows = [];
+
+    ///
+    for (var student in state.students) {
+      ///
+      List<StudentTestMarkDetails> marks = [];
+      List<AttendanceRecord> records = [];
+      List<Result> studentResults = results.where((e) => e.userId == student.uuid).toList();
+
+      ///
+      studentResults.sort((a, b) => a.date.compareTo(b.date));
+
+      ///
+      for (var test in state.selectedTests) {
+        List<Result> studentResultsForTest = studentResults.where((e) => e.testId == test.$1).toList();
+        if (studentResultsForTest.isNotEmpty) {
+          final result = studentResultsForTest.first;
+          marks.add(StudentTestMarkDetails(
+            testId: test.$1,
+            mark: result.mark,
+            date: result.date,
+          ));
+        }
+      }
+
+      ///
+      for (var set in state.selectedSets) {
+        List<Result> studentResultsForSet = studentResults.where((e) => e.outerTestId == set.id).toList();
+        if (studentResultsForSet.isNotEmpty) {
+          final result = studentResultsForSet.first;
+          records.add(AttendanceRecord(
+            id: 0,
+            attendanceSetId: set.id.toString(),
+            studentName: student.name,
+            studentId: student.id.toString(),
+            date: result.date,
+          ));
+        }
+      }
+
+      ///
+      rows.add(StudentRowDetails(
+        name: student.name,
+        userId: student.id,
+        marks: marks,
+        records: records,
+      ));
+    }
+
+    ///
+    rows.sort((a, b) => a.userId.compareTo(b.userId));
+
+    ///
+    return rows;
   }
 }
 

@@ -39,7 +39,7 @@ class QuestionModel extends Question {
           return AnswerModel.fromJson(answer);
         },
       ),
-      video: json["video"],
+      video: json["video"] == "" ? null : json["video"],
       colors: List.generate(
         (json["colors"] as List?)?.length ?? 0,
         (i) => QuestionWordColorModel.fromJson(json["colors"][i]),

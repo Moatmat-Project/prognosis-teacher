@@ -34,4 +34,16 @@ class TestProperties {
       downloadable: downloadable ?? this.downloadable,
     );
   }
+
+  factory TestProperties.empty() {
+    return TestProperties(
+      exploreAnswers: false,
+      showAnswers: false,
+      timePerQuestion: false,
+      repeatable: false,
+      visible: false,
+      scrollable: false,
+      downloadable: false,
+    );
+  }
 }

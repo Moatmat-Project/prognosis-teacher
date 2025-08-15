@@ -31,17 +31,22 @@ class StudentsRepositoryImpl implements StudentsRepository {
       );
       return right(res);
     } on Exception catch (e) {
+      print(e);
       return left(e);
     }
   }
 
   @override
-  Future<Either<Exception, GetMyStudentsStatisticsResponse>> getMyStudentsStatistics({
-    required List<UserData> students,
+  Future<Either<Exception, List<Result>>> getMyStudentsResults({
+    required List<String> studentsIds,
+    required List<String> testsIds,
+    required List<String> setsIds,
   }) async {
     try {
-      var res = await dataSource.getMyStudentsStatistics(
-        students: students,
+      var res = await dataSource.getMyStudentsResults(
+        studentsIds: studentsIds,
+        testsIds: testsIds,
+        setsIds: setsIds,
       );
       return right(res);
     } on Exception catch (e) {

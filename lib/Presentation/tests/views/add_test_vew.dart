@@ -96,6 +96,7 @@ class _AddTestViewState extends State<AddTestView> {
             repeatable: state.properties?.repeatable ?? false,
             visible: state.properties?.visible ?? false,
             scrollable: state.properties?.scrollable ?? false,
+            downloadable: state.properties?.downloadable ?? false,
             afterSet: ({
               exploreAnswers,
               repeatable,
@@ -147,6 +148,7 @@ class _AddTestViewState extends State<AddTestView> {
               context.read<AddTestCubit>().uploadTest();
             },
             onOpenQuestion: (question, index) {
+              print("question: ${question.video}");
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AddQuestionView(

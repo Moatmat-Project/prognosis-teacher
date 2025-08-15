@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:moatmat_teacher/Core/injection/app_inj.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/buckets/domain/usecases/delete_test_files_uc.dart';
@@ -40,7 +41,7 @@ abstract class TestsRemoteDS {
     required bool update,
   });
   //
-  Future<List<Test>> getMyTests({required bool update});
+  Future<List<Test>> getMyTests({required bool update, required bool queryIds});
   //
   Future<Video> addVideo({
     required Video video,
@@ -187,7 +188,6 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
       ),
     );
     //
-    print(newTest.information.videos?.map((v) => VideoModel.fromClass(v).toJson(addId: true)).toList());
     // upload test images
     for (int i = 0; i < (newTest.information.images ?? []).length; i++) {
       //
@@ -233,6 +233,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
           bucket: "tests",
           material: newTest.information.material,
           path: newTest.information.files![i],
+          name: newTest.information.files![i].split('/').last,
         );
         res.fold(
           (l) {},
@@ -338,15 +339,26 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
   }
 
   @override
-  Future<List<Test>> getMyTests({required bool update}) async {
+  Future<List<Test>> getMyTests({required bool update, required bool queryIds}) async {
     //
     final client = Supabase.instance.client;
     //
     List<Test> tests = [];
+    late List<Map<String, dynamic>> response;
     //
-    final res = await client.from("tests").select().eq("teacher_email", locator<TeacherData>().email);
+    if (queryIds) {
+      response = await client.from("tests").select("id,information->>title").eq("teacher_email", locator<TeacherData>().email);
+    } else {
+      response = await client.from("tests").select().eq("teacher_email", locator<TeacherData>().email);
+    }
     //
-    tests = res.map((e) => TestModel.fromJson(e)).toList();
+    tests = response.map((e) {
+      if (queryIds) {
+        return TestModel.fromJsonForId(e);
+      } else {
+        return TestModel.fromJson(e);
+      }
+    }).toList();
     //
     return tests;
   }
@@ -379,6 +391,7 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
   @override
   Stream<String> updateTest({required Test test}) async* {
     //
+    debugPrint("test.questions.first.video: ${test.questions.first.video}");
     //
     final client = Supabase.instance.client;
     //
@@ -404,7 +417,11 @@ class TestsRemoteDSImpl implements TestsRemoteDS {
       }
     }
     //
-    await client.from("tests").update(model).eq("id", test.id);
+    debugPrint("new test.questions.first.video: $model");
+    //
+    var res = await client.from("tests").update(model).eq("id", test.id).select();
+    //
+    debugPrint("res: $res");
     //
     yield "تم الرفع";
   }

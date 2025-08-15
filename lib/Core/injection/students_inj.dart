@@ -29,8 +29,8 @@ void injectUC() {
       repository: locator(),
     ),
   );
-  locator.registerFactory<GetMyStudentsStatisticsUc>(
-    () => GetMyStudentsStatisticsUc(
+  locator.registerFactory<GetMyStudentsResultsUc>(
+    () => GetMyStudentsResultsUc(
       repository: locator(),
     ),
   );

@@ -202,6 +202,7 @@ class BanksRemoteDSImpl implements BanksRemoteDS {
           bucket: "banks",
           material: newBank.information.material,
           path: newBank.information.files![i],
+          name: newBank.information.files![i].split('/').last,
         );
         res.fold(
           (l) {

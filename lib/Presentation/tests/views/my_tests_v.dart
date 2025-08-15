@@ -64,7 +64,7 @@ class _MyTestsViewState extends State<MyTestsView> {
                                   await Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => TestDetailsView(
-                                        test: test,
+                                        testId: test.id,
                                       ),
                                     ),
                                   );
@@ -110,7 +110,7 @@ class _MyTestsViewState extends State<MyTestsView> {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => TestDetailsView(
-                                  test: state.tests[i],
+                                  testId: state.tests[i].id,
                                 ),
                               ),
                             );
