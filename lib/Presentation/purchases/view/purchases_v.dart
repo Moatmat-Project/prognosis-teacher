@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moatmat_teacher/Presentation/purchases/state/bloc/export_purchases_bloc.dart';
 import 'package:moatmat_teacher/Presentation/purchases/state/cubit/purchases_cubit.dart';
 
 import '../../../Core/resources/colors_r.dart';
@@ -26,19 +27,27 @@ class _PurchasesViewState extends State<PurchasesView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "تفاصيل الاشتراكات",
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ),
-      body: BlocBuilder<PurchasesCubit, PurchasesState>(
-        builder: (context, state) {
-          if (state is PurchasesInitial) {
-            return Column(
+    return BlocBuilder<PurchasesCubit, PurchasesState>(
+      builder: (context, state) {
+        if (state is PurchasesInitial) {
+          return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                context.read<ExportPurchasesBloc>().add(
+                  ExportPurchasesRequested(purchases: state.purchases),
+                );
+              },
+              child: Icon(Icons.file_open),
+            ),
+            appBar: AppBar(
+              title: const Text(
+                "تفاصيل الاشتراكات",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            body: Column(
               children: [
                 TeacherPurchasesInformation(
                   items: state.purchases,
@@ -103,13 +112,23 @@ class _PurchasesViewState extends State<PurchasesView> {
                   ),
                 ),
               ],
-            );
-          }
-          return const Center(
-            child: CupertinoActivityIndicator(),
+            ),
           );
-        },
-      ),
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "تفاصيل الاشتراكات",
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          body: const Center(
+            child: CupertinoActivityIndicator(),
+          ),
+        );
+      },
     );
   }
 }

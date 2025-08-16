@@ -7,6 +7,7 @@ import 'package:moatmat_teacher/Presentation/banks/state/my_banks/my_banks_cubit
 import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/group_test_details_cubit.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/notifications_bloc/notifications_bloc.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
+import 'package:moatmat_teacher/Presentation/purchases/state/bloc/export_purchases_bloc.dart';
 import 'package:moatmat_teacher/Presentation/questions/state/cubit/create_question_cubit.dart';
 import 'package:moatmat_teacher/Presentation/students/state/my_students/my_students_cubit.dart';
 import 'package:moatmat_teacher/Presentation/tests/state/add_outer_test/add_outer_test_cubit.dart';
@@ -99,6 +100,7 @@ void main() async {
         BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
         BlocProvider(create: (context) => locator<SendNotificationBloc>()),
         BlocProvider(create: (context) => CommentsManagmentBloc()),
+        BlocProvider(create: (context) => ExportPurchasesBloc()),
         BlocProvider(
             create: (context) =>
                 locator<NotificationsBloc>()..add(GetNotifications())),
