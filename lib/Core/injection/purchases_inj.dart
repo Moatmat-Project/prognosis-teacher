@@ -1,6 +1,7 @@
 import 'package:moatmat_teacher/Features/purchase/data/datasources/purchased_items_ds.dart';
 import 'package:moatmat_teacher/Features/purchase/data/repository/purhcases_repo_impl.dart';
 import 'package:moatmat_teacher/Features/purchase/domain/usecases/bank_purchases_uc.dart';
+import 'package:moatmat_teacher/Features/purchase/domain/usecases/get_test_purchases_by_ids_uc.dart';
 import 'package:moatmat_teacher/Features/purchase/domain/usecases/teacher_purchases_uc.dart';
 
 import '../../Features/purchase/domain/repository/purchases_rep.dart';
@@ -26,6 +27,11 @@ void injectUC() {
   );
   locator.registerFactory<TeacherPurchasesUC>(
     () => TeacherPurchasesUC(
+      repository: locator(),
+    ),
+  );
+  locator.registerFactory<GetTestPurchasesByIdsUC>(
+    () => GetTestPurchasesByIdsUC(
       repository: locator(),
     ),
   );

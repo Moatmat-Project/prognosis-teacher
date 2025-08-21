@@ -269,7 +269,6 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
                     ],
                     if (state.records.isNotEmpty && state.starting != null && state.starting != null)
                       TimeRangeWidget(
-                        studentsCount: state.records.length,
                         starting: state.starting!,
                         ending: state.ending!,
                         onChangeEndingDate: (date) {
@@ -315,13 +314,11 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
 class TimeRangeWidget extends StatelessWidget {
   const TimeRangeWidget({
     super.key,
-    required this.studentsCount,
     required this.starting,
     required this.ending,
     required this.onChangeStartingDate,
     required this.onChangeEndingDate,
   });
-  final int studentsCount;
   final DateTime starting, ending;
   final void Function(DateTime date) onChangeStartingDate;
   final void Function(DateTime date) onChangeEndingDate;

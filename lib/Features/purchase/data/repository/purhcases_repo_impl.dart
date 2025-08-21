@@ -44,4 +44,14 @@ class PurchasesRepositoryImpl implements PurchasesRepository {
       return left(e);
     }
   }
+  
+  @override
+  Future<Either<Exception, List<PurchaseItem>>> getTestPurchasesByIds({required List<int> testIds}) async {
+    try {
+      var res = await dataSource.getTestPurchasesByIds(testIds: testIds);
+      return right(res);
+    } on Exception catch (e) {
+      return left(e);
+    }
+  }
 }

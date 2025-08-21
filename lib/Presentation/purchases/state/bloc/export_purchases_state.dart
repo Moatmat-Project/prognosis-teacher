@@ -1,28 +1,31 @@
 part of 'export_purchases_bloc.dart';
 
-abstract class ExportPurchasesState extends Equatable {
-  const ExportPurchasesState();
+class ExportPurchasesInitial extends Equatable {
+  final String? message;
+  final bool isLoading;
+  final DateTime? starting, ending;
+
+  const ExportPurchasesInitial({
+    this.message,
+    required this.isLoading,
+    this.starting,
+    this.ending,
+  });
+
+  ExportPurchasesInitial copyWith({
+    bool? isLoading,
+    String? message,
+    DateTime? starting,
+    DateTime? ending,
+  }) {
+    return ExportPurchasesInitial(
+      isLoading: isLoading ?? this.isLoading,
+      message: message ?? this.message,
+      starting: starting ?? this.starting,
+      ending: ending ?? this.ending,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class ExportPurchasesInitial extends ExportPurchasesState {}
-
-class ExportPurchasesLoading extends ExportPurchasesState {}
-
-class ExportPurchasesSuccess extends ExportPurchasesState {
-  final String filePath;
-  const ExportPurchasesSuccess({required this.filePath});
-  
-  @override
-  List<Object?> get props => [filePath];
-}
-
-class ExportPurchasesFailure extends ExportPurchasesState {
-  final String message;
-  const ExportPurchasesFailure({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [isLoading, message, starting, ending];
 }

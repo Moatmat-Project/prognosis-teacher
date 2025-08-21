@@ -9,9 +9,17 @@ abstract class ExportPurchasesEvent extends Equatable {
 
 class ExportPurchasesRequested extends ExportPurchasesEvent {
   final List<PurchaseItem> purchases;
+  final String exportType;
 
-  const ExportPurchasesRequested({required this.purchases});
+  const ExportPurchasesRequested({required this.purchases , this.exportType ='test'});
 
   @override
   List<Object?> get props => [purchases];
+}
+
+class ChangeRangeFiltersEvent extends ExportPurchasesEvent{
+  const ChangeRangeFiltersEvent({this.starting, this.ending});
+  final DateTime? starting, ending;
+  @override
+  List<Object> get props => [];
 }

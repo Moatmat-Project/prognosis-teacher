@@ -11,6 +11,8 @@ abstract class PurchasedItemsDS {
   Future<List<PurchaseItem>> bankPurchases({required Bank bank});
   //
   Future<List<PurchaseItem>> teacherPurchases({required String email});
+  //
+  Future<List<PurchaseItem>> getTestPurchasesByIds({required List<int> testIds});
 }
 
 class PurchasedItemsDSImpl implements PurchasedItemsDS {
@@ -44,6 +46,21 @@ class PurchasedItemsDSImpl implements PurchasedItemsDS {
     var client = Supabase.instance.client;
     //
     var res = await client.from("purchases").select().eq("item_type", "teacher").eq("item_id", email).order("id");
+    //
+    var list = res.map((e) => PurchaseItemModel.fromJson(e)).toList();
+    //
+    return list;
+  }
+  
+  @override
+  Future<List<PurchaseItem>> getTestPurchasesByIds({required List<int> testIds}) async {
+    var client = Supabase.instance.client;
+    //
+    final res = await client
+      .from('purchases')
+      .select()
+      .eq('item_type', 'test')
+      .inFilter('item_id', testIds);
     //
     var list = res.map((e) => PurchaseItemModel.fromJson(e)).toList();
     //
