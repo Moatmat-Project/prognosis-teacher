@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/purchase/domain/entities/purchase_item.dart';
 
@@ -36,8 +35,8 @@ class PurchasesCubit extends Cubit<PurchasesInitial> {
         emit(state.copyWith(
           isLoading: false,
           purchases: r,
-          starting: _parseMMDDToCurrentYear(r.last.dayAndMoth),
-          ending: _parseMMDDToCurrentYear(r.first.dayAndMoth),
+          starting: _parseToCurrentYear(r.last.createdAt!),
+          ending: _parseToCurrentYear(r.first.createdAt!),
           filtered: r,
           error: null,
         ));
@@ -50,7 +49,7 @@ class PurchasesCubit extends Cubit<PurchasesInitial> {
     final newEnding = ending ?? state.ending!;
     //
     final filtered = state.purchases.where((p) {
-      final d = _parseMMDDToCurrentYear(p.dayAndMoth);
+      final d = _parseToCurrentYear(p.createdAt!);
       return !d.isBefore(newStarting) && !d.isAfter(newEnding);
     }).toList();
     //
@@ -62,9 +61,7 @@ class PurchasesCubit extends Cubit<PurchasesInitial> {
     ));
   }
 
-  DateTime _parseMMDDToCurrentYear(String mmdd) {
-    final now = DateTime.now();
-    final parsed = DateFormat('MM/dd').parse(mmdd);
-    return DateTime(now.year, parsed.month, parsed.day);
+  DateTime _parseToCurrentYear(String datetime) {
+    return DateTime.parse(datetime);
   }
 }
