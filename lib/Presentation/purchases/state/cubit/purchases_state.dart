@@ -30,7 +30,7 @@ final class PurchasesInitial extends Equatable {
       purchases: purchases ?? this.purchases,
       filtered: filtered ?? this.filtered,
       error: error ?? this.error,
-      isLoading:this.isLoading,
+      isLoading: isLoading,
     );
   }
 

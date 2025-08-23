@@ -70,6 +70,7 @@ class _ExportPurchasesExcelViewState extends State<ExportPurchasesExcelView> {
           return Column(
             children: [
               TimeRangeWidget(
+                limitOnDate: false,
                 starting: _starting,
                 ending: _ending,
                 onChangeStartingDate: (date) {
