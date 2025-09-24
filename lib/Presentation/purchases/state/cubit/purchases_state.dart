@@ -1,20 +1,46 @@
 part of 'purchases_cubit.dart';
 
-sealed class PurchasesState extends Equatable {
-  const PurchasesState();
-
-  @override
-  List<Object> get props => [];
-}
-
-final class PurchasesLoading extends PurchasesState {}
-
-final class PurchasesInitial extends PurchasesState {
+final class PurchasesInitial extends Equatable {
   final List<PurchaseItem> purchases;
+  final List<PurchaseItem> filtered;
+  final DateTime? starting, ending;
   final String? error;
+  final bool isLoading;
 
   const PurchasesInitial({
     required this.purchases,
+    this.starting,
+    this.ending,
+    required this.filtered,
     this.error,
+    required this.isLoading,
   });
+
+  PurchasesInitial copyWith({
+    DateTime? starting,
+    DateTime? ending,
+    List<PurchaseItem>? purchases,
+    List<PurchaseItem>? filtered,
+    String? error,
+    required bool isLoading,
+  }) {
+    return PurchasesInitial(
+      starting: starting ?? this.starting,
+      ending: ending ?? this.ending,
+      purchases: purchases ?? this.purchases,
+      filtered: filtered ?? this.filtered,
+      error: error ?? this.error,
+      isLoading: isLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        purchases,
+        filtered,
+        starting,
+        ending,
+        error,
+        isLoading,
+      ];
 }

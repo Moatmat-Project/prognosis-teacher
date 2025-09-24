@@ -9,6 +9,7 @@ class PurchaseItemModel extends PurchaseItem {
     required super.itemId,
     required super.itemType,
     required super.dayAndMoth,
+    required super.createdAt,
   });
   factory PurchaseItemModel.fromJson(Map json) {
     return PurchaseItemModel(
@@ -19,6 +20,7 @@ class PurchaseItemModel extends PurchaseItem {
       itemId: json["item_id"],
       itemType: json["item_type"],
       dayAndMoth: json["day_month"],
+      createdAt: json["created_at"],
     );
   }
   factory PurchaseItemModel.fromClass(PurchaseItem item) {
@@ -30,6 +32,7 @@ class PurchaseItemModel extends PurchaseItem {
       itemId: item.itemId,
       itemType: item.itemType,
       dayAndMoth: item.dayAndMoth,
+      createdAt: item.createdAt,
     );
   }
   toJson() {

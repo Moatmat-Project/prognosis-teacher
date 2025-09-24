@@ -10,6 +10,7 @@ class PurchaseItem {
   final String itemId;
   //
   late String dayAndMoth;
+  final String? createdAt;
 
   PurchaseItem({
     this.id = 0,
@@ -19,6 +20,7 @@ class PurchaseItem {
     required this.itemType,
     required this.itemId,
     required this.dayAndMoth,
+    this.createdAt,
   });
   PurchaseItem copyWith({
     int? id,
@@ -28,6 +30,7 @@ class PurchaseItem {
     String? itemId,
     String? itemType,
     String? dayAndMoth,
+    String? createdAt,
   }) {
     return PurchaseItem(
       id: id ?? this.id,
@@ -37,6 +40,7 @@ class PurchaseItem {
       itemType: itemType ?? this.itemType,
       itemId: itemId ?? this.itemId,
       dayAndMoth: dayAndMoth ?? this.dayAndMoth,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

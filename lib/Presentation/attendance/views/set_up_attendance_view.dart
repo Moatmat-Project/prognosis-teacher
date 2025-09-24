@@ -269,7 +269,6 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
                     ],
                     if (state.records.isNotEmpty && state.starting != null && state.starting != null)
                       TimeRangeWidget(
-                        studentsCount: state.records.length,
                         starting: state.starting!,
                         ending: state.ending!,
                         onChangeEndingDate: (date) {
@@ -315,16 +314,16 @@ class _SetUpAttendanceViewState extends State<SetUpAttendanceView> {
 class TimeRangeWidget extends StatelessWidget {
   const TimeRangeWidget({
     super.key,
-    required this.studentsCount,
     required this.starting,
     required this.ending,
     required this.onChangeStartingDate,
     required this.onChangeEndingDate,
+    this.limitOnDate = true,
   });
-  final int studentsCount;
   final DateTime starting, ending;
   final void Function(DateTime date) onChangeStartingDate;
   final void Function(DateTime date) onChangeEndingDate;
+  final bool limitOnDate;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -384,8 +383,8 @@ class TimeRangeWidget extends StatelessWidget {
                                 onTap: () async {
                                   DateTime? picked = await showDatePicker(
                                     context: context,
-                                    firstDate: starting,
-                                    lastDate: ending,
+                                    firstDate: limitOnDate? starting:DateTime(2000),
+                                    lastDate: limitOnDate? ending: DateTime(DateTime.now().year+1),
                                     initialDate: starting,
                                     keyboardType: TextInputType.text,
                                   );
@@ -394,7 +393,7 @@ class TimeRangeWidget extends StatelessWidget {
                                   }
                                 },
                                 child: Text(
-                                  DateFormat('MM/dd').format(starting),
+                                  DateFormat('yy/MM/dd').format(starting),
                                   style: TextStyle(
                                     color: ColorsResources.primary.withAlpha(200),
                                     fontWeight: FontWeight.w600,
@@ -463,15 +462,15 @@ class TimeRangeWidget extends StatelessWidget {
                                 onTap: () async {
                                   DateTime? picked = await showDatePicker(
                                     context: context,
-                                    firstDate: starting,
-                                    lastDate: ending,
+                                    firstDate: limitOnDate? starting:DateTime(2000),
+                                    lastDate: limitOnDate? ending: DateTime(DateTime.now().year+1),
                                     initialDate: ending,
                                     keyboardType: TextInputType.text,
                                   );
                                   onChangeEndingDate(adjustDate(ending, newDate: picked));
                                 },
                                 child: Text(
-                                  DateFormat('MM/dd').format(ending),
+                                  DateFormat('yy/MM/dd').format(ending),
                                   style: TextStyle(
                                     color: ColorsResources.primary.withAlpha(200),
                                     fontWeight: FontWeight.w600,
