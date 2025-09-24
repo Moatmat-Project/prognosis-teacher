@@ -424,10 +424,12 @@ class StudentsDSimpl implements StudentsDS {
 
     ///
     final response = await client.rpc('get_results_with_filters', params: params).select();
-    debugPrint(response.toString());
 
     ///
-    return response.map((e) => ResultModel.fromStatisticsQuery(e)).toList();
+    return response.map((e) {
+      final model = ResultModel.fromStatisticsQuery(e);
+      return model;
+    }).toList();
   }
 }
 

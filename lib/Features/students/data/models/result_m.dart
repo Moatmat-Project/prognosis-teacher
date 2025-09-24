@@ -44,7 +44,7 @@ class ResultModel extends Result {
       mark: json["mark"] + 0.0,
       answers: json["answers"].cast<int?>(),
       wrongAnswers: [],
-      period: 0,
+      period: json["period"],
       date: DateTime.parse(json["date"]),
       testName: "",
       userId: json["user_id"],

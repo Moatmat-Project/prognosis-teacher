@@ -378,15 +378,18 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
       StatisticsCellValue(value: TextCellValue("  تقييم الطالب  ")),
       if (state.selectedTests.isNotEmpty) StatisticsCellValue(value: TextCellValue("  غيابات الاختبارات  ")),
       if (state.selectedSets.isNotEmpty) StatisticsCellValue(value: TextCellValue("  غيابات الجلسات  ")),
-      if (state.selectedTests.isNotEmpty) ...state.selectedTests.map((e) => StatisticsCellValue(value: TextCellValue(e.$2))),
+      if (state.selectedTests.isNotEmpty)
+        ...state.selectedTests.expand((e) => [
+              StatisticsCellValue(value: TextCellValue(e.$2)),
+              StatisticsCellValue(value: TextCellValue("تاريخ الحل")),
+              StatisticsCellValue(value: TextCellValue("مدة الحل")),
+            ]),
       if (state.selectedSets.isNotEmpty) ...state.selectedSets.map((e) => StatisticsCellValue(value: TextCellValue(e.title))),
     ];
   }
 
   ///
   Future<List<StudentRowDetails>?> getStudentsRows() async {
-    print(state.selectedTests.map((e) => e.$1.toString()).toList());
-
     ///
     final response = await _getMyStudentsResultsUc.call(
       studentsIds: state.students.map((e) => e.uuid).toList(),
@@ -430,6 +433,7 @@ class ExportStudentsStatisticsBloc extends Bloc<ExportStudentsStatisticsEvent, E
             testId: test.$1,
             mark: result.mark,
             date: result.date,
+            period: result.period,
           ));
         }
       }

@@ -1,4 +1,6 @@
 import 'package:excel/excel.dart';
+import 'package:moatmat_teacher/Core/functions/parsers/date_to_text_f.dart';
+import 'package:moatmat_teacher/Core/functions/parsers/period_to_text_f.dart';
 import 'package:moatmat_teacher/Features/attendance/domain/entities/attendance_record.dart';
 
 import '../../../../Presentation/statistics/state/bloc/export_students_statistics_bloc.dart';
@@ -41,7 +43,7 @@ class StudentRowDetails {
     double studentAverage = 0.0;
     String studentRate = '        A        ';
     int studentTestsAbsents = 0, studentSetsAbsents = 0;
-    List<double?> studentMarks = List.filled(testsIds?.length ?? 0, null);
+    List<StudentTestMarkDetails?> studentMarkDetails = List.filled(testsIds?.length ?? 0, null);
 
     ///
     studentId = userId.toString().padLeft(6, "0");
@@ -52,7 +54,7 @@ class StudentRowDetails {
       if (!marks.any((e) {
         bool value = e.testId == testsIds![i];
         if (value) {
-          studentMarks[i] = (e.mark);
+          studentMarkDetails[i] = (e);
         }
         return value;
       })) {
@@ -68,7 +70,7 @@ class StudentRowDetails {
     }
 
     ///
-    final marksSum = studentMarks.where((e) => e != null).fold(0, (sum, element) => sum + element!.toInt());
+    final marksSum = studentMarkDetails.where((e) => e != null).fold(0, (sum, element) => sum + element!.mark.toInt());
     if (marksSum > 0) {
       studentAverage = marksSum / ((testsIds?.length ?? 0) - studentTestsAbsents);
       studentAverage = double.parse(studentAverage.toStringAsPrecision(2));
@@ -89,25 +91,45 @@ class StudentRowDetails {
       if (setsIds?.isNotEmpty ?? false) StatisticsCellValue(value: IntCellValue(studentSetsAbsents)),
       if (testsIds?.isNotEmpty ?? false)
         ...List.generate(
-          studentMarks.length,
+          studentMarkDetails.length,
           (i) {
-            final mark = studentMarks[i];
+            final markDetails = studentMarkDetails[i];
             final style = CellStyle(
               numberFormat: NumFormat.standard_2,
-              fontColorHex: mark == null ? ExcelColor.red : ExcelColor.black,
+              fontColorHex: markDetails == null ? ExcelColor.red : ExcelColor.black,
             );
-            if (mark == null) {
-              return StatisticsCellValue(
-                value: TextCellValue(" غياب "),
-                style: style,
-              );
+            if (markDetails == null) {
+              return [
+                StatisticsCellValue(
+                  value: TextCellValue(" غياب "),
+                  style: style,
+                ),
+                StatisticsCellValue(
+                  value: TextCellValue("   "),
+                  style: style,
+                ),
+                StatisticsCellValue(
+                  value: TextCellValue("   "),
+                  style: style,
+                ),
+              ];
             } else {
-              return StatisticsCellValue(
-                value: DoubleCellValue(mark),
-              );
+              return [
+                StatisticsCellValue(
+                  value: DoubleCellValue(markDetails.mark),
+                ),
+                StatisticsCellValue(
+                  value: TextCellValue(dateToTextFunction(markDetails.date)),
+                  style: style,
+                ),
+                StatisticsCellValue(
+                  value: TextCellValue(periodToTextFunction(markDetails.period)),
+                  style: style,
+                ),
+              ];
             }
           },
-        ),
+        ).expand((cellPair) => cellPair),
       if (setsIds?.isNotEmpty ?? false)
         ...List.generate(
           setsIds!.length,
@@ -138,10 +160,12 @@ class StudentTestMarkDetails {
   final int testId;
   final double mark;
   final DateTime date;
+  final int period;
 
   StudentTestMarkDetails({
     required this.testId,
     required this.mark,
     required this.date,
+    required this.period,
   });
 }
