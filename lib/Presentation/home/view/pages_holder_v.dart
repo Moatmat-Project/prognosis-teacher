@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:moatmat_teacher/Core/resources/colors_r.dart';
@@ -7,9 +6,7 @@ import 'package:moatmat_teacher/Presentation/folders/view/folders_views_manager.
 import 'package:moatmat_teacher/Presentation/home/view/home_v.dart';
 import 'package:moatmat_teacher/Presentation/purchases/view/purchases_v.dart';
 
-import '../../../Core/resources/fonts_r.dart';
 import '../../banks/views/my_banks_v.dart';
-import '../../tests/views/my_tests_v.dart';
 
 class PagesHolderView extends StatefulWidget {
   const PagesHolderView({super.key});
@@ -43,17 +40,6 @@ class _PagesHolderViewState extends State<PagesHolderView> {
         children: [
           const HomeView(),
           FoldersViewManager(
-            title: "الاختبارات",
-            isTest: true,
-            openAll: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const MyTestsView(),
-                ),
-              );
-            },
-          ),
-          FoldersViewManager(
             title: "البنوك",
             isTest: false,
             openAll: () {
@@ -64,12 +50,12 @@ class _PagesHolderViewState extends State<PagesHolderView> {
               );
             },
           ),
-
           ExploreAttendanceView(),
           const PurchasesView(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: ColorsResources.background,
         selectedItemColor: ColorsResources.primary,
         unselectedItemColor: ColorsResources.borders,
         currentIndex: index,
@@ -88,15 +74,6 @@ class _PagesHolderViewState extends State<PagesHolderView> {
               Icons.home,
             ),
             label: "الرئيسية",
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(
-              Icons.folder,
-            ),
-            icon: Icon(
-              Icons.folder,
-            ),
-            label: "الاختبارات",
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(

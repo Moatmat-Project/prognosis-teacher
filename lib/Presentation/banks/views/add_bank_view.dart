@@ -46,8 +46,8 @@ class _AddBankViewState extends State<AddBankView> {
           if (state is AddBankInformation) {
             return SetInformationView(
               title: state.information?.title,
-              classs: state.information?.classs,
-              material: state.information?.material,
+              classs: "state.information?.classs",
+              material: "state.information?.material",
               password: null,
               teacher: state.information?.teacher,
               period: null,
@@ -72,8 +72,8 @@ class _AddBankViewState extends State<AddBankView> {
                 //
                 var info = BankInformation(
                   title: title,
-                  classs: classs,
-                  material: material,
+                  classs: "classs",
+                  material: "material",
                   teacher: teacher,
                   price: price,
                   videos: videos,

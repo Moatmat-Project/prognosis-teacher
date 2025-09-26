@@ -84,8 +84,8 @@ class _SetInformationViewState extends State<SetInformationView> {
   @override
   void initState() {
     title = widget.title;
-    classs = widget.classs;
-    material = widget.material;
+    classs = "widget.classs";
+    material =" widget.material";
     teacher = widget.teacher;
     password = widget.password;
     period = widget.period;
@@ -129,30 +129,7 @@ class _SetInformationViewState extends State<SetInformationView> {
                   title = p0;
                 },
               ),
-              const SizedBox(height: SizesResources.s2),
-              DropDownWidget(
-                hintText: "الصف",
-                selectedItem: classs ?? classesLst[classesLst.length - 2],
-                items: classesLst,
-                validator: (p0) {
-                  return notEmptyValidator(text: p0);
-                },
-                onSaved: (p0) {
-                  classs = p0;
-                },
-              ),
-              const SizedBox(height: SizesResources.s2),
-              DropDownWidget(
-                hintText: "المادة",
-                selectedItem: material ?? materialsLst.first["name"],
-                items: materialsLst.map((e) => e["name"] as String).toList(),
-                validator: (p0) {
-                  return notEmptyValidator(text: p0);
-                },
-                onSaved: (p0) {
-                  material = p0;
-                },
-              ),
+        
               const SizedBox(height: SizesResources.s2),
               MyTextFormFieldWidget(
                 hintText: "الاستاذ",

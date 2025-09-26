@@ -126,16 +126,16 @@ class _HomeViewState extends State<HomeView> {
               FocusManager.instance.primaryFocus?.unfocus();
             },
           ),
-          SpeedDialChild(
-            label: "إضافة أختبار",
-            child: const Icon(Icons.quiz_outlined),
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AddTestView()),
-              );
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-          ),
+          // SpeedDialChild(
+          //   label: "إضافة أختبار",
+          //   child: const Icon(Icons.quiz_outlined),
+          //   onTap: () async {
+          //     await Navigator.of(context).push(
+          //       MaterialPageRoute(builder: (context) => const AddTestView()),
+          //     );
+          //     FocusManager.instance.primaryFocus?.unfocus();
+          //   },
+          // ),
           SpeedDialChild(
             label: "تصميم سلم اختبار خارجي",
             child: const Icon(Icons.rule_outlined),
