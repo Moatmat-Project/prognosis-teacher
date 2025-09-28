@@ -53,9 +53,21 @@ void main() async {
   // int supabase
   await SupabaseServices.init();
   //
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (Firebase.apps.isEmpty) {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } on FirebaseException catch (e) {
+      // If the default app is already initialized, ignore the duplicate error.
+      if (e.code != 'duplicate-app') {
+        rethrow;
+      }
+    }
+  } else {
+    // Ensure we reference the default app if it's already initialized.
+    Firebase.app();
+  }
   //
   // init get it
   await initGetIt();

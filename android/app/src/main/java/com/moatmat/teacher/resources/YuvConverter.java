@@ -1,4 +1,4 @@
-package com.moatmat.teacher.resources;
+package com.prognosis.teacher.resources;
 
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;

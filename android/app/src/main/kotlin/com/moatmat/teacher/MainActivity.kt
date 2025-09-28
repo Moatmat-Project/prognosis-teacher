@@ -1,13 +1,13 @@
-package com.moatmat.teacher
+package com.prognosis.teacher
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import com.moatmat.teacher.resources.YuvConverter
-import com.moatmat.teacher.services.ContoursService
-import com.moatmat.teacher.services.ImageSplitter
-import com.moatmat.teacher.services.MatService
-import com.moatmat.teacher.services.WrapperService
+import com.prognosis.teacher.resources.YuvConverter
+import com.prognosis.teacher.services.ContoursService
+import com.prognosis.teacher.services.ImageSplitter
+import com.prognosis.teacher.services.MatService
+import com.prognosis.teacher.services.WrapperService
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -17,7 +17,7 @@ import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
 
 class MainActivity : FlutterActivity() {
-    private val channel = "com.moatmat.teacher"
+    private val channel = "com.prognosis.teacher"
     private var job: Job? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

@@ -65,6 +65,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'moatmat-project.appspot.com',
     androidClientId: '359748080763-eb7gipm9l7195anh18d8hhokn2vhsa1m.apps.googleusercontent.com',
     iosClientId: '359748080763-c1mju2n4qhr0pjie131o8075gkhfpdk5.apps.googleusercontent.com',
-    iosBundleId: 'com.moatmat.teacher',
+    iosBundleId: 'com.prognosis.teacher',
   );
 }

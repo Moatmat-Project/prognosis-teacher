@@ -1,4 +1,4 @@
-package com.moatmat.teacher.services
+package com.prognosis.teacher.services
 import android.graphics.drawable.shapes.Shape
 import org.opencv.core.Mat
 import org.opencv.calib3d.Calib3d

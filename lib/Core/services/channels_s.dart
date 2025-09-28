@@ -9,7 +9,7 @@ import '../../Features/scanner/domain/entities/row_bubbles.dart';
 
 class ChannelsService {
   //
-  static const methodChannel = MethodChannel('com.moatmat.teacher');
+  static const methodChannel = MethodChannel('com.prognosis.teacher');
   //
   static Future<int> processImage(CameraImage image, PaperType type) async {
     //

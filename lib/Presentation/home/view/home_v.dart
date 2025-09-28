@@ -163,18 +163,18 @@ class _HomeViewState extends State<HomeView> {
               );
             },
           ),
-          if (locator<TeacherData>().options.allowScanning || kDebugMode)
-            SpeedDialChild(
-              label: "تصحيح اختبار",
-              child: const Icon(Icons.scanner_outlined),
-              onTap: () async {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ScannerViewsManager(),
-                  ),
-                );
-              },
-            ),
+          // if (locator<TeacherData>().options.allowScanning || kDebugMode)
+          //   SpeedDialChild(
+          //     label: "تصحيح اختبار",
+          //     child: const Icon(Icons.scanner_outlined),
+          //     onTap: () async {
+          //       Navigator.of(context).push(
+          //         MaterialPageRoute(
+          //           builder: (context) => const ScannerViewsManager(),
+          //         ),
+          //       );
+          //     },
+          //   ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-package com.moatmat.teacher.services
+package com.prognosis.teacher.services
 
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint

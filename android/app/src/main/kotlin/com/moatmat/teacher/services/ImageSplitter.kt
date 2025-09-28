@@ -1,4 +1,4 @@
-package com.moatmat.teacher.services
+package com.prognosis.teacher.services
 
 import android.util.Log
 import io.flutter.plugin.common.MethodChannel
