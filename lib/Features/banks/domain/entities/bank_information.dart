@@ -7,10 +7,13 @@ class BankInformation {
   final String teacher;
   final int price; //
   final List<String>? images;
+  final String? schoolId;
+
   final List<Video>? videos;
   final List<String>? files;
 
   BankInformation({
+    required this.schoolId,
     required this.title,
     required this.classs,
     required this.material,
@@ -31,9 +34,11 @@ class BankInformation {
     List<Video>? videos,
     List<String>? images,
     List<String>? files,
+    String? schoolId,
   }) {
     return BankInformation(
       title: title ?? this.title,
+      schoolId: schoolId ?? this.schoolId,
       classs: classs ?? this.classs,
       material: material ?? this.material,
       teacher: teacher ?? this.teacher,

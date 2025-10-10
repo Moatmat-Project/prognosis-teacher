@@ -13,6 +13,8 @@ import '../../../Core/widgets/view/set_properties_v.dart';
 import '../../../Core/widgets/view/upload_done_v.dart';
 import '../../../Core/widgets/view/upload_error_v.dart';
 import '../../questions/view/add_question_v.dart';
+import '../../../Core/injection/app_inj.dart';
+import '../../../Features/auth/domain/entites/teacher_data.dart';
 
 class AddBankView extends StatefulWidget {
   const AddBankView({super.key, this.bank});
@@ -46,10 +48,12 @@ class _AddBankViewState extends State<AddBankView> {
           if (state is AddBankInformation) {
             return SetInformationView(
               title: state.information?.title,
-              classs: "state.information?.classs",
-              material: "state.information?.material",
+              classs: state.information?.classs,
+              material: state.information?.material,
               password: null,
-              teacher: state.information?.teacher,
+              teacher: state.information?.teacher ?? locator<TeacherData>().email,
+              schoolId: state.information?.schoolId,
+              schools: state.schools,
               period: null,
               price: state.information?.price,
               videos: state.information?.videos,
@@ -58,32 +62,36 @@ class _AddBankViewState extends State<AddBankView> {
               isBank: true,
               afterSet: ({
                 required classs,
+                required files,
+                required images,
                 required material,
                 required password,
                 required period,
                 previous,
+                required price,
+                required schoolId,
                 required teacher,
                 required title,
-                required price,
                 required videos,
-                required files,
-                required images,
               }) {
-                //
-                var info = BankInformation(
-                  title: title,
-                  classs: "classs",
-                  material: "material",
-                  teacher: teacher,
-                  price: price,
-                  videos: videos,
-                  files: files,
-                  images: images,
-                );
-                //
-                context.read<AddBankCubit>().setBankInformation(
-                      information: info,
-                    );
+                {
+                  //
+                  var info = BankInformation(
+                    title: title,
+                    classs: classs,
+                    schoolId: schoolId,
+                    material: material,
+                    teacher: teacher,
+                    price: price,
+                    videos: videos,
+                    files: files,
+                    images: images,
+                  );
+                  //
+                  context.read<AddBankCubit>().setBankInformation(
+                        information: info,
+                      );
+                }
               },
             );
           } else if (state is AddBankProperties) {

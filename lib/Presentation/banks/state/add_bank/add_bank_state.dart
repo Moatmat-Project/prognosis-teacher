@@ -41,10 +41,11 @@ final class AddBankProperties extends AddBankState {
 
 final class AddBankInformation extends AddBankState {
   final BankInformation? information;
+  final List<School>? schools;
 
-  const AddBankInformation({required this.information});
+  const AddBankInformation({required this.information, this.schools});
   @override
-  List<Object?> get props => [information];
+  List<Object?> get props => [information, schools];
 }
 
 final class AddBankQuestions extends AddBankState {

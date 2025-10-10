@@ -42,7 +42,7 @@ class _AddTestViewState extends State<AddTestView> {
           Navigator.of(context).pop();
         }
       },
-      builder: (context, state) {
+    builder: (context, state) {
         if (state is AddTestInformation) {
           return SetInformationView(
             title: state.information?.title,
@@ -50,6 +50,8 @@ class _AddTestViewState extends State<AddTestView> {
             material: state.information?.material,
             password: state.information?.password,
             teacher: state.information?.teacher,
+        //    schoolId: state.information?.schoolId,
+      //      schools: state.schools,
             period: state.information?.period,
             price: state.information?.price,
             videos: state.information?.videos,
@@ -65,6 +67,7 @@ class _AddTestViewState extends State<AddTestView> {
               previous,
               required price,
               required teacher,
+              required schoolId,
               required title,
               required videos,
               required images,
@@ -74,6 +77,7 @@ class _AddTestViewState extends State<AddTestView> {
                 classs: classs,
                 material: material,
                 teacher: teacher,
+             //   schoolId: schoolId,
                 price: price,
                 password: password,
                 period: period,

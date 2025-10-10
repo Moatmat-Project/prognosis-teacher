@@ -104,7 +104,7 @@ class BucketsRemoteDSImpl implements BucketsRemoteDS {
     String? name,
   }) async {
     //
-    String folder1 = trMaterialsLst[material];
+    String folder1 = trMaterialsLst[material] ?? "main";
     //
     String type = path.split("/").last;
     //

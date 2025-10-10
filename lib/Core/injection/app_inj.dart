@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:moatmat_teacher/Core/injection/school_inj.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:moatmat_teacher/Core/injection/banks_inj.dart';
 import 'package:moatmat_teacher/Core/injection/buckets_inj.dart';
@@ -61,4 +62,6 @@ initGetIt() async {
   injectAttendance();
   //
   injectControllers();
+  //
+  injectSchools();
 }

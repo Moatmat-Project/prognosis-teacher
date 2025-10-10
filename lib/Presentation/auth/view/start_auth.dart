@@ -33,7 +33,7 @@ class _StartAuthViewState extends State<StartAuthView> {
             const Spacer(),
             SizedBox(
               width: SpacingResources.mainHalfWidth(context),
-              child: SvgPicture.asset(
+              child: Image.asset(
                 ImagesResources.appIcon,
                 width: SpacingResources.mainWidth(context),
               ),

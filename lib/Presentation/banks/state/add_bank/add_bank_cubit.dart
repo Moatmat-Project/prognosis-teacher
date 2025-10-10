@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:moatmat_teacher/Core/errors/exceptions.dart';
 import 'package:moatmat_teacher/Features/auth/domain/entites/teacher_data.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank_information.dart';
 import 'package:moatmat_teacher/Features/banks/domain/entities/bank_properties.dart';
 import 'package:moatmat_teacher/Features/banks/domain/usecases/update_bank_uc.dart';
 import 'package:moatmat_teacher/Features/banks/domain/usecases/upload_bank_uc.dart';
 import 'package:moatmat_teacher/Features/requests/domain/entities/request.dart';
+import 'package:moatmat_teacher/Features/school/domain/entities/school.dart';
+import 'package:moatmat_teacher/Features/school/domain/usecases/get_school_uc.dart';
 import '../../../../Core/injection/app_inj.dart';
 import '../../../../Core/services/questions_cash_s.dart';
 import '../../../../Features/banks/domain/entities/bank.dart';
@@ -38,14 +41,18 @@ class AddBankCubit extends Cubit<AddBankState> {
       //
       information = bank?.information;
       //
+      if (this.bank != null) {
+        information = information!.copyWith(
+          teacher: this.bank?.teacherEmail,
+        );
+      }
+      //
       questions = [];
       if (bank != null) {
         for (int i = 0; i < bank.questions.length; i++) {
           questions.add(bank.questions[i].copyWith(id: i + 1));
         }
-        //
         QuestionsCashS.clearQuestions("bank");
-        //
       }
       emitBankInformation();
     });
@@ -106,8 +113,14 @@ class AddBankCubit extends Cubit<AddBankState> {
 
   removeQuestion(int index) {
     questions.removeAt(index);
-    List<Question> newList = List<Question>.from(questions);
+
+    List<Question> newList = [];
+    //
+    for (int i = 0; i < questions.length; i++) {
+      newList.add(questions[i].copyWith(id: i + 1));
+    }
     questions = newList;
+
     emit(AddBankQuestions(questions: newList));
   }
 
@@ -118,7 +131,7 @@ class AddBankCubit extends Cubit<AddBankState> {
     if (bank != null) {
       bank = bank!.copyWith(
         id: bank!.id,
-        teacherEmail: locator<TeacherData>().email,
+        teacherEmail: information!.teacher,
         properties: properties!,
         information: information!,
         questions: questions,
@@ -138,7 +151,7 @@ class AddBankCubit extends Cubit<AddBankState> {
     } else {
       bank = Bank(
         id: 0,
-        teacherEmail: locator<TeacherData>().email,
+        teacherEmail: information!.teacher,
         information: information!,
         properties: properties!,
         questions: questions,
@@ -164,7 +177,7 @@ class AddBankCubit extends Cubit<AddBankState> {
     //
     bank = Bank(
       id: 0,
-      teacherEmail: locator<TeacherData>().email,
+      teacherEmail: bank!.information.teacher,
       information: information!,
       properties: properties!,
       questions: [],
@@ -185,8 +198,16 @@ class AddBankCubit extends Cubit<AddBankState> {
   }
 
   // views
-  emitBankInformation() {
-    emit(AddBankInformation(information: information));
+  Future<void> emitBankInformation() async {
+    final response = await locator<GetSchoolUc>().call();
+    response.fold(
+      (l) {
+        emit(AddBankError(exception: AnonException()));
+      },
+      (r) {
+        emit(AddBankInformation(information: information, schools: r));
+      },
+    );
   }
 
   emitBankProperties() {
