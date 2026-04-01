@@ -13,12 +13,10 @@ class AddQuestionView extends StatefulWidget {
     super.key,
     required this.result,
     this.question,
-    required this.isItBank,
   });
   //
   final Question? question;
   final Function(Question) result;
-  final bool isItBank;
   @override
   State<AddQuestionView> createState() => _AddQuestionViewState();
 }
@@ -36,9 +34,7 @@ class _AddQuestionViewState extends State<AddQuestionView> {
       body: BlocBuilder<CreateQuestionCubit, CreateQuestionState>(
         builder: (context, state) {
           if (state is CreateQuestionInitial) {
-            return SetUpQuestionView(
-              question: state.question,
-            );
+            return SetUpQuestionView(question: state.question);
           } else if (state is CreateQuestionSetUpAnswers) {
             return SetUpAnswerView(
               answers: state.answers,

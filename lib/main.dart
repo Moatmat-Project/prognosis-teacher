@@ -4,6 +4,7 @@ import 'package:moatmat_teacher/Presentation/auth/state/auth_c/auth_cubit_cubit.
 import 'package:moatmat_teacher/Presentation/auth/state/switch_accounts/switch_accounts_bloc.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/add_bank/add_bank_cubit.dart';
 import 'package:moatmat_teacher/Presentation/banks/state/my_banks/my_banks_cubit.dart';
+import 'package:moatmat_teacher/Presentation/colleges/state/college_bloc/college_bloc.dart';
 import 'package:moatmat_teacher/Presentation/groups/state/group_test_detials/group_test_details_cubit.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/notifications_bloc/notifications_bloc.dart';
 import 'package:moatmat_teacher/Presentation/notifications/state/send_notification_bloc/send_notification_bloc.dart';
@@ -112,6 +113,7 @@ void main() async {
         BlocProvider(create: (context) => locator<ExploreAttendanceBloc>()),
         BlocProvider(create: (context) => locator<SendNotificationBloc>()),
         BlocProvider(create: (context) => CommentsManagmentBloc()),
+        BlocProvider(create: (context) => locator<CollegeBloc>()),
         BlocProvider(create: (context) => ExportPurchasesBloc()),
         BlocProvider(
             create: (context) =>

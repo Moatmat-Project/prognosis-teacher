@@ -2,7 +2,6 @@ import 'package:moatmat_teacher/Features/groups/data/datasources/groups_ds.dart'
 import 'package:moatmat_teacher/Features/groups/data/repository/groups_repository_impl.dart';
 import 'package:moatmat_teacher/Features/groups/domain/repository/groups_repository.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/add_list_to_group_uc.dart';
-import 'package:moatmat_teacher/Features/groups/domain/usecases/add_to_group_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/get_groups_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_from_group_uc.dart';
 import 'package:moatmat_teacher/Features/groups/domain/usecases/remove_group_uc.dart';

@@ -51,7 +51,7 @@ class _AddBankViewState extends State<AddBankView> {
               classs: state.information?.classs,
               material: state.information?.material,
               password: null,
-              teacher: state.information?.teacher ?? locator<TeacherData>().email,
+              teacher: state.information?.teacher,
               schoolId: state.information?.schoolId,
               schools: state.schools,
               period: null,
@@ -62,6 +62,7 @@ class _AddBankViewState extends State<AddBankView> {
               isBank: true,
               afterSet: ({
                 required classs,
+                required collegeId,
                 required files,
                 required images,
                 required material,
@@ -80,6 +81,7 @@ class _AddBankViewState extends State<AddBankView> {
                     title: title,
                     classs: classs,
                     schoolId: schoolId,
+                    collegeId: collegeId,
                     material: material,
                     teacher: teacher,
                     price: price,
@@ -132,7 +134,6 @@ class _AddBankViewState extends State<AddBankView> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => AddQuestionView(
-                      isItBank: true,
                       result: (question) {
                         context.read<AddBankCubit>().setBankQuestions(
                               question: question,
@@ -149,7 +150,6 @@ class _AddBankViewState extends State<AddBankView> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => AddQuestionView(
-                      isItBank: true,
                       question: question,
                       result: (question) {
                         context.read<AddBankCubit>().updateBankQuestions(
@@ -180,7 +180,9 @@ class _AddBankViewState extends State<AddBankView> {
             );
           } else if (state is AddBankLoading) {
             return Center(
-              child: state.details == "" || state.details == null ? const CupertinoActivityIndicator() : Text(state.details ?? ""),
+              child: state.details == "" || state.details == null
+                  ? const CupertinoActivityIndicator()
+                  : Text(state.details ?? ""),
             );
           } else if (state is AddBankPickFiles) {
             return AttachFileView(

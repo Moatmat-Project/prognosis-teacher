@@ -8,12 +8,14 @@ class BankInformation {
   final int price; //
   final List<String>? images;
   final String? schoolId;
+  final String? collegeId;
 
   final List<Video>? videos;
   final List<String>? files;
 
   BankInformation({
     required this.schoolId,
+    this.collegeId,
     required this.title,
     required this.classs,
     required this.material,
@@ -35,10 +37,12 @@ class BankInformation {
     List<String>? images,
     List<String>? files,
     String? schoolId,
+    String? collegeId,
   }) {
     return BankInformation(
       title: title ?? this.title,
       schoolId: schoolId ?? this.schoolId,
+      collegeId: collegeId ?? this.collegeId,
       classs: classs ?? this.classs,
       material: material ?? this.material,
       teacher: teacher ?? this.teacher,

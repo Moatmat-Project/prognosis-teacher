@@ -9,7 +9,8 @@ import '../../../../Features/purchase/domain/usecases/teacher_purchases_uc.dart'
 part 'purchases_state.dart';
 
 class PurchasesCubit extends Cubit<PurchasesInitial> {
-  PurchasesCubit() : super(PurchasesInitial(purchases: [], filtered: [], isLoading: false));
+  PurchasesCubit()
+      : super(PurchasesInitial(purchases: [], filtered: [], isLoading: false));
 
   init() async {
     //
@@ -19,29 +20,40 @@ class PurchasesCubit extends Cubit<PurchasesInitial> {
       email: locator<TeacherData>().email,
     );
     //
-    res.fold(
-      (l) {
+    res.fold((l) {
+      DateTime now = DateTime.now();
+      emit(state.copyWith(
+        isLoading: false,
+        error: l.toString(),
+        purchases: [],
+        filtered: [],
+        starting: DateTime(now.year, 1, 1),
+        ending: DateTime(now.year, 12, 31),
+      ));
+    }, (r) {
+      if (r.isEmpty) {
         DateTime now = DateTime.now();
+
         emit(state.copyWith(
           isLoading: false,
-          error: l.toString(),
           purchases: [],
           filtered: [],
           starting: DateTime(now.year, 1, 1),
           ending: DateTime(now.year, 12, 31),
-        ));
-      },
-      (r) {
-        emit(state.copyWith(
-          isLoading: false,
-          purchases: r,
-          starting: _parseToCurrentYear(r.last.createdAt!),
-          ending: _parseToCurrentYear(r.first.createdAt!),
-          filtered: r,
           error: null,
         ));
-      },
-    );
+        return;
+      }
+
+      emit(state.copyWith(
+        isLoading: false,
+        purchases: r,
+        starting: _parseToCurrentYear(r.last.createdAt!),
+        ending: _parseToCurrentYear(r.first.createdAt!),
+        filtered: r,
+        error: null,
+      ));
+    });
   }
 
   changeTime({DateTime? starting, DateTime? ending}) {
